@@ -6,7 +6,7 @@ const errorMiddleware = (err, req, res, next) => {
         error.message = err.message;
         console.error(err);
 
-        // Mongoose Bad BojectId
+        // Mongoose Bad OjectId
         if (err.name === 'CastError') {
             const message = "Resource not found";
             error = new Error(message);
@@ -27,7 +27,8 @@ const errorMiddleware = (err, req, res, next) => {
             error.statusCode = 400;
         }
 
-        res.statusCode(error.statusCode || 500).json({ success: false, error: error.message || 'Server Error' });
+        res.status(error.statusCode || 500).json({ 
+            success: false, error: error.message || 'Server Error' });
 
     } catch (error) {
         next(error);

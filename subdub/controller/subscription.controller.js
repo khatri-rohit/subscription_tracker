@@ -15,7 +15,9 @@ export const createSubscription = async (req, res, next) => {
 
 export const getUserSubscriptions = async (req, res, next) => {
     try {
-        if (req.user._id !== req.params.id) {
+        console.log(req.user.id);
+        console.log(req.params.id);
+        if (req.user.id !== req.params.id) {
             const error = new Error("You are not the Owner of the Account");
             error.status = 401;
             throw error;
@@ -27,4 +29,4 @@ export const getUserSubscriptions = async (req, res, next) => {
     } catch (error) {
         next(error);
     }
-}
+};

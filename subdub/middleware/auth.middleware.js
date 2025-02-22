@@ -18,7 +18,6 @@ const authorize = async (req, res, next) => {
         const decoded = jwt.verify(token, JWT_SECRET);
         console.log(decoded);
         // console.log("3");
-        // console.log();
 
         const user = await User.findById(decoded.userId);
         // console.log("4");
@@ -27,7 +26,8 @@ const authorize = async (req, res, next) => {
         // console.log("5");
 
         req.user = user;
-        
+        console.log(user);
+
         next();
     } catch (error) {
         res.status(401).json({

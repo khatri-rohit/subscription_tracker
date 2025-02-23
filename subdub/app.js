@@ -6,6 +6,7 @@ import { PORT } from './config/env.js';
 import userRouter from './routes/user.routes.js';
 import authRoute from './routes/auth.routes.js';
 import subcriptionRouter from './routes/subscription.routes.js';
+import workflowRouter from './routes/workflow.routes.js';
 
 import connectToDB from './database/mongodb.js';
 
@@ -22,6 +23,7 @@ app.use(arcjetMiddleware);
 app.use('/api/v1/auth', authRoute);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/subscriptions', subcriptionRouter);
+app.use('/api/v1/workflows', workflowRouter);
 
 app.use(errorMiddleware);
 

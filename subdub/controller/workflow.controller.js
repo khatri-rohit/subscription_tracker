@@ -11,12 +11,12 @@ const REMINDERS = [7, 5, 2, 1];
 export const sendReminders = serve(async (context) => {
     const { subscriptionId } = context.requestPayload;
     const subscription = await fetchSubscription(context, subscriptionId);
-    console.log("Debug 1");
+    // console.log("Debug 1");
     // console.log(JSON.parse(subscription));
     if (!subscription || subscription.status !== 'active') return;
 
     const renewalDate = dayjs(subscription.renewalDate);
-    console.log(renewalDate);
+    // console.log(renewalDate);
 
     if (renewalDate.isBefore(dayjs())) {
         console.log(`Renewal Date has passed from subscription ${subscription}. Stopping workflow`);

@@ -9,14 +9,14 @@ const authorize = async (req, res, next) => {
         if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
             token = req.headers.authorization.split(' ')[1];
         }
-        console.log(req.headers);
+        // console.log(req.headers);
 
         if (!token) return res.status.json({ message: "Unauthorized" });
         // console.log("2");
         // console.log(token);
 
         const decoded = jwt.verify(token, JWT_SECRET);
-        console.log(decoded);
+        // console.log(decoded);
         // console.log("3");
 
         const user = await User.findById(decoded.userId);

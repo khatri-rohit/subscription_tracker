@@ -7,9 +7,9 @@ export const sendReminderEmail = async ({ to, type, subscription }) => {
 
     // console.log(to, type,subscription);
     const template = emailTemplates.find((t) => t.label === type);
-    emailTemplates.find((t) => {
-        console.log(t.label);
-    });
+    // emailTemplates.find((t) => {
+    //     console.log(t.label);
+    // });
     // console.log(template);
     if (!template) throw new Error('Invalid email type');
 
@@ -31,8 +31,8 @@ export const sendReminderEmail = async ({ to, type, subscription }) => {
         subject: subject,
         html: message,
     }
-    console.log(mailOptions);
-    console.log("Email");
+    // console.log(mailOptions);
+    // console.log("Email");
     transporter.sendMail(mailOptions, (error, info) => {
         if (error) return console.log(error, 'Error sending email');
         console.log('Email sent: ' + info.response);

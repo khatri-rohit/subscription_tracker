@@ -82,10 +82,18 @@ export const signIn = async (req, res, next) => {
 
     } catch (error) {
         next(error);
-
     }
 }
 
 export const signOut = async (req, res, next) => {
-
+    try {
+        console.log(res);
+        // res.clearCookie('access_token');
+        // res.status(200).json({
+        //     success: true,
+        //     message: 'User logged out successfully'
+        // });
+    } catch (error) {
+        next(error);
+    }
 }

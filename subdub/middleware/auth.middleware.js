@@ -26,7 +26,7 @@ const authorize = async (req, res, next) => {
         // console.log("5");
 
         req.user = user;
-        console.log(user);
+        // console.log(user);
         next();
     } catch (error) {
         res.status(401).json({

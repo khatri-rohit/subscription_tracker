@@ -1,5 +1,6 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
 
 import { PORT } from './config/env.js';
 
@@ -19,6 +20,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(arcjetMiddleware);
+app.use(cors()); // For Crosss origin access
 
 app.use('/api/v1/auth', authRoute);
 app.use('/api/v1/users', userRouter);

@@ -30,6 +30,7 @@ export const signUp = async (req, res, next) => {
 
         const token = jwt.sign({ userId: newUsers[0]._id }, JWT_SECRET, { expiresIn: JWT_EXPRIES_IN });
 
+        res.cookie('token', token);
 
         await session.commitTransaction(); // commit the transaction if no error occurs
         session.endSession(); // end the session
@@ -70,6 +71,7 @@ export const signIn = async (req, res, next) => {
         }
 
         const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: JWT_EXPRIES_IN });
+        res.cookie('token', token);
 
         res.status(200).json({
             success: true,
@@ -87,12 +89,13 @@ export const signIn = async (req, res, next) => {
 
 export const signOut = async (req, res, next) => {
     try {
-        console.log(res);
-        // res.clearCookie('access_token');
-        // res.status(200).json({
-        //     success: true,
-        //     message: 'User logged out successfully'
-        // });
+        console.log(req.cookies);
+        res.clearCookie('token');
+        console.log(req.cookies);
+        res.status(200).json({
+            success: true,
+            message: 'User logged out successfully',
+        });
     } catch (error) {
         next(error);
     }

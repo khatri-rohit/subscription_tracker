@@ -1,4 +1,5 @@
 import { Resolver, useForm } from 'react-hook-form'
+import { useNavigate } from 'react-router-dom'
 
 type FormValues = {
     name: string,
@@ -27,7 +28,6 @@ const resolver: Resolver<FormValues> = async (values) => {
             message: "This is required!"
         };
     } else if (!/^[a-zA-Z0-9._%+-]+@gmail\.com$/i.test(values.email)) {
-        
         errors.email = {
             type: "validate",
             message: "Please use a Gmail address"
@@ -66,19 +66,42 @@ const resolver: Resolver<FormValues> = async (values) => {
 
 const SignUp = () => {
 
+    const navigate = useNavigate();
     const {
         register,
         handleSubmit,
         formState: { errors }
     } = useForm<FormValues>({ resolver })
 
-    const onSubmit = (data: FormValues) => {
-        console.log(data);
+    const onSubmit = async (data: FormValues) => {
+        try {
+            console.log("Request Sent");
+            const response = await fetch('http://localhost:5500/api/v1/auth/sign-up', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            });
+            if (!response.ok) {
+                throw new Error('Something Went Wrong\nUser Already Exists in DB');
+            }
+            const result = await response.json();
+            console.log('User created:', result);
+            console.log(document.cookie);
+            navigate('/');
+
+        } catch (error) {
+            console.error('Error creating user:', error);
+            alert("User Already Exists");
+        }
     }
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-50">
-            <form className="bg-white p-10 rounded-xl shadow-lg w-[450px] space-y-6" onSubmit={handleSubmit(onSubmit)}>
+
+            <form className="bg-white p-10 rounded-xl shadow-lg w-[450px] space-y-6"
+                onSubmit={handleSubmit(onSubmit)}>
                 <h2 className="text-3xl font-bold mb-8 text-center text-gray-800">Create Account</h2>
                 <div className="space-y-5">
                     <div>
@@ -88,7 +111,7 @@ const SignUp = () => {
                         <input
                             type="text"
                             className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                            placeholder="Enter your full name"
+                            placeholder="Name"
                             {...register("name")}
                         />
                         {errors?.name && <p className="text-red-400">{errors?.name?.message}</p>}
@@ -123,7 +146,7 @@ const SignUp = () => {
                         </label>
                         <input
                             type="password"
-                            className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 !my-2"
                             placeholder="Confirm your password"
                             {...register("confirmPassword")}
                         />

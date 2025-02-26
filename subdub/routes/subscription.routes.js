@@ -4,7 +4,9 @@ import {
     getUserSubscriptions,
     updateSubscription,
     deleteSubscription,
-    getSubscriptions
+    getSubscriptions,
+    cancelSubscription,
+    renewalSubscription
 } from '../controller/subscription.controller.js';
 import authorize from '../middleware/auth.middleware.js';
 
@@ -12,9 +14,11 @@ const subscriptionRouter = Router();
 
 subscriptionRouter.get('/', getSubscriptions);
 
-subscriptionRouter.get('/:id', (req, res) => {
-    res.send("Subscription");
-});
+// subscriptionRouter.get('/:id', (req, res) => {
+//     res.send("Subscription");
+// });
+
+subscriptionRouter.get('/upcoming_renewals', authorize, renewalSubscription);
 
 subscriptionRouter.post('/', authorize, createSubscription);
 
@@ -24,12 +28,6 @@ subscriptionRouter.delete('/:id', authorize, deleteSubscription);
 
 subscriptionRouter.get('/user/:id', authorize, getUserSubscriptions);
 
-subscriptionRouter.put('/:id/cancel', (req, res) => {
-    res.send({ title: "Cancel Subscription" });
-});
-
-subscriptionRouter.get('/upcoming-renewals', (req, res) => {
-    res.send({ title: "Get Upcoming Renewals Subscription" });
-});
+subscriptionRouter.put('/:id/cancel', authorize, cancelSubscription);
 
 export default subscriptionRouter;

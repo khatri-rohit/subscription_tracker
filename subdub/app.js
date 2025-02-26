@@ -20,7 +20,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(arcjetMiddleware);
-app.use(cors()); // For Crosss origin access
+app.use(cors()); // For Crosss origin access (basiclly to access backend)
 
 app.use('/api/v1/auth', authRoute);
 app.use('/api/v1/users', userRouter);

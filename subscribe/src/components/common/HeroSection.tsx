@@ -9,7 +9,7 @@ const HeroSection = () => {
                 <p className="text-2xl leading-7 mb-5">
                     Effortlessly track and manage all your subscriptions in one place.
                 </p>
-                <Button className="bg-[#636AE8] text-lg font-[400] tracking-wide p-6">Get Started</Button>
+                <Button className="bg-[#636AE8] hover:bg-[#565ba9] transition-all duration-300 cursor-pointer text-lg font-[400] tracking-wide p-6">Get Started</Button>
             </div>
         </section>
     )

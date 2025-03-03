@@ -10,7 +10,7 @@ const Navbar = () => {
                         <h1 className="text-4xl mx-1">SubScribe</h1>
                     </div>
                     <div className="nav-right ">
-                        <Button className="bg-[#636AE8]"> <img src="/img/newsletter.png" alt="" /> SignUp</Button>
+                        <Button className="bg-[#636AE8] hover:bg-[#565ba9] transition-all duration-300 cursor-pointer"> <img src="/img/newsletter.png" alt="" /> SignUp</Button>
                     </div>
                 </div>
             </nav>

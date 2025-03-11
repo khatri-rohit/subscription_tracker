@@ -30,23 +30,18 @@ const SignIn = () => {
 
   return (
     <Model>
-      <div className="bg-[#636AE8] w-[65%] h-[65%] flex">
-        <div className="absolute right-10 top-10 cursor-pointer">
-          <X size={50} />
-        </div>
-
-        <div className="w-[50%]">
-          <img className="object-cover h-full" src="/img/signup-1.png" alt="girl-illestration" />
-        </div>
-        
-        <div className="w-[50%] h-full flex flex-col p-10">
+      <div className="absolute md:right-10 right-5 md:top-10 top-5 cursor-pointer">
+        <X size={25} />
+      </div>
+      <div className="bg-[#636AE8] md:w-[] lg:w-[65%] w-[85%] h-[65%] md:grid md:grid-cols-2">
+        <div className="h-full flex flex-col p-10 w-full">
           <p className="text-3xl text-white font-bold text-center">
             Login
           </p>
 
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}
-              className="space-y-6 px-6 w-[80%] m-auto">
+              className="space-y-6 md:px-6 px-3 md:w-[80%] w-full m-auto">
               <FormField
                 control={form.control}
                 name="email"
@@ -89,26 +84,31 @@ const SignIn = () => {
             </form>
           </Form>
 
-          <div className="m-auto w-[80%]">
-            <p className="text-center text-white relative flex items-center justify-center before:content-[''] before:absolute before:left-0 before:w-[30%] before:h-[1px] before:bg-white/50 after:content-[''] after:absolute after:right-0 after:w-[30%] after:h-[1px] after:bg-white/50">
+          <div className="m-auto md:w-[80%]">
+            <p className="text-center text-sm text-white relative flex items-center justify-center before:content-[''] before:absolute before:left-0 before:w-[20%] md:before:w-[15%] lg:before:w-[30%] before:h-[1px] before:bg-white/50 after:content-[''] after:absolute after:right-0 after:w-[20%] md:after:w-[15%] lg:after:w-[30%] after:h-[1px] after:bg-white/50">
               Or Continue With
             </p>
             <div className="icons flex justify-center gap-x-7 mt-4">
-              <div className="bg-white p-2 rounded-lg px-5">
+              <div className="bg-white md:p-2 px-2 py-1 rounded-lg">
                 <img src="/img/icons/google-svgrepo-com.svg" alt="google" className="w-10 h-10 cursor-pointer" />
               </div>
-              <div className="bg-white p-2 rounded-lg px-5">
+              <div className="bg-white md:p-2 px-2 py-1 rounded-lg">
                 <img src="/img/icons/github-svgrepo-com.svg" alt="github" className="w-10 h-10 cursor-pointer" />
               </div>
-              <div className="bg-white p-2 rounded-lg px-5">
+              <div className="bg-white md:p-2 px-2 py-1 rounded-lg">
                 <img src="/img/icons/twitter-svgrepo-com.svg" alt="twitter" className="w-10 h-10 cursor-pointer" />
               </div>
             </div>
           </div>
           <div className="text-center text-white">
-            <p className="">Don't have an account? <span className="underline text-gray-300">Sign Up here</span></p>
+            <p className="text-sm lg:text-lg ">Don't have an account? <span className="hover:underline text-gray-300 cursor-pointer">Sign Up here</span></p>
           </div>
         </div>
+
+        {/* <div className="w-[50%]"> */}
+        <img className="hidden md:block object-cover h-full" src="/img/signup-1.png" alt="girl-illestration" />
+        {/* </div> */}
+
       </div>
     </Model>
   )

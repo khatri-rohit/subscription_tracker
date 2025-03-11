@@ -10,8 +10,8 @@ const Home = () => {
             <HeroSection />
             <Features />
             <UnlockPremium />
-            {/* <SignUp /> */}
-            <SignIn />
+            <SignUp />
+            {/* <SignIn /> */}
         </main>
     )
 }

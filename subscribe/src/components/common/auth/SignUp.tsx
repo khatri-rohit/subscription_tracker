@@ -39,24 +39,22 @@ const SignUp = () => {
             <div className="absolute md:right-10 right-5 md:top-10 top-5 cursor-pointer">
                 <X size={25} />
             </div>
-            <div className="bg-[#FFCF8D] md:w-[] lg:w-[65%] w-[85%] h-[65%] md:grid md:grid-cols-2">
+            <div className="bg-[#FFCF8D] w-[85%] md:w-[90%] lg:w-[75%] min-h-[80vh] lg:min-h-[65%] md:grid md:grid-cols-2">
+                <img className="hidden md:block object-cover w-full h-full" src="/img/signIn.png" alt="girl-illestration" />
 
-                {/* <div className="w-[50%]"> */}
-                <img className="hidden md:block object-cover h-full" src="/img/signIn.png" alt="girl-illestration" />
-                {/* </div> */}
-
-                <div className="h-full flex flex-col md:p-20 p-10 w-full">
-                    <p className="md:text-5xl text-xl text-[#5A3E2B] font-bold text-">
+                <div className="h-full flex flex-col justify-between w-[85%] md:w-[90%] lg:w-[75%] m-auto">
+                    <p className="md:text-3xl text-2xl text-center pt-7 text-[#5A3E2B] font-bold">
                         Create Account
                     </p>
 
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)}
-                            className="space-y-3 w-full m-auto grid grid-cols-1 text-black">
+                            className="space-y-3 m-auto grid grid-cols-1 text-black pt-10 md:p-0">
                             <div className="names flex space-x-2 w-full col-span-1">
                                 <FormField
                                     control={form.control}
                                     name="firstName"
+                                    rules={{ required: "First name is required" }}
                                     render={({ field }) => (
                                         <FormItem className="w-full">
                                             <FormLabel>
@@ -67,13 +65,14 @@ const SignUp = () => {
                                                 <Input className="border-none shadow-none text-black text-sm md:text-lg placeholder:text-gray-500/50"
                                                     placeholder="First Name" {...field} />
                                             </div>
-                                            <FormMessage />
+                                            {/* <FormMessage /> */}
                                         </FormItem>
                                     )}
                                 />
                                 <FormField
                                     control={form.control}
                                     name="LastName"
+                                    rules={{ required: "Last name is required" }}
                                     render={({ field }) => (
                                         <FormItem className="w-full">
                                             <FormLabel>
@@ -84,7 +83,7 @@ const SignUp = () => {
                                                 <Input className="border-none shadow-none text-sm md:text-lg placeholder:text-gray-500/50"
                                                     placeholder="Last Name" {...field} />
                                             </div>
-                                            <FormMessage />
+                                            {/* <FormMessage /> */}
                                         </FormItem>
                                     )}
                                 />
@@ -93,6 +92,13 @@ const SignUp = () => {
                             <FormField
                                 control={form.control}
                                 name="email"
+                                rules={{
+                                    required: "Email is required",
+                                    pattern: {
+                                        value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                                        message: "Please enter a valid email address"
+                                    }
+                                }}
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel className="">
@@ -110,6 +116,7 @@ const SignUp = () => {
                             <FormField
                                 control={form.control}
                                 name="password"
+                                rules={{ required: "Password is important" }}
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel className="">
@@ -127,6 +134,10 @@ const SignUp = () => {
                             <FormField
                                 control={form.control}
                                 name="Confpassword"
+                                rules={{
+                                    required: "Re-enter your password before continue",
+                                    validate: (value) => value === form.getValues('password') || "Password is not same"
+                                }}
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel className="">
@@ -150,8 +161,8 @@ const SignUp = () => {
                         </form>
                     </Form>
 
-                    <div className="m-auto md:w-[80%]">
-                        <p className="text-center text-[#3f291a] text-sm relative flex items-center justify-center before:content-[''] before:absolute before:left-0 before:w-[20%] md:before:w-[15%] lg:before:w-[30%] before:h-[1px] before:bg-white/50 after:content-[''] after:absolute after:right-0 after:w-[20%] md:after:w-[15%] lg:after:w-[30%] after:h-[1px] after:bg-white/50">
+                    <div className="m-auto md:w-[80%] pt-10 md:p-0">
+                        <p className="text-center text-[#3f291a] text-sm relative flex items-center justify-center before:content-[''] before:absolute before:left-0 before:w-[10%] sm:before:w-[15%] md:before:w-[20%] lg:before:w-[25%] before:h-[1px] before:bg-white/50 after:content-[''] after:absolute after:right-0 after:w-[10%] sm:after:w-[15%] md:after:w-[20%] lg:after:w-[25%] after:h-[1px] after:bg-white/50">
                             Or Continue With
                         </p>
                         <div className="icons flex justify-center gap-x-7 mt-4">
@@ -166,7 +177,7 @@ const SignUp = () => {
                             </div>
                         </div>
                     </div>
-                    <p className="text-sm lg:text-lg text-center">Already have an account? <span className="hover:underline text-gray-800 cursor-pointer">Login</span></p>
+                    <p className="text-sm lg:text-[1em] text-center pt-10 pb-5 md:pb-4">Already have an account? <span className="hover:underline text-gray-800 cursor-pointer">Login</span></p>
 
                 </div>
             </div>

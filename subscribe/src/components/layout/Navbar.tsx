@@ -1,8 +1,11 @@
-import { NavLink } from "react-router-dom"
-// import { Button } from "../ui/button"
-import { Settings } from "lucide-react"
+import { NavLink, useNavigate } from "react-router-dom"
+import { Button } from "../ui/button"
+// import { Settings } from "lucide-react"
 
 const Navbar = () => {
+
+    const navigate = useNavigate();
+
     return (
         <header>
             <nav className="shadow-lg">
@@ -19,12 +22,12 @@ const Navbar = () => {
                         </div>
                     </div>
                     <div className="nav-right flex items-center justify-between gap-x-2">
-                        {/* <Button className="bg-[#636AE8] hover:bg-[#565ba9] transition-all duration-300 cursor-pointer"> <img src="/img/newsletter.png" alt="" /> SignUp</Button> */}
+                        <Button className="bg-[#636AE8] hover:bg-[#565ba9] transition-all duration-300 cursor-pointer" onClick={() => navigate('/signup')}> <img src="/img/newsletter.png" /> SignUp</Button>
 
-                        <Settings />
+                        {/* <Settings />
                         <div className="image">
                             <img src="/img/blank-avatar.webp" alt="avatar" className="object-contain w-10 rounded-full" />
-                        </div>
+                        </div> */}
 
                     </div>
                 </div>

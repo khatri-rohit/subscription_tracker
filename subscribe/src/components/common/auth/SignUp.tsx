@@ -1,4 +1,11 @@
 import { useForm } from "react-hook-form"
+import { createCookie, useNavigate } from "react-router-dom"
+import { ALargeSmall, EyeIcon, MailIcon, X } from "lucide-react"
+import axios from 'axios';
+
+import Model from "../../util/Model"
+import { useAuth } from "@/context/Auth"
+
 import { Button } from "@/components/ui/button"
 import {
     Form,
@@ -8,35 +15,59 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import Model from "../../util/Model"
-import { ALargeSmall, EyeIcon, MailIcon, X } from "lucide-react"
+
+
 
 type FormValues = {
     firstName: string,
-    LastName: string,
+    lastName: string,
     email: string,
+    // otp: string,
     password: string,
     Confpassword: string,
 }
 
 const SignUp = () => {
+
+    const navigate = useNavigate();
+
+    const { apiUrl } = useAuth();
+
     const form = useForm<FormValues>({
         defaultValues: {
             firstName: "",
-            LastName: "",
+            lastName: "",
+            // otp: "",
             email: "",
             password: "",
             Confpassword: "",
         }
     })
 
-    const onSubmit = (data: FormValues) => {
-        console.log(data)
+    const onSubmit = async (data: FormValues) => {
+        try {
+            const { email, firstName, lastName, password } = data;
+
+            const request = await axios.post(`${apiUrl}/api/v1/auth/sign-up`,
+                { email, firstName, lastName, password }, {
+                withCredentials: true,
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            });
+            const response = await request;
+
+            // createCookie('token', response.token)
+
+            console.log(response);
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     return (
         <Model>
-            <div className="absolute md:right-10 right-5 md:top-10 top-5 cursor-pointer">
+            <div className="absolute md:right-10 right-5 md:top-10 top-5 cursor-pointer" onClick={() => navigate('/')}>
                 <X size={25} />
             </div>
             <div className="bg-[#FFCF8D] w-[85%] md:w-[90%] lg:w-[75%] min-h-[80vh] lg:min-h-[65%] md:grid md:grid-cols-2">
@@ -71,7 +102,7 @@ const SignUp = () => {
                                 />
                                 <FormField
                                     control={form.control}
-                                    name="LastName"
+                                    name="lastName"
                                     rules={{ required: "Last name is required" }}
                                     render={({ field }) => (
                                         <FormItem className="w-full">
@@ -113,6 +144,24 @@ const SignUp = () => {
                                     </FormItem>
                                 )}
                             />
+                            {/* <FormField
+                                control={form.control}
+                                name="otp"
+                                rules={{ required: "Password is important", maxLength: 6 }}
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel className="">
+                                            Verify Otp
+                                        </FormLabel>
+                                        <div className="flex items-center border border-[#5A3E2B] ps-1.5 md:px-3 rounded-lg">
+                                            <KeyIcon color="#5A3E2B" />
+                                            <Input className="border-none shadow-none text-sm md:text-lg placeholder:text-gray-500/50"
+                                                placeholder="" {...field} />
+                                        </div>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            /> */}
                             <FormField
                                 control={form.control}
                                 name="password"
@@ -125,7 +174,7 @@ const SignUp = () => {
                                         <div className="flex items-center border border-[#5A3E2B] ps-1.5 md:px-3 rounded-lg">
                                             <EyeIcon color="#5A3E2B" />
                                             <Input className="border-none shadow-none text-sm md:text-lg placeholder:text-gray-500/50"
-                                                placeholder="********" {...field} />
+                                                placeholder="********" type="password" {...field} />
                                         </div>
                                         <FormMessage />
                                     </FormItem>
@@ -156,7 +205,7 @@ const SignUp = () => {
                             <Button
                                 className="w-full hover:bg-white/80 cursor-pointer bg-white text-black"
                                 type="submit">
-                                Register
+                                Register ? Verify
                             </Button>
                         </form>
                     </Form>
@@ -177,7 +226,7 @@ const SignUp = () => {
                             </div>
                         </div>
                     </div>
-                    <p className="text-sm lg:text-[1em] text-center pt-10 pb-5 md:pb-4">Already have an account? <span className="hover:underline text-gray-800 cursor-pointer">Login</span></p>
+                    <p className="text-sm lg:text-[1em] text-center pt-10 pb-5 md:pb-4">Already have an account? <span className="hover:underline text-gray-800 cursor-pointer" onClick={() => navigate('/signin')}>Login</span></p>
 
                 </div>
             </div>

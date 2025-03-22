@@ -10,6 +10,7 @@ import {
 import { Input } from "@/components/ui/input"
 import Model from "../../util/Model"
 import { EyeIcon, MailIcon, X } from "lucide-react"
+import { useNavigate } from "react-router-dom"
 
 type FormValues = {
   email: string,
@@ -17,6 +18,7 @@ type FormValues = {
 }
 
 const SignIn = () => {
+  const navigate = useNavigate();
   const form = useForm<FormValues>({
     defaultValues: {
       email: "",
@@ -30,7 +32,8 @@ const SignIn = () => {
 
   return (
     <Model>
-      <div className="absolute md:right-10 right-5 md:top-10 top-5 cursor-pointer">
+      <div className="absolute md:right-10 right-5 md:top-10 top-5 cursor-pointer"
+        onClick={() => navigate('/')}>
         <X size={25} />
       </div>
       <div className="bg-[#636AE8] text-white w-[90%] sm:w-[85%] lg:w-[65%] min-h-[80vh] lg:min-h-[65%] md:grid md:grid-cols-2">
@@ -101,7 +104,7 @@ const SignIn = () => {
             </div>
           </div>
 
-          <p className="text-sm lg:text-[1em] text-center pt-10 pb-5 md:pb-4">Don't have an account? <span className="hover:underline text-gray-300 cursor-pointer">Sign Up here</span></p>
+          <p className="text-sm lg:text-[1em] text-center pt-10 pb-5 md:pb-4">Don't have an account? <span className="hover:underline text-gray-300 cursor-pointer" onClick={() => navigate('/signup')}>SignUp here</span></p>
 
         </div>
 

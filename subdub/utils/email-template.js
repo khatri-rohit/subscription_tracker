@@ -92,3 +92,81 @@ export const emailTemplates = [
         generateBody: (data) => generateEmailTemplate({ ...data, daysLeft: 1 }),
     },
 ];
+
+export const generateWelcomeEmailTemplate = (name) => `
+<div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 0; background-color: #f4f7fa;">
+    <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #ffffff; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+        <!-- Header with Logo -->
+        <tr>
+            <td style="background-color: #4a90e2; text-align: center; padding: 30px;">
+                <p style="font-size: 54px; line-height: 54px; font-weight: 800; color: #ffffff; margin: 0;">SubDub</p>
+                <p style="color: #ffffff; font-size: 24px; margin: 10px 0 0;">Welcome Aboard! 🎉</p>
+            </td>
+        </tr>
+        
+        <!-- Main Content -->
+        <tr>
+            <td style="padding: 40px 30px;">                
+                <p style="font-size: 18px; margin-bottom: 25px;">Hello <strong style="color: #4a90e2;">${name}</strong>,</p>
+                
+                <p style="font-size: 16px; margin-bottom: 25px;">Welcome to SubDub! We're thrilled to have you join our community of smart subscription managers. 🌟</p>
+                
+                <!-- Feature Highlights -->
+                <table cellpadding="15" cellspacing="0" border="0" width="100%" style="background-color: #f0f7ff; border-radius: 10px; margin-bottom: 25px;">
+                    <tr>
+                        <td style="font-size: 16px; border-bottom: 1px solid #d0e3ff;">
+                            📊 <strong>Track Subscriptions</strong><br>
+                            Keep all your subscriptions organized in one place
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 16px; border-bottom: 1px solid #d0e3ff;">
+                            ⏰ <strong>Smart Reminders</strong><br>
+                            Never miss a renewal date again
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 16px;">
+                            💰 <strong>Budget Management</strong><br>
+                            Optimize your subscription spending
+                        </td>
+                    </tr>
+                </table>
+                
+                <!-- Getting Started Button -->
+                <div style="text-align: center; margin: 30px 0;">
+                    <a href="" style="background-color: #4a90e2; color: #ffffff; padding: 12px 30px; text-decoration: none; border-radius: 5px; font-weight: bold;">Get Started Now</a>
+                </div>
+                
+                <p style="font-size: 16px; margin-bottom: 25px;">Need help getting started? Our support team is here for you! <a href="" style="color: #4a90e2; text-decoration: none;">Reach out anytime</a>.</p>
+                
+                <p style="font-size: 16px; margin-top: 30px;">
+                    Welcome to better subscription management!<br>
+                    <strong>The SubDub Team</strong>
+                </p>
+            </td>
+        </tr>
+        
+        <!-- Footer -->
+        <tr>
+            <td style="background-color: #f0f7ff; padding: 20px; text-align: center; font-size: 14px;">
+                <p style="margin: 0 0 10px;">
+                    SubDub Inc. | 123 Main St, Anytown, AN 12345
+                </p>
+                <p style="margin: 0;">
+                    <a href="#" style="color: #4a90e2; text-decoration: none; margin: 0 10px;">Privacy Policy</a> | 
+                    <a href="#" style="color: #4a90e2; text-decoration: none; margin: 0 10px;">Terms of Service</a> |
+                    <a href="#" style="color: #4a90e2; text-decoration: none; margin: 0 10px;">Help Center</a>
+                </p>
+            </td>
+        </tr>
+    </table>
+</div>
+`;
+
+// Add this to your emailTemplates array
+export const welcomeEmailTemplate = {
+    label: "Welcome Email",
+    generateSubject: (data) => `🎉 Welcome to SubDub, ${data.name}!`,
+    generateBody: (data) => generateWelcomeEmailTemplate(data.name),
+};

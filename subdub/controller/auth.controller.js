@@ -2,7 +2,7 @@ import mongoose from "mongoose"
 import User from '../models/user.model.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { JWT_EXPRIES_IN, JWT_SECRET } from "../config/env.js";
+import { JWT_EXPRIES_IN, JWT_SECRET, NODE_ENV } from "../config/env.js";
 import { userCreated } from "../utils/send-email.js";
 
 export const signUp = async (req, res, next) => {
@@ -11,7 +11,7 @@ export const signUp = async (req, res, next) => {
 
     try {
         // Logic to create a a new user
-        const { name, email, password } = req.body;
+        const { firstName, lastName, email, password } = req.body;
 
         // check if user already exists
         const existingUser = await User.findOne({ email });
@@ -27,22 +27,30 @@ export const signUp = async (req, res, next) => {
         const hashedPassword = await bcrypt.hash(password, salt);
         // console.log(salt + " => " + hashedPassword);
 
-        const newUsers = await User.create([{ name, email, password: hashedPassword }], { session });
+        const newUsers = await User.create([{ firstName, lastName, email, password: hashedPassword }], { session });
 
         const token = jwt.sign({ userId: newUsers[0]._id }, JWT_SECRET, { expiresIn: JWT_EXPRIES_IN });
 
-        res.cookie('token', token, {
+        // res.cookie('token', token, {
+        //     httpOnly: false,
+        //     secure: false,
+        //     sameSite: 'strict',
+        //     maxAge: 7 * 24 * 60 * 60 * 1000
+        // });
+
+        res.cookie("token", token, {
             httpOnly: true,
-            secure: false,
-            sameSite: 'strict',
-            maxAge: 7 * 24 * 60 * 60 * 1000
+            secure: false,  // Change to true in production
+            sameSite: "Lax"
         });
+
 
         await session.commitTransaction(); // commit the transaction if no error occurs
         session.endSession(); // end the session
 
-        userCreated({ to: newUsers[0].email, user: newUsers[0] })
+        // userCreated({ to: newUsers[0].email, user: newUsers[0] })
 
+        console.log("New Usre Created");
         res.status(201).json({
             success: true,
             message: 'User created successfully',
@@ -83,8 +91,8 @@ export const signIn = async (req, res, next) => {
         // res.cookie('token', token);
 
         res.cookie('token', token, {
-            httpOnly: true,
-            secure: false,
+            httpOnly: false,
+            secure: NODE_ENV === 'production',
             sameSite: 'strict',
             maxAge: 7 * 24 * 60 * 60 * 1000
         });

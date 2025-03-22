@@ -1,9 +1,16 @@
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
-    name: {
+    firstName: {
         type: String,
-        required: [true, 'User Name is required'], // with error message
+        required: [true, 'First Name is required'], // with error message
+        trim: true, // remove white spaces
+        minLength: 2,
+        maxLength: 50,
+    },
+    lastName: {
+        type: String,
+        required: [true, 'Last Name is required'], // with error message
         trim: true, // remove white spaces
         minLength: 2,
         maxLength: 50,

@@ -3,8 +3,6 @@ import dayjs from 'dayjs'
 import transporter, { accountEmail } from '../config/nodemailer.js'
 
 export const userCreated = async ({ to, user }) => {
-    console.log(to);
-    console.log(user);
     if (!to) throw new Error('Missing required parameters');
 
     const message = welcomeEmailTemplate.generateBody(user)

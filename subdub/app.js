@@ -19,8 +19,12 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(arcjetMiddleware);
-app.use(cors()); // For Crosss origin access (basiclly to access backend)
+// app.use(arcjetMiddleware);
+// app.use(cors()); // For Crosss origin access (basiclly to access backend)
+app.use(cors({
+    origin: "http://localhost:5173", // Change this to your frontend URL
+    credentials: true
+}));
 
 app.use('/api/v1/auth', authRoute);
 app.use('/api/v1/users', userRouter);

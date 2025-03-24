@@ -27,7 +27,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: [true, 'User Password is required'], // with error message
         minLength: 6,
-    }
+    },
+    // image: {
+    //     type: String,
+    // }
 }, { timestamps: true });
 
 const User = mongoose.model('User', userSchema);

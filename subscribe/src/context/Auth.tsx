@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { createContext, useContext, ReactNode } from "react";
+import { createContext, useContext, PropsWithChildren } from "react";
 
 type AuthContextType = {
     apiUrl: string;
@@ -9,7 +8,7 @@ type AuthContextType = {
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
+export const AuthProvider = ({ children }: PropsWithChildren) => {
     const apiUrl = import.meta.env.VITE_BACKEND_URL;
 
     return (

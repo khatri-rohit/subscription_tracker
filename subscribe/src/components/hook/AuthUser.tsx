@@ -7,19 +7,19 @@ type UserID = {
 
 const useUser = () => {
     const [userId, setUser] = useState<UserID | null>(null);
+    const token: string | null = localStorage.getItem('isagi-kun');
 
-    const getLoggedInUser = async () => {
-        if (typeof localStorage.getItem('isagi-kun') === 'string') {
-            const decode: UserID = await jwtDecode(localStorage.getItem('isagi-kun')!);
-            console.log(decode);
-            setUser(decode);
-        }
+    const getLoggedInUser = async (jwtToken: string) => {
+        console.log("Getting User");
+        const decode: UserID = await jwtDecode(jwtToken);
+        console.log(decode);
+        setUser(decode);
     }
 
     useEffect(() => {
-        if (localStorage.getItem('isagi-kun') === 'string') {
-            getLoggedInUser();
-        }
+        if (token !== null)
+            getLoggedInUser(token);
+        console.log(token);
     }, [])
 
     return [userId];

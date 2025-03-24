@@ -1,35 +1,19 @@
-import { createContext, useContext, useState, ReactNode } from "react";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { createContext, useContext, ReactNode } from "react";
 
-interface AuthContextType {
+type AuthContextType = {
     apiUrl: string;
-    isAuthenticated: boolean;
-    user: null;
-    login: (token: string) => void;
-    logout: () => void;
+    // isAuthenticated: string;
+    // setIsAuth: (isAuthenticated: string) => void
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-
     const apiUrl = import.meta.env.VITE_BACKEND_URL;
-    const [isAuthenticated, setIsAuth] = useState<boolean>(false);
-
-    const [user, setUser] = useState(null);
-
-    const login = (token: string) => {
-        localStorage.setItem('token', token);
-        setIsAuth(true);
-    };
-
-    const logout = () => {
-        localStorage.removeItem('token');
-        setIsAuth(false);
-        setUser(null);
-    };
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated, user, login, logout, apiUrl }}>
+        <AuthContext.Provider value={{ apiUrl, }}>
             {children}
         </AuthContext.Provider >
     )

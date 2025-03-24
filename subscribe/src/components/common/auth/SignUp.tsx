@@ -1,10 +1,13 @@
 import { useForm } from "react-hook-form"
-import { createCookie, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { ALargeSmall, EyeIcon, MailIcon, X } from "lucide-react"
 import axios from 'axios';
+import { SyncLoader } from 'react-spinners'
 
 import Model from "../../util/Model"
 import { useAuth } from "@/context/Auth"
+import { useAppDispatch } from "@/app/store";
+import { isAuthenticated } from '@/features/slice';
 
 import { Button } from "@/components/ui/button"
 import {
@@ -15,8 +18,7 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-
-
+import { useState } from "react";
 
 type FormValues = {
     firstName: string,
@@ -27,12 +29,16 @@ type FormValues = {
     Confpassword: string,
 }
 
+type Status = 'loading' | 'error' | 'success'
+
 const SignUp = () => {
 
-    const navigate = useNavigate();
+    const [status, setStatus] = useState<Status>('success');
 
     const { apiUrl } = useAuth();
+    const dispatch = useAppDispatch()
 
+    const navigate = useNavigate();
     const form = useForm<FormValues>({
         defaultValues: {
             firstName: "",
@@ -42,12 +48,12 @@ const SignUp = () => {
             password: "",
             Confpassword: "",
         }
-    })
+    });
 
     const onSubmit = async (data: FormValues) => {
         try {
+            setStatus("loading");
             const { email, firstName, lastName, password } = data;
-
             const request = await axios.post(`${apiUrl}/api/v1/auth/sign-up`,
                 { email, firstName, lastName, password }, {
                 withCredentials: true,
@@ -56,11 +62,13 @@ const SignUp = () => {
                 }
             });
             const response = await request;
-
-            // createCookie('token', response.token)
-
-            console.log(response);
+            setTimeout(() => setStatus("success"), 500);
+            localStorage.setItem('isagi-kun', response.data?.data.token);
+            dispatch(isAuthenticated())
+            console.log(response.data);
+            navigate('/dashboard')
         } catch (error) {
+            setStatus("error");
             console.log(error);
         }
     }
@@ -140,7 +148,7 @@ const SignUp = () => {
                                             <Input className="border-none shadow-none text-sm md:text-lg placeholder:text-gray-500/50"
                                                 placeholder="Email" {...field} />
                                         </div>
-                                        <FormMessage />
+                                        {status === 'error' ? <p className="text-red-600 text-sm">Email Already Exists</p> : <FormMessage />}
                                     </FormItem>
                                 )}
                             />
@@ -205,7 +213,10 @@ const SignUp = () => {
                             <Button
                                 className="w-full hover:bg-white/80 cursor-pointer bg-white text-black"
                                 type="submit">
-                                Register ? Verify
+                                {status === 'loading' ? <SyncLoader
+                                    color="#31363F"
+                                    size={8}
+                                /> : 'Register ? Verify'}
                             </Button>
                         </form>
                     </Form>

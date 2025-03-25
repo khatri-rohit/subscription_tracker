@@ -1,25 +1,36 @@
-import { jwtDecode } from 'jwt-decode';
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react'
+import { jwtDecode } from 'jwt-decode'
+import { isAuthenticated } from '@/features/slice'
+import { useAppDispatch } from '@/app/store'
 
 type UserID = {
-    id: string
+    userId: string;
+    iat: number;
+    exp: number;
 }
 
 const useUser = () => {
-    const [userId, setUser] = useState<UserID | null>(null);
-    const token: string | null = localStorage.getItem('isagi-kun');
+    const [userId, setUser] = useState<UserID | null>(null)
+    const dispatch = useAppDispatch()
 
-    const getLoggedInUser = async (jwtToken: string) => {
-        console.log("Getting User");
-        const decode: UserID = await jwtDecode(jwtToken);
-        console.log(decode);
-        setUser(decode);
+    const getLoggedInUser = (jwtToken: string) => {
+        try {
+            const decode: UserID = jwtDecode(jwtToken);
+            console.log(decode);
+            console.log("Authorised Token");
+            dispatch(isAuthenticated(true))
+            setUser(decode);
+        } catch (error: unknown) {
+            setUser(null);
+            console.log("UnAuthorised Token");
+            console.log(error);
+        }
     }
 
     useEffect(() => {
+        const token: string | null = localStorage.getItem('isagi-kun')
         if (token !== null)
             getLoggedInUser(token);
-        console.log(token);
     }, [])
 
     return [userId];

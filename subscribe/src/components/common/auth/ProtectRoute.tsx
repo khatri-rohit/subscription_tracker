@@ -8,15 +8,11 @@ const ProtectRoute = ({ children }: PropsWithChildren) => {
 
     useEffect(() => {
         if (userId === null) {
-            navigate('/');
-        }
-    })
+            navigate('/', { replace: true });
+        } else navigate('/dashboard');
+    }, [navigate, userId])
 
-    return (
-        <>
-            {children}
-        </>
-    )
+    return children
 }
 
 export default ProtectRoute

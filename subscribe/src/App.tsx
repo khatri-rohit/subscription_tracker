@@ -19,14 +19,18 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<Layout />}>
-          <Route index element={<Home />} />
-          <Route path='/signup' element={<SignUp />} />
-          <Route path='/signin' element={<SignIn />} />
-          <Route path='/dashboard' element={(
+          <Route index path='/dashboard' element={
             <ProtectRoute>
               <Dashborad />
             </ProtectRoute>
-          )} />
+          } />
+          <Route path='/' element={
+            <ProtectRoute>
+              <Home />
+            </ProtectRoute>
+          } />
+          <Route path='/signup' element={<SignUp />} />
+          <Route path='/signin' element={<SignIn />} />
         </Route>
       </Routes>
     </BrowserRouter>

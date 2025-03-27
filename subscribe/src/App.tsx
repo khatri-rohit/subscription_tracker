@@ -11,6 +11,7 @@ import Dashborad from './pages/Dashborad';
 import SignUp from './components/common/auth/SignUp';
 import SignIn from './components/common/auth/SignIn';
 import ProtectRoute from './components/common/auth/ProtectRoute';
+import Subscriptions from './pages/Subscriptions';
 
 
 function App() {
@@ -19,18 +20,23 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<Layout />}>
-          <Route index path='/dashboard' element={
-            <ProtectRoute>
-              <Dashborad />
-            </ProtectRoute>
-          } />
-          <Route path='/' element={
+          <Route path='/signup' element={<SignUp />} />
+          <Route path='/signin' element={<SignIn />} />
+          <Route index element={
             <ProtectRoute>
               <Home />
             </ProtectRoute>
           } />
-          <Route path='/signup' element={<SignUp />} />
-          <Route path='/signin' element={<SignIn />} />
+          <Route path='/dashboard' element={
+            <ProtectRoute>
+              <Dashborad />
+            </ProtectRoute>
+          } />
+          <Route path='/subscription' element={
+            <ProtectRoute>
+              <Subscriptions />
+            </ProtectRoute>
+          } />
         </Route>
       </Routes>
     </BrowserRouter>

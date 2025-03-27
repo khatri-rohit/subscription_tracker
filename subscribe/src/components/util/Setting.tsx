@@ -11,11 +11,10 @@ const Setting = ({ children, setOpen }: Props) => {
     useEffect(() => {
         const clickOutside = (e: MouseEvent) => {
             if (e.target instanceof HTMLElement) {
-                if (e.target.className.includes('bg-white/80')) {
+                if (e.target.className.includes('bg-white/40')) {
                     setOpen(false);
                 }
             }
-            console.log();
         }
         window.addEventListener('mousedown', clickOutside);
         return () => window.removeEventListener('mousedown', clickOutside);
@@ -23,7 +22,7 @@ const Setting = ({ children, setOpen }: Props) => {
 
     return (
         <div ref={ref}
-            className={`bg-white/80 z-10 h-screen w-full absolute`}>
+            className={`bg-white/40 z-10 h-screen w-full absolute`}>
             {children}
         </div>
     )

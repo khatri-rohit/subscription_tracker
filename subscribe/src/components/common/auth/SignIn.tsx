@@ -11,14 +11,24 @@ import { Input } from "@/components/ui/input"
 import Model from "../../util/Model"
 import { EyeIcon, MailIcon, X } from "lucide-react"
 import { useNavigate } from "react-router-dom"
+import { useAuth } from "@/context/Auth"
+import { useState } from "react"
+import axios from "axios"
 
 type FormValues = {
   email: string,
   password: string
 }
 
+type Status = 'loading' | 'error' | 'success'
+
 const SignIn = () => {
-  const navigate = useNavigate();
+  const [status, setStatus] = useState<Status>('success')
+
+  const navigate = useNavigate()
+
+  const { apiUrl } = useAuth()
+
   const form = useForm<FormValues>({
     defaultValues: {
       email: "",
@@ -26,13 +36,35 @@ const SignIn = () => {
     }
   })
 
-  const onSubmit = (data: FormValues) => {
-    console.log(data)
+  const onSubmit = async (data: FormValues) => {
+    try {
+      setStatus("loading");
+      const { email, password } = data;
+      const response = await axios.post(`${apiUrl}/auth/sign-in`,
+        { email, password }, {
+        // withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+        }
+      });
+      if (response.data) {
+        console.log(response.data);
+        setStatus("success");
+        localStorage.setItem('isagi-kun', response.data?.data.token);
+        // localStorage.setItem('user', JSON.stringify(response.data.user));
+        navigate('/dashboard');
+      }
+    } catch (error) {
+      setStatus("error");
+      console.log(error);
+      form.setError('email', { message: 'Invalid credentials' });
+      form.setError('password', { message: 'Invalid credentials' });
+    }
   }
 
   return (
     <Model>
-      <div className="absolute md:right-10 right-5 md:top-10 top-5 cursor-pointer"
+      <div className="absolute right-10 top-5 cursor-pointer"
         onClick={() => navigate('/')}>
         <X size={25} />
       </div>
@@ -81,7 +113,7 @@ const SignIn = () => {
               />
               <Button
                 className="w-full hover:bg-white/80 cursor-pointer bg-white text-black"
-                type="submit">
+                type="submit" disabled={status === 'loading'}>
                 Submit
               </Button>
             </form>

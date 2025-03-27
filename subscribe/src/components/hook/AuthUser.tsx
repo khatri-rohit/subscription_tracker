@@ -16,8 +16,8 @@ const useUser = () => {
     const getLoggedInUser = (jwtToken: string) => {
         try {
             const decode: UserID = jwtDecode(jwtToken);
-            console.log(decode);
             console.log("Authorised Token");
+            console.log(decode);
             dispatch(isAuthenticated(true))
             setUser(decode);
         } catch (error: unknown) {
@@ -29,6 +29,7 @@ const useUser = () => {
 
     useEffect(() => {
         const token: string | null = localStorage.getItem('isagi-kun')
+        console.log("token->" + token);
         if (token !== null)
             getLoggedInUser(token);
     }, [])

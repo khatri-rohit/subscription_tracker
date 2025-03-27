@@ -54,9 +54,9 @@ const SignUp = () => {
         try {
             setStatus("loading");
             const { email, firstName, lastName, password } = data;
-            const request = await axios.post(`${apiUrl}/api/v1/auth/sign-up`,
+            const request = await axios.post(`${apiUrl}/auth/sign-up`,
                 { email, firstName, lastName, password }, {
-                withCredentials: true,
+                // withCredentials: true,
                 headers: {
                     "Content-Type": "application/json",
                 }
@@ -66,7 +66,7 @@ const SignUp = () => {
             localStorage.setItem('isagi-kun', response.data?.data.token);
             navigate('/dashboard')
             dispatch(isAuthenticated(true))
-            console.log(response.data);
+            console.log(response);
         } catch (error) {
             setStatus("error");
             console.log(error);
@@ -75,7 +75,8 @@ const SignUp = () => {
 
     return (
         <Model>
-            <div className="absolute md:right-10 right-5 md:top-10 top-5 cursor-pointer" onClick={() => navigate('/')}>
+            <div className="absolute right-10 top-5 cursor-pointer"
+                onClick={() => navigate('/')}>
                 <X size={25} />
             </div>
             <div className="bg-[#FFCF8D] w-[85%] md:w-[90%] lg:w-[75%] min-h-[80vh] lg:min-h-[65%] md:grid md:grid-cols-2">
@@ -212,7 +213,7 @@ const SignUp = () => {
                             />
                             <Button
                                 className="w-full hover:bg-white/80 cursor-pointer bg-white text-black"
-                                type="submit">
+                                type="submit" disabled={status === 'loading'}>
                                 {status === 'loading' ? <SyncLoader
                                     color="#31363F"
                                     size={8}

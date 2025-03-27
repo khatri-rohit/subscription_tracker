@@ -2,15 +2,22 @@ import { useAppDispatch } from "@/app/store"
 import { isAuthenticated } from "@/features/slice"
 import { useNavigate } from "react-router-dom";
 
-const DropDown = () => {
+type Props = {
+    setOpen: (open: boolean) => void
+}
+
+const DropDown = ({ setOpen }: Props) => {
 
     const dispatch = useAppDispatch();
     const navigate = useNavigate()
 
-    const signOut = () => {
+    const signOut = async () => {
         localStorage.clear()
-        dispatch(isAuthenticated(false));
-        navigate('/');
+        await new Promise(resolve => setTimeout(() => {
+            dispatch(isAuthenticated(false));
+            setOpen(false);
+            navigate('/');
+        }, 100));
     }
 
     return (

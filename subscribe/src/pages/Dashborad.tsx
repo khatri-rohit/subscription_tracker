@@ -42,28 +42,31 @@ const Dashborad = () => {
         }
       </div>
 
-      <div className="p-2 space-y-5 w-fit mt-8">
-        <h3 className="text-3xl">Filter & Search Subscriptions</h3>
+      <div className="p-2 space-y-5 mt-8">
         {/* Search Overview */}
-        <div className="flex items-center gap-x-2">
-          <div className="border-[.12em] border-[#BCC1CA]  w-full flex items-center rounded-lg shadow-2xs">
-            <Search className="mx-2" />
-            <Input className="border-none md:text-xl shadow-none"
-              placeholder="Search Subscription" />
+        <div className="p-2 space-y-5 w-fit">
+          <h3 className="text-3xl">Filter & Search Subscriptions</h3>
+          {/* Search Overview */}
+          <div className="flex items-center gap-x-2 w-full">
+            <div className="border-[.12em] border-[#BCC1CA] w-full flex items-center rounded-lg shadow-2xs">
+              <Search className="mx-2" />
+              <Input className="border-none md:text-xl shadow-none"
+                placeholder="Search Subscription" />
+            </div>
           </div>
         </div>
 
-        <div className="flex items-center justify-evenly w-full gap-1">
-          <p className="text-lg flex justify-center items-center w-[25%] gap-x-1 relative hover:after:absolute hover:after:-bottom-[13px] hover:after:w-[115%] hover:after:-left-[6.5px] hover:after:block hover:after:h-[3px] hover:after:rounded-b-4xl hover:after:bg-[#636AE8] ">
+        <div className="flex items-center justify-evenly w-1/2 gap-1">
+          <p className="text-lg flex justify-center items-center w-[25%] gap-x-1 relative hover:after:absolute hover:after:-bottom-[13px] hover:after:w-[115%] hover:after:-left-[6.5px] hover:after:block hover:after:h-[3px] hover:after:rounded-b-4xl hover:after:bg-[#636AE8]">
             <List color="#BBBBBB" />All
           </p>
-          <p className="text-lg flex justify-center items-center w-[25%] gap-x-1 relative hover:after:absolute hover:after:-bottom-[13px] hover:after:w-[115%] hover:after:-left-[6.5px] hover:after:block hover:after:h-[3px] hover:after:rounded-b-4xl hover:after:bg-[#636AE8] ">
+          <p className="text-lg flex justify-center items-center w-[25%] gap-x-1 relative hover:after:absolute hover:after:-bottom-[13px] hover:after:w-[115%] hover:after:-left-[6.5px] hover:after:block hover:after:h-[3px] hover:after:rounded-b-4xl hover:after:bg-[#636AE8]">
             <Music color="#BBBBBB" />Music
           </p>
-          <p className="text-lg flex justify-center items-center w-[25%] gap-x-1 relative hover:after:absolute hover:after:-bottom-[13px] hover:after:w-[115%] hover:after:-left-[6.5px] hover:after:block hover:after:h-[3px] hover:after:rounded-b-4xl hover:after:bg-[#636AE8] ">
+          <p className="text-lg flex justify-center items-center w-[25%] gap-x-1 relative hover:after:absolute hover:after:-bottom-[13px] hover:after:w-[115%] hover:after:-left-[6.5px] hover:after:block hover:after:h-[3px] hover:after:rounded-b-4xl hover:after:bg-[#636AE8]">
             <Video color="#BBBBBB" /> Video
           </p>
-          <p className="text-lg flex justify-center items-center w-[25%] gap-x-1 relative hover:after:absolute hover:after:-bottom-[13px] hover:after:w-[115%] hover:after:-left-[6.5px] hover:after:block hover:after:h-[3px] hover:after:rounded-b-4xl hover:after:bg-[#636AE8] ">
+          <p className="text-lg flex justify-center items-center w-[25%] gap-x-1 relative hover:after:absolute hover:after:-bottom-[13px] hover:after:w-[115%] hover:after:-left-[6.5px] hover:after:block hover:after:h-[3px] hover:after:rounded-b-4xl hover:after:bg-[#636AE8]">
             <Podcast color="#BBBBBB" />Podcasts
           </p>
         </div>

@@ -1,13 +1,11 @@
 import { NavLink, useNavigate } from "react-router-dom"
-// import { Settings } from "lucide-react"
+import { useState } from "react";
 
 import { useAppSelector } from '@/app/store';
 
 import { Button } from "../ui/button"
 import Setting from "../util/Setting";
-import { useState } from "react";
 import DropDown from "../util/DropDown";
-// import useUser from "../hook/AuthUser";
 
 const Navbar = () => {
 

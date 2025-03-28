@@ -1,8 +1,37 @@
-import { Input } from "@/components/ui/input"
 import { List, Music, Podcast, Search, Video } from "lucide-react"
-import subscription from './subscription.ts';
+import { useEffect, useState } from "react";
+import axios from "axios";
+
+import { Input } from "@/components/ui/input"
+
+import { Subscription } from "@/lib/types.ts";
+import { useAuth } from "@/context/Auth.tsx";
+import SubsOverview from "@/components/common/SubsOverview.tsx";
 
 const Dashborad = () => {
+
+  const [subscriptions, setSubscriptions] = useState<Subscription[] | null>(null);
+
+  const { apiUrl, user } = useAuth()
+
+  const fetchSubscription = async () => {
+    try {
+      axios.defaults.withCredentials = true;
+      const request = await axios.get(`${apiUrl}/subscriptions/user/${user?._id}`, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      setSubscriptions(request.data.data)
+      console.log(request.data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchSubscription()
+  }, [])
 
   return (
     <section className="p-10">
@@ -32,12 +61,8 @@ const Dashborad = () => {
       {/* All Subscriptions */}
       <div className="grid grid-cols-2 md:gap-5 gap-2 lg:gap-3 md:grid-cols-3 lg:grid-cols-4">
         {
-          subscription.map((subs, _) => (
-            <div className="p-3 gap-3" key={_}>
-              <p className="text-xl font-medium">{subs.name}</p>
-              <p className="text-lg text-gray-500/80">{subs.status}</p>
-              <p>Renews: {subs.Renews}</p>
-            </div>
+          subscriptions?.map((subscription) => (
+            <SubsOverview key={subscription._id} name={subscription.name} renewalDate={subscription.renewalDate} status={subscription.status} />
           ))
         }
       </div>
@@ -75,12 +100,8 @@ const Dashborad = () => {
       {/* All Subscriptions */}
       <div className="grid grid-cols-2 md:gap-5 gap-2 lg:gap-3 md:grid-cols-3 lg:grid-cols-4">
         {
-          subscription.map((subs, _) => (
-            <div className="p-3 gap-3" key={_}>
-              <p className="text-xl font-medium">{subs.name}</p>
-              <p className="text-lg text-gray-500/80">{subs.status}</p>
-              <p>Renews: {subs.Renews}</p>
-            </div>
+          subscriptions?.map((subscription) => (
+            <SubsOverview key={subscription._id} name={subscription.name} renewalDate={subscription.renewalDate} status={subscription.status} />
           ))
         }
       </div>

@@ -54,19 +54,17 @@ const SignUp = () => {
         try {
             setStatus("loading");
             const { email, firstName, lastName, password } = data;
-            const request = await axios.post(`${apiUrl}/auth/sign-up`,
+            const response = await axios.post(`${apiUrl}/auth/sign-up`,
                 { email, firstName, lastName, password }, {
-                // withCredentials: true,
+                withCredentials: true,
                 headers: {
                     "Content-Type": "application/json",
                 }
             });
-            const response = await request;
+            console.log(response);
             setTimeout(() => setStatus("success"), 500);
-            localStorage.setItem('isagi-kun', response.data?.data.token);
             navigate('/dashboard', { replace: true })
             dispatch(isAuthenticated(true))
-            console.log(response);
         } catch (error) {
             setStatus("error");
             console.log(error);

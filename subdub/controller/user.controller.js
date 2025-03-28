@@ -13,7 +13,9 @@ export const getUsers = async (req, res, next) => {
 
 export const getUser = async (req, res, next) => {
     try {
-        const user = await User.findById(req.params.id).select('-password'); // exclude password from the response
+        // const user = await User.findById(req.params.id).select('-password'); // exclude password from the response
+        const user = req.user;
+        // console.log(user);
 
         if (!user) {
             const error = new Error("user Not Found");

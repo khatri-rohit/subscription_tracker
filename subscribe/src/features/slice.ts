@@ -4,11 +4,25 @@ import type { PayloadAction } from '@reduxjs/toolkit'
 import type { RootState } from '../app/store'
 
 interface UserState {
-    isAuth: boolean
+    isAuth: boolean,
+    subscriptions: {
+        _id: string,
+        category: string
+        createdAt: string
+        currency: string
+        frequency: string
+        name: string
+        paymentMethod: string
+        price: number
+        renewalDate: string
+        startDate: string
+        status: string
+        updatedAt: string
+    }
 }
 
 const initialState: UserState = {
-    isAuth: false
+    isAuth: false,
 }
 
 export const userSlice = createSlice({
@@ -17,7 +31,7 @@ export const userSlice = createSlice({
     reducers: {
         isAuthenticated: (state, action: PayloadAction<boolean>) => {
             state.isAuth = action.payload
-        }
+        },
     },
 })
 

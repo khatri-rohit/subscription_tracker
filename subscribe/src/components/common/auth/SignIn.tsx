@@ -14,6 +14,8 @@ import { useNavigate } from "react-router-dom"
 import { useAuth } from "@/context/Auth"
 import { useState } from "react"
 import axios from "axios"
+import { useAppDispatch } from "@/app/store"
+import { isAuthenticated } from "@/features/slice"
 
 type FormValues = {
   email: string,
@@ -27,6 +29,7 @@ const SignIn = () => {
 
   const navigate = useNavigate()
 
+  const dispatch = useAppDispatch()
   const { apiUrl } = useAuth()
 
   const form = useForm<FormValues>({
@@ -40,19 +43,21 @@ const SignIn = () => {
     try {
       setStatus("loading");
       const { email, password } = data;
-      const response = await axios.post(`${apiUrl}/auth/sign-in`,
-        { email, password }, {
-        // withCredentials: true,
-        headers: {
-          "Content-Type": "application/json",
+      const response = await axios.post(
+        `${apiUrl}/auth/sign-in`,
+        { email, password },
+        {
+          withCredentials: true, // Enable this
+          headers: {
+            "Content-Type": "application/json",
+          }
         }
-      });
+      );
+      console.log(response.data);
       if (response.data) {
-        console.log(response.data);
         setStatus("success");
-        localStorage.setItem('isagi-kun', response.data?.data.token);
-        // localStorage.setItem('user', JSON.stringify(response.data.user));
-        navigate('/dashboard');
+        dispatch(isAuthenticated(true));
+        navigate('/dashboard', { replace: true });
       }
     } catch (error) {
       setStatus("error");

@@ -1,15 +1,18 @@
-import useUser from "@/components/hook/AuthUser"
+import { useAppSelector } from "@/app/store";
+import { useAuth } from "@/context/Auth";
 import { PropsWithChildren, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const ProtectRoute = ({ children }: PropsWithChildren) => {
-    const [userId] = useUser();
+    // const { user } = useAuth();
+    const isAuth = useAppSelector((state) => state.isAuth)
     const navigate = useNavigate();
     const location = useLocation();
 
     useEffect(() => {
-        if (userId === null) {
-            navigate('/');
+        console.log(isAuth);
+        if (!isAuth) {
+            navigate('/')
         } else {
             if (location.pathname === '/subscription')
                 navigate('/subscription');
@@ -17,9 +20,8 @@ const ProtectRoute = ({ children }: PropsWithChildren) => {
                 navigate('/subscription/create-subs');
             else
                 navigate('/dashboard');
-            // console.log(location.pathname);
         }
-    }, [userId])
+    }, [isAuth])
 
     return children
 }

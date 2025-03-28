@@ -4,6 +4,8 @@ import * as z from "zod"
 import { CalendarIcon } from "lucide-react"
 import { format } from "date-fns"
 import { useEffect, useState } from "react"
+import { BeatLoader } from "react-spinners"
+import axios from "axios"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -31,25 +33,32 @@ import {
 } from "@/components/ui/popover"
 import { cn, platforms } from "@/lib/utils"
 
+import { useAuth } from "@/context/Auth"
+import { status } from "@/lib/types"
+
 const formSchema = z.object({
     platformId: z.string().min(1, "Please select a platform"),
     customPlatform: z.string().optional(),
     price: z.string().min(1, "Price is required"),
     currency: z.enum(["INR", "USD", "EUR", "GBP"]),
     frequency: z.enum(["monthly", "daily", "weekly", "yearly"]),
-    category: z.string().min(1, "Category is required"),
+    category: z.string().min(1, "Category is required").toLowerCase(),
     paymentMethod: z.string().min(1, "Payment method is required"),
     startDate: z.date(),
-    status: z.enum(["active", "cancelled", "expired"])
+    // status: z.enum(["active", "cancelled", "expired"])
 });
 
 const CreateSubscription = () => {
+
     const [showCustomInput, setShowCustomInput] = useState<boolean>(false);
+    const [status, setStatus] = useState<status>('success');
+
+    const { apiUrl } = useAuth()
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            status: "active",
+            // status: "active",
             currency: "INR",
             frequency: "monthly",
             platformId: "",
@@ -69,8 +78,28 @@ const CreateSubscription = () => {
     }, [selectedPlatform, form]);
 
 
-    const onSubmit = (values: z.infer<typeof formSchema>) => {
-        console.log(values)
+    const onSubmit = async (values: z.infer<typeof formSchema>) => {
+        try {
+            setStatus('loading');
+            const { platformId, price, currency, category, frequency, paymentMethod, startDate, customPlatform } = values;
+            const name = platformId === 'other' ? customPlatform : platformId;
+
+            axios.defaults.withCredentials = true;
+            const response = await axios.post(`${apiUrl}/subscriptions`, {
+                name, price, currency, category, frequency, paymentMethod, startDate
+            }, {
+                headers: {
+                    "Content-Type": 'application/json'
+                }
+            });
+
+            setStatus('success');
+            console.log(response);
+
+        } catch (error) {
+            setStatus('error');
+            console.log(error);
+        }
     }
 
     return (
@@ -305,14 +334,16 @@ const CreateSubscription = () => {
                             type="button"
                             variant="outline"
                             className="h-12 px-6 text-base cursor-pointer"
+                            disabled={status === 'loading'}
                         >
                             Cancel
                         </Button>
                         <Button
                             type="submit"
                             className="h-12 px-8 text-base bg-primary hover:bg-primary/90 cursor-pointer"
+                            disabled={status === 'loading'}
                         >
-                            Create Subscription
+                            {status === 'loading' ? <BeatLoader color="#ffffff" /> : 'Create Subscription'}
                         </Button>
                     </div>
                 </form>

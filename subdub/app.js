@@ -12,6 +12,7 @@ import workflowRouter from './routes/workflow.routes.js';
 import connectToDB from './database/mongodb.js';
 
 import errorMiddleware from './middleware/error.middleware.js';
+// eslint-disable-next-line no-unused-vars
 import arcjetMiddleware from './middleware/arcjet.middleware.js';
 
 const app = express();
@@ -21,11 +22,13 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 // app.use(arcjetMiddleware);
 // app.use(cors()); // For Crosss origin access (basiclly to access backend)
+// In your Express app setup
 app.use(cors({
-    origin: "http://localhost:5173", // Change this to your frontend URL
-    credentials: true
+    origin: 'http://localhost:5173', // Your frontend URL
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
 }));
-
 app.use('/api/v1/auth', authRoute);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/subscriptions', subcriptionRouter);

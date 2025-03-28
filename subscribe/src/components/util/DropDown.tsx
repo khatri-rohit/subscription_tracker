@@ -1,5 +1,7 @@
 import { useAppDispatch } from "@/app/store"
+import { useAuth } from "@/context/Auth";
 import { isAuthenticated } from "@/features/slice"
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 type Props = {
@@ -11,13 +13,14 @@ const DropDown = ({ setOpen }: Props) => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate()
 
+    const { apiUrl } = useAuth()
+
     const signOut = async () => {
-        localStorage.clear()
-        await new Promise(resolve => setTimeout(() => {
-            dispatch(isAuthenticated(false));
-            setOpen(false);
-            navigate('/');
-        }, 100));
+        axios.defaults.withCredentials = true
+        await axios.post(`${apiUrl}/auth/sign-out`)
+        dispatch(isAuthenticated(false))
+        setOpen(false)
+        setTimeout(() => navigate('/'), 500)
     }
 
     return (

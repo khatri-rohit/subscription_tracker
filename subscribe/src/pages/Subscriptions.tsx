@@ -1,5 +1,6 @@
 import SubscriptionCard from "@/components/common/SubscriptionCard"
 import { Input } from "@/components/ui/input"
+import { Subscription } from "@/lib/types"
 import { List, Rows4, Search, Sofa, Tv2, Volleyball } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 
@@ -28,79 +29,68 @@ const tabs = [
   },
 ]
 
-const subscriptions: {
-  _id: string;
-  name: string;
-  price: number;
-  currency: 'INR' | 'USD' | 'EUR' | 'GBP';
-  frequency: 'monthly' | 'daily' | 'weekly' | 'yearly';
-  category: string;
-  status: 'active' | 'cancelled' | 'expired';
-  startDate: Date;
-  renewalDate: Date;
-  paymentMethod: string;
-}[] = [
-    {
-      _id: "1",
-      name: 'Netflix Premium',
-      price: 649,
-      currency: 'INR',
-      frequency: 'monthly',
-      category: 'Entertainment',
-      status: 'active',
-      startDate: new Date('2024-01-01'),
-      renewalDate: new Date('2024-04-01'),
-      paymentMethod: 'Credit Card',
-    },
-    {
-      _id: "2",
-      name: 'Spotify Family',
-      price: 179,
-      currency: 'INR',
-      frequency: 'monthly',
-      category: 'Entertainment',
-      status: 'active',
-      startDate: new Date('2024-02-15'),
-      renewalDate: new Date('2024-03-15'),
-      paymentMethod: 'UPI',
-    },
-    {
-      _id: "3",
-      name: 'Gold Gym',
-      price: 12000,
-      currency: 'INR',
-      frequency: 'yearly',
-      category: 'sports',
-      status: 'expired',
-      startDate: new Date('2023-01-01'),
-      renewalDate: new Date('2024-01-01'),
-      paymentMethod: 'Debit Card',
-    },
-    {
-      _id: "4",
-      name: 'Amazon Prime',
-      price: 1499,
-      currency: 'INR',
-      frequency: 'yearly',
-      category: 'Lifestyle',
-      status: 'active',
-      startDate: new Date('2024-01-01'),
-      renewalDate: new Date('2025-01-01'),
-      paymentMethod: 'Net Banking',
-    },
-    {
-      _id: "5",
-      name: 'Disney+ Hotstar',
-      price: 299,
-      currency: 'INR',
-      frequency: 'monthly',
-      category: 'Entertainment',
-      status: 'cancelled',
-      startDate: new Date('2024-01-01'),
-      renewalDate: new Date('2024-02-01'),
-      paymentMethod: 'Credit Card',
-    }
-  ]
+const subscriptions: Subscription[] = [
+  {
+    _id: "1",
+    name: 'Netflix Premium',
+    price: 649,
+    currency: 'INR',
+    frequency: 'monthly',
+    category: 'Entertainment',
+    status: 'active',
+    startDate: new Date('2024-01-01'),
+    renewalDate: new Date('2024-04-01'),
+    paymentMethod: 'Credit Card',
+  },
+  {
+    _id: "2",
+    name: 'Spotify Family',
+    price: 179,
+    currency: 'INR',
+    frequency: 'monthly',
+    category: 'Entertainment',
+    status: 'active',
+    startDate: new Date('2024-02-15'),
+    renewalDate: new Date('2024-03-15'),
+    paymentMethod: 'UPI',
+  },
+  {
+    _id: "3",
+    name: 'Gold Gym',
+    price: 12000,
+    currency: 'INR',
+    frequency: 'yearly',
+    category: 'sports',
+    status: 'expired',
+    startDate: new Date('2023-01-01'),
+    renewalDate: new Date('2024-01-01'),
+    paymentMethod: 'Debit Card',
+  },
+  {
+    _id: "4",
+    name: 'Amazon Prime',
+    price: 1499,
+    currency: 'INR',
+    frequency: 'yearly',
+    category: 'Lifestyle',
+    status: 'active',
+    startDate: new Date('2024-01-01'),
+    renewalDate: new Date('2025-01-01'),
+    paymentMethod: 'Net Banking',
+  },
+  {
+    _id: "5",
+    name: 'Disney+ Hotstar',
+    price: 299,
+    currency: 'INR',
+    frequency: 'monthly',
+    category: 'Entertainment',
+    status: 'cancelled',
+    startDate: new Date('2024-01-01'),
+    renewalDate: new Date('2024-02-01'),
+    paymentMethod: 'Credit Card',
+  }
+]
 
 const Subscriptions = () => {
 

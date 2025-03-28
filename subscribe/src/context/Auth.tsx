@@ -1,18 +1,58 @@
-import { createContext, useContext, PropsWithChildren } from "react";
+import { useAppDispatch } from "@/app/store";
+import { isAuthenticated } from "@/features/slice";
+import axios from "axios";
+import {
+    createContext,
+    useContext,
+    PropsWithChildren,
+    useState,
+    useEffect,
+    cache
+} from "react";
+
+type User = {
+    _id: string
+    firstName: string
+    lastName: string
+    email: string
+    createdAt: string
+}
 
 type AuthContextType = {
     apiUrl: string;
-    // isAuthenticated: string;
-    // setIsAuth: (isAuthenticated: string) => void
+    user: User | null
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
+    const [user, setUser] = useState<User | null>(null);
     const apiUrl = import.meta.env.VITE_BACKEND_URL;
 
+    const dispatch = useAppDispatch();
+
+    const getLoggedInUser = cache(async () => {
+        try {
+            axios.defaults.withCredentials = true;
+            const request = await axios.post(`${apiUrl}/users/`);
+            console.log(request);
+            dispatch(isAuthenticated(true));
+            setUser(request.data.data);
+            console.log("Authenticated");
+        } catch (error: unknown) {
+            setUser(null);
+            dispatch(isAuthenticated(false));
+            console.log("UnAuthorised Token");
+            console.log(error);
+        }
+    })
+
+    useEffect(() => {
+        getLoggedInUser();
+    }, [])
+
     return (
-        <AuthContext.Provider value={{ apiUrl, }}>
+        <AuthContext.Provider value={{ apiUrl, user }}>
             {children}
         </AuthContext.Provider >
     )

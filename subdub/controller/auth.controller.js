@@ -32,12 +32,12 @@ export const signUp = async (req, res, next) => {
 
         const token = jwt.sign({ userId: newUsers[0]._id }, JWT_SECRET, { expiresIn: JWT_EXPRIES_IN });
 
-        // res.cookie("token", token, {
-        //     httpOnly: true,
-        //     secure: false,  // Change to true in production
-        //     sameSite: "Lax"
-        // });
-
+        res.cookie('token', token, {
+            httpOnly: false,
+            secure: NODE_ENV === 'production',
+            sameSite: NODE_ENV === 'production' ? 'none' : 'strict',
+            maxAge: 7 * 24 * 60 * 60 * 1000
+        });
         await session.commitTransaction(); // commit the transaction if no error occurs
         session.endSession(); // end the session
 
@@ -47,10 +47,10 @@ export const signUp = async (req, res, next) => {
         res.status(201).json({
             success: true,
             message: 'User created successfully',
-            data: {
-                token,
-                user: newUsers[0]
-            }
+            // data: {
+            //     token,
+            //     user: newUsers[0]
+            // }
         });
     } catch (error) {
         await session.abortTransaction(); // abort the transaction if error occurs
@@ -81,22 +81,19 @@ export const signIn = async (req, res, next) => {
 
         const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: JWT_EXPRIES_IN });
 
-        // res.cookie('token', token);
-
-        // res.cookie('token', token, {
-        //     httpOnly: false,
-        //     secure: NODE_ENV === 'production',
-        //     sameSite: 'strict',
-        //     maxAge: 7 * 24 * 60 * 60 * 1000
-        // });
+        res.cookie('token', token, {
+            httpOnly: false,
+            secure: NODE_ENV === 'production',
+            sameSite: NODE_ENV === 'production' ? 'none' : 'strict',
+            maxAge: 7 * 24 * 60 * 60 * 1000
+        });
 
         res.status(200).json({
             success: true,
             message: 'User Sign In in successfully',
-            data: {
-                token,
-                // user
-            }
+            // data: {
+            //     user
+            // }
         });
 
     } catch (error) {
@@ -106,17 +103,7 @@ export const signIn = async (req, res, next) => {
 
 export const signOut = async (req, res, next) => {
     try {
-        console.log(req.cookies);
-
-        // res.clearCookie('token');
-        res.clearCookie('token', {
-            httpOnly: true,
-            secure: false,
-            sameSite: 'strict',
-        });
-
-        console.log(req.cookies);
-
+        res.clearCookie('token')
         res.status(200).json({
             success: true,
             message: 'User logged out successfully',

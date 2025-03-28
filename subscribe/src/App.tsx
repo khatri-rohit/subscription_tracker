@@ -12,6 +12,7 @@ import SignUp from './components/common/auth/SignUp';
 import SignIn from './components/common/auth/SignIn';
 import ProtectRoute from './components/common/auth/ProtectRoute';
 import Subscriptions from './pages/Subscriptions';
+import CreateSubscription from './pages/CreateSubscription';
 
 
 function App() {
@@ -35,6 +36,11 @@ function App() {
           <Route path='/subscription' element={
             <ProtectRoute>
               <Subscriptions />
+            </ProtectRoute>
+          } />
+          <Route path='/subscription/create-subs' element={
+            <ProtectRoute>
+              <CreateSubscription />
             </ProtectRoute>
           } />
         </Route>

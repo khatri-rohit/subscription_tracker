@@ -53,3 +53,19 @@ export const getStatusColor = (status: string) => {
   }
   return colors[status.toLowerCase()] || { bg: 'bg-gray-100', text: 'text-gray-800' }
 }
+
+export const platforms = [
+  { id: 'netflix', name: 'Netflix', category: 'Entertainment' },
+  { id: 'prime', name: 'Amazon Prime', category: 'Entertainment' },
+  { id: 'hotstar', name: 'JioHotstar', category: 'Sports' },
+  { id: 'spotify', name: 'Spotify', category: 'Entertainment' },
+  { id: 'youtube', name: 'YouTube Premium', category: 'Entertainment' },
+  { id: 'apple-tv', name: 'Apple TV+', category: 'Entertainment' },
+  { id: 'hbo', name: 'HBO Max', category: 'Entertainment' },
+  { id: 'hulu', name: 'Hulu', category: 'Entertainment' },
+  { id: 'paramount', name: 'Paramount+', category: 'Entertainment' },
+  { id: 'peacock', name: 'Peacock', category: 'Entertainment' },
+  { id: 'crunchyroll', name: 'Crunchyroll', category: 'Entertainment' },
+  { id: 'apple-music', name: 'Apple Music', category: 'Entertainment' },
+  { id: 'other', name: 'Other', category: 'Other' }
+] as const;

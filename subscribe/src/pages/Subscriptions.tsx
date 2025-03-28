@@ -1,6 +1,7 @@
-import SubscriptionCard from "@/components/SubscriptionCard"
+import SubscriptionCard from "@/components/common/SubscriptionCard"
 import { Input } from "@/components/ui/input"
 import { List, Rows4, Search, Sofa, Tv2, Volleyball } from "lucide-react"
+import { useNavigate } from "react-router-dom"
 
 // enum: ['education', 'health', 'finance',],
 
@@ -103,6 +104,8 @@ const subscriptions: {
 
 const Subscriptions = () => {
 
+  const navigate = useNavigate();
+
   const handleEdit = (id: string) => {
     console.log(id);
   }
@@ -123,7 +126,8 @@ const Subscriptions = () => {
             <Input className="border-none md:text-xl shadow-none"
               placeholder="Search Subscription" />
           </div>
-          <button className="bg-[#636AE8] text-white px-4 py-2 rounded-lg hover:bg-[#4B51B8] transition-colors">
+          <button className="bg-[#636AE8] text-white px-4 py-2 rounded-lg hover:bg-[#4B51B8] transition-colors"
+            onClick={() => navigate('/subscription/create-subs')}>
             Create Subscription
           </button>
         </div>
@@ -131,8 +135,8 @@ const Subscriptions = () => {
 
       <div className="flex items-center justify-start gap-1 p-1 gap-x-14">
         {
-          tabs.map((tab) => (
-            <p className="cursor-pointer text-lg flex justify-start items-center w-[6%] gap-x-3 relative hover:after:absolute hover:after:-bottom-[13px] hover:after:w-[115%] hover:after:-left-[6.5px] hover:after:block hover:after:h-[3px] hover:after:rounded-b-4xl hover:after:bg-[#636AE8]">
+          tabs.map((tab, _) => (
+            <p key={_} className="cursor-pointer text-lg flex justify-start items-center w-[6%] gap-x-3 relative hover:after:absolute hover:after:-bottom-[13px] hover:after:w-[115%] hover:after:-left-[6.5px] hover:after:block hover:after:h-[3px] hover:after:rounded-b-4xl hover:after:bg-[#636AE8]">
               {tab.icon}{tab.category}
             </p>
           ))

@@ -64,7 +64,7 @@ const SignUp = () => {
             const response = await request;
             setTimeout(() => setStatus("success"), 500);
             localStorage.setItem('isagi-kun', response.data?.data.token);
-            navigate('/dashboard')
+            navigate('/dashboard', { replace: true })
             dispatch(isAuthenticated(true))
             console.log(response);
         } catch (error) {

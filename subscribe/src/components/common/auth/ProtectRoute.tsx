@@ -13,9 +13,11 @@ const ProtectRoute = ({ children }: PropsWithChildren) => {
         } else {
             if (location.pathname === '/subscription')
                 navigate('/subscription');
+            else if (location.pathname === '/subscription/create-subs')
+                navigate('/subscription/create-subs');
             else
                 navigate('/dashboard');
-            console.log(location.pathname);
+            // console.log(location.pathname);
         }
     }, [userId])
 

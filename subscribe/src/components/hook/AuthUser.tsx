@@ -29,7 +29,7 @@ const useUser = () => {
 
     useEffect(() => {
         const token: string | null = localStorage.getItem('isagi-kun')
-        console.log("token->" + token);
+        // console.log("token->" + token);
         if (token !== null)
             getLoggedInUser(token);
     }, [])

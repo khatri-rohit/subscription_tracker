@@ -11,6 +11,9 @@ type UserID = {
 
 const useUser = () => {
     const [userId, setUser] = useState<UserID | null>(null)
+
+    const token: string | null = localStorage.getItem('isagi-kun')
+
     const dispatch = useAppDispatch()
 
     const getLoggedInUser = (jwtToken: string) => {
@@ -28,13 +31,12 @@ const useUser = () => {
     }
 
     useEffect(() => {
-        const token: string | null = localStorage.getItem('isagi-kun')
         // console.log("token->" + token);
         if (token !== null)
             getLoggedInUser(token);
     }, [])
 
-    return [userId];
+    return [userId, token];
 }
 
 export default useUser

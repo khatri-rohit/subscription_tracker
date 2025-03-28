@@ -39,7 +39,7 @@ import { status } from "@/lib/types"
 const formSchema = z.object({
     platformId: z.string().min(1, "Please select a platform"),
     customPlatform: z.string().optional(),
-    price: z.string().min(1, "Price is required"),
+    price: z.number().min(1, "Price is required"),
     currency: z.enum(["INR", "USD", "EUR", "GBP"]),
     frequency: z.enum(["monthly", "daily", "weekly", "yearly"]),
     category: z.string().min(1, "Category is required").toLowerCase(),
@@ -77,7 +77,6 @@ const CreateSubscription = () => {
         }
     }, [selectedPlatform, form]);
 
-
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
             setStatus('loading');
@@ -93,6 +92,7 @@ const CreateSubscription = () => {
                 }
             });
 
+            form.reset()
             setStatus('success');
             console.log(response);
 
@@ -232,7 +232,8 @@ const CreateSubscription = () => {
                                             type="number"
                                             placeholder="0.00"
                                             className="h-12 text-base px-4"
-                                            {...field}
+                                            onChange={(e) => field.onChange(Number(e.target.value))}
+                                            value={field.value || ''}
                                         />
                                     </FormControl>
                                     <FormMessage className="text-sm" />

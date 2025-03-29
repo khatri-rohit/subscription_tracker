@@ -10,7 +10,7 @@ import DropDown from "../util/DropDown";
 const Navbar = () => {
 
     const navigate = useNavigate();
-    const isAuth = useAppSelector((state) => state.isAuth);
+    const { isAuth } = useAppSelector((state) => state.rootReducers);
     const [open, setOpen] = useState<boolean>(false);
 
     return (

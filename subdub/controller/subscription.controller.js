@@ -33,18 +33,20 @@ export const createSubscription = async (req, res, next) => {
 
 export const getUserSubscriptions = async (req, res, next) => {
     try {
+        console.log("Get SUbscirptions");
         if (req.user.id !== req.params.id) {
             const error = new Error("Forbidden for unauthorized access");
             error.status = 403;
             throw error;
         }
-
+        console.log("Get SUbscirptions");
         const subscription = await Subscription.find({ user: req.params.id });
 
-        return res.status(200).json({
-            success: true,
-            data: subscription
-        });
+        // return res.status(200).json({
+        // success:true,
+        // data: subscription
+        // })
+        return res.status(200).json(subscription)
     } catch (error) {
         next(error);
     }

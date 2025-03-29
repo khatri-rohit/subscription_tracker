@@ -10,7 +10,7 @@ const authorize = async (req, res, next) => {
         //     token = req.headers.authorization.split(' ')[1];
         // }
         const { token } = req.cookies
-        // console.log(token + '\n');
+        console.log(token + '\n');
         if (!token) return res.status.json({ message: "Unauthorized" });
 
         const decoded = jwt.verify(token, JWT_SECRET);

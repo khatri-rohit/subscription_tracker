@@ -1,16 +1,13 @@
 import { useAppSelector } from "@/app/store";
-import { useAuth } from "@/context/Auth";
 import { PropsWithChildren, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const ProtectRoute = ({ children }: PropsWithChildren) => {
-    // const { user } = useAuth();
-    const isAuth = useAppSelector((state) => state.isAuth)
+    const isAuth = useAppSelector((state) => state.rootReducers.isAuth)
     const navigate = useNavigate();
     const location = useLocation();
 
     useEffect(() => {
-        console.log(isAuth);
         if (!isAuth) {
             navigate('/')
         } else {

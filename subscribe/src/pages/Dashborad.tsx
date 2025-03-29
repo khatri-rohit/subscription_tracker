@@ -1,37 +1,47 @@
-import { List, Music, Podcast, Search, Video } from "lucide-react"
 import { useEffect, useState } from "react";
-import axios from "axios";
+import { List, Music, Podcast, Search, Video } from "lucide-react"
+
+import { useAppDispatch, useAppSelector } from "@/app/store";
+import { useGetAllSubscriptionsQuery } from '@/services/subscriptions'
+import { setSubscription } from '@/features/slice'
+import { useAuth } from "@/context/Auth.tsx";
 
 import { Input } from "@/components/ui/input"
 
-import { Subscription } from "@/lib/types.ts";
-import { useAuth } from "@/context/Auth.tsx";
 import SubsOverview from "@/components/common/SubsOverview.tsx";
+import { FadeLoader } from "react-spinners";
+import { Subscription } from "@/lib/types";
 
 const Dashborad = () => {
 
-  const [subscriptions, setSubscriptions] = useState<Subscription[] | null>(null);
+  const { user } = useAuth()
+  const dispatch = useAppDispatch()
+  const { subscriptions } = useAppSelector((state) => state.rootReducers)
 
-  const { apiUrl, user } = useAuth()
+  const [filterSubscirpion, setFilterSubscription] = useState<Subscription[]>([]);
 
-  const fetchSubscription = async () => {
-    try {
-      axios.defaults.withCredentials = true;
-      const request = await axios.get(`${apiUrl}/subscriptions/user/${user?._id}`, {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-      setSubscriptions(request.data.data)
-      console.log(request.data.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const {
+    isLoading,
+    data,
+    // error,
+    isError
+  } = useGetAllSubscriptionsQuery(user?._id, {
+    skip: !user?._id.trim(),
+  });
+
+  // const isLoading = true
+  // const isError = true
 
   useEffect(() => {
-    fetchSubscription()
-  }, [])
+    // console.log("isLoading -> " + isLoading);
+    // console.log("isError -> " + isError);
+    // console.log("Error -> " + error);
+
+    if (data !== undefined) {
+      dispatch(setSubscription(data))
+      setFilterSubscription(data)
+    }
+  }, [data])
 
   return (
     <section className="p-10">
@@ -59,11 +69,16 @@ const Dashborad = () => {
       </div>
 
       {/* All Subscriptions */}
-      <div className="grid grid-cols-2 md:gap-5 gap-2 lg:gap-3 md:grid-cols-3 lg:grid-cols-4">
-        {
+      <div className={isError || isLoading ? "h-52 flex items-center justify-center" : "grid grid-cols-2 md:gap-5 gap-2 lg:gap-3 md:grid-cols-3 lg:grid-cols-4"}>
+        {isError && <p className="text-2xl text-red-500">Something Went Wrong</p>}
+        {!isError && (isLoading ? <FadeLoader
+          color="#141010"
+          height={19}
+          width={6}
+        /> :
           subscriptions?.map((subscription) => (
             <SubsOverview key={subscription._id} name={subscription.name} renewalDate={subscription.renewalDate} status={subscription.status} />
-          ))
+          )))
         }
       </div>
 
@@ -98,15 +113,18 @@ const Dashborad = () => {
       </div>
 
       {/* All Subscriptions */}
-      <div className="grid grid-cols-2 md:gap-5 gap-2 lg:gap-3 md:grid-cols-3 lg:grid-cols-4">
-        {
-          subscriptions?.map((subscription) => (
+      <div className={!isError || !isLoading ? "grid grid-cols-2 md:gap-5 gap-2 lg:gap-3 md:grid-cols-3 lg:grid-cols-4" : "h-52 flex items-center justify-center"}>
+        {isError && <p className="text-2xl text-red-500">Something Went Wrong</p>}
+        {!isError && isLoading ? <FadeLoader
+          color="#141010"
+          height={19}
+          width={6}
+        /> :
+          filterSubscirpion?.map((subscription) => (
             <SubsOverview key={subscription._id} name={subscription.name} renewalDate={subscription.renewalDate} status={subscription.status} />
           ))
         }
       </div>
-
-
 
     </section>
   )

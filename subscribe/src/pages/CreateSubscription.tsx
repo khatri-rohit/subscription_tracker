@@ -5,7 +5,6 @@ import { CalendarIcon } from "lucide-react"
 import { format } from "date-fns"
 import { useEffect, useState } from "react"
 import { BeatLoader } from "react-spinners"
-import axios from "axios"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -33,8 +32,9 @@ import {
 } from "@/components/ui/popover"
 import { cn, platforms } from "@/lib/utils"
 
-import { useAuth } from "@/context/Auth"
-import { status } from "@/lib/types"
+import { CreateSubscriptions } from "@/lib/types"
+import { useCreateSubscriptionMutation } from "@/services/subscriptions"
+import { useNavigate } from "react-router-dom"
 
 const formSchema = z.object({
     platformId: z.string().min(1, "Please select a platform"),
@@ -50,10 +50,11 @@ const formSchema = z.object({
 
 const CreateSubscription = () => {
 
+    const navigate = useNavigate()
     const [showCustomInput, setShowCustomInput] = useState<boolean>(false);
-    const [status, setStatus] = useState<status>('success');
 
-    const { apiUrl } = useAuth()
+
+    const [createSubscription, { isError, isLoading }] = useCreateSubscriptionMutation();
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -77,27 +78,27 @@ const CreateSubscription = () => {
         }
     }, [selectedPlatform, form]);
 
+
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
+
         try {
-            setStatus('loading');
             const { platformId, price, currency, category, frequency, paymentMethod, startDate, customPlatform } = values;
-            const name = platformId === 'other' ? customPlatform : platformId;
-
-            axios.defaults.withCredentials = true;
-            const response = await axios.post(`${apiUrl}/subscriptions`, {
-                name, price, currency, category, frequency, paymentMethod, startDate
-            }, {
-                headers: {
-                    "Content-Type": 'application/json'
-                }
-            });
-
-            form.reset()
-            setStatus('success');
-            console.log(response);
-
+            const name: string = platformId === 'other' ? (customPlatform as string) : platformId;
+            const newSubscription: CreateSubscriptions = {
+                name,
+                price,
+                category,
+                currency,
+                frequency,
+                paymentMethod,
+                startDate
+            }
+            console.log(newSubscription);
+            await createSubscription(newSubscription)
+            console.log(isError);
+            if (!isError && !isLoading)
+                navigate('/subscription', { replace: true })
         } catch (error) {
-            setStatus('error');
             console.log(error);
         }
     }
@@ -136,7 +137,7 @@ const CreateSubscription = () => {
                                                 {platforms.map((platform) => (
                                                     <SelectItem
                                                         key={platform.id}
-                                                        value={platform.id}
+                                                        value={platform.name}
                                                         className="text-base py-3"
                                                     >
                                                         {platform.name}
@@ -189,7 +190,7 @@ const CreateSubscription = () => {
                                             <SelectItem value="Entertainment" className="text-base py-3">Entertainment</SelectItem>
                                             <SelectItem value="sports" className="text-base py-3">Sports</SelectItem>
                                             <SelectItem value="Lifestyle" className="text-base py-3">Lifestyle</SelectItem>
-                                            <SelectItem value="Others" className="text-base py-3">Others</SelectItem>
+                                            <SelectItem value="Other" className="text-base py-3">Others</SelectItem>
                                         </SelectContent>
                                     </Select>
                                     <FormMessage className="text-sm" />
@@ -335,16 +336,16 @@ const CreateSubscription = () => {
                             type="button"
                             variant="outline"
                             className="h-12 px-6 text-base cursor-pointer"
-                            disabled={status === 'loading'}
+                            disabled={isLoading}
                         >
                             Cancel
                         </Button>
                         <Button
                             type="submit"
                             className="h-12 px-8 text-base bg-primary hover:bg-primary/90 cursor-pointer"
-                            disabled={status === 'loading'}
+                            disabled={isLoading}
                         >
-                            {status === 'loading' ? <BeatLoader color="#ffffff" /> : 'Create Subscription'}
+                            {isLoading ? <BeatLoader color="#ffffff" /> : 'Create Subscription'}
                         </Button>
                     </div>
                 </form>

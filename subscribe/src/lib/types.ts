@@ -11,6 +11,16 @@ export type Subscription = {
     paymentMethod: string;
 }
 
+export type CreateSubscriptions = {
+    name: string;
+    price: number;
+    currency: 'INR' | 'USD' | 'EUR' | 'GBP';
+    frequency: 'monthly' | 'daily' | 'weekly' | 'yearly';
+    category: string;
+    startDate: Date;
+    paymentMethod: string;
+}
+
 export type status = 'success' | 'loading' | 'error'
 
 export type Category = 'All' | 'entertainment' | 'sports' | 'lifestyle' | 'other'

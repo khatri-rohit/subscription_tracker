@@ -136,8 +136,7 @@ const Dashborad = () => {
             } else if (status === "All") {
               return <SubsOverview key={subscription._id} name={subscription.name} renewalDate={subscription.renewalDate} status={subscription.status} />
             }
-          })) : <p className="text-xl my-auto text-center md:col-span-3 lg:col-span-4">You don't have {status} subscriptions</p>
-        )
+          })) : <p className="text-xl my-auto text-center md:col-span-3 lg:col-span-4">You don't have {status} subscriptions</p>)
         }
       </div>
 

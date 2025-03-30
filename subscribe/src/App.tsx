@@ -13,6 +13,10 @@ import SignIn from './components/common/auth/SignIn';
 import ProtectRoute from './components/common/auth/ProtectRoute';
 import Subscriptions from './pages/Subscriptions';
 import CreateSubscription from './pages/CreateSubscription';
+import SettingLayout from './components/layout/SettingLayout';
+import Account from './pages/Account';
+import Notifications from './pages/Notifications';
+import Profile from './pages/Profile';
 
 
 function App() {
@@ -33,6 +37,20 @@ function App() {
               <Dashborad />
             </ProtectRoute>
           } />
+
+          <Route path='/dashboard/settings' element={<SettingLayout />}>
+            <Route index element={
+              <Account />
+            } />
+            <Route path='notifications' element={
+              <Notifications />
+            } />
+            <Route path='profile' element={
+              <Profile />
+            } />
+
+          </Route>
+
           <Route path='/subscription' element={
             <ProtectRoute>
               <Subscriptions />

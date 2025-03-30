@@ -13,3 +13,4 @@ export type Subscription = {
 
 export type status = 'success' | 'loading' | 'error'
 
+export type Category = 'All' | 'entertainment' | 'sports' | 'lifestyle' | 'other'

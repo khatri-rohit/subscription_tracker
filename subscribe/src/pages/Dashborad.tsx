@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { List, Music, Podcast, Search, Video } from "lucide-react"
+import { List, Music, Search, Sofa, Video } from "lucide-react"
 
 import { useAppDispatch, useAppSelector } from "@/app/store";
 import { useGetAllSubscriptionsQuery } from '@/services/subscriptions'
@@ -10,15 +10,18 @@ import { Input } from "@/components/ui/input"
 
 import SubsOverview from "@/components/common/SubsOverview.tsx";
 import { FadeLoader } from "react-spinners";
-import { Subscription } from "@/lib/types";
+import { Category, Subscription } from "@/lib/types";
 
 const Dashborad = () => {
 
   const { user } = useAuth()
   const dispatch = useAppDispatch()
-  const { subscriptions } = useAppSelector((state) => state.rootReducers)
+  // const { subscriptions } = useAppSelector((state) => state.rootReducers)
 
   const [filterSubscirpion, setFilterSubscription] = useState<Subscription[]>([]);
+  const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
+
+  const [category, setCategory] = useState<Category>("All");
 
   const {
     isLoading,
@@ -30,7 +33,7 @@ const Dashborad = () => {
   });
 
   // const isLoading = true
-  // const isError = true
+  // const isError = false
 
   useEffect(() => {
     // console.log("isLoading -> " + isLoading);
@@ -39,7 +42,9 @@ const Dashborad = () => {
 
     if (data !== undefined) {
       dispatch(setSubscription(data))
-      setFilterSubscription(data)
+      setSubscriptions(data);
+      setFilterSubscription(data);
+      console.log(data);
     }
   }, [data])
 
@@ -97,32 +102,40 @@ const Dashborad = () => {
         </div>
 
         <div className="flex items-center justify-evenly w-1/2 gap-1">
-          <p className="text-lg flex justify-center items-center w-[25%] gap-x-1 relative hover:after:absolute hover:after:-bottom-[13px] hover:after:w-[115%] hover:after:-left-[6.5px] hover:after:block hover:after:h-[3px] hover:after:rounded-b-4xl hover:after:bg-[#636AE8]">
+          <p className={category === 'All' ? "text-lg flex justify-center items-center w-[25%] gap-x-1 relative after:absolute after:-bottom-[13px] after:w-[115%] after:-left-[6.5px] after:block after:h-[3px] after:rounded-b-4xl after:bg-[#636AE8]" : "text-lg flex justify-center items-center w-[25%] gap-x-1 relative hover:after:absolute hover:after:-bottom-[13px] hover:after:w-[115%] hover:after:-left-[6.5px] hover:after:block hover:after:h-[3px] hover:after:rounded-b-4xl hover:after:bg-[#636AE8]"}
+            onClick={() => setCategory("All")} >
             <List color="#BBBBBB" />All
           </p>
-          <p className="text-lg flex justify-center items-center w-[25%] gap-x-1 relative hover:after:absolute hover:after:-bottom-[13px] hover:after:w-[115%] hover:after:-left-[6.5px] hover:after:block hover:after:h-[3px] hover:after:rounded-b-4xl hover:after:bg-[#636AE8]">
-            <Music color="#BBBBBB" />Music
+          <p className={category === 'entertainment' ? "text-lg flex justify-center items-center w-[25%] gap-x-1 relative after:absolute after:-bottom-[13px] after:w-[115%] after:-left-[6.5px] after:block after:h-[3px] after:rounded-b-4xl after:bg-[#636AE8]" : "text-lg flex justify-center items-center w-[25%] gap-x-1 relative hover:after:absolute hover:after:-bottom-[13px] hover:after:w-[115%] hover:after:-left-[6.5px] hover:after:block hover:after:h-[3px] hover:after:rounded-b-4xl hover:after:bg-[#636AE8]"} onClick={() => setCategory('entertainment')} >
+            <Music color="#BBBBBB" />Entertainment
           </p>
-          <p className="text-lg flex justify-center items-center w-[25%] gap-x-1 relative hover:after:absolute hover:after:-bottom-[13px] hover:after:w-[115%] hover:after:-left-[6.5px] hover:after:block hover:after:h-[3px] hover:after:rounded-b-4xl hover:after:bg-[#636AE8]">
-            <Video color="#BBBBBB" /> Video
+          <p className={category === 'sports' ? "text-lg flex justify-center items-center w-[25%] gap-x-1 relative after:absolute after:-bottom-[13px] after:w-[115%] after:-left-[6.5px] after:block after:h-[3px] after:rounded-b-4xl after:bg-[#636AE8]" : "text-lg flex justify-center items-center w-[25%] gap-x-1 relative hover:after:absolute hover:after:-bottom-[13px] hover:after:w-[115%] hover:after:-left-[6.5px] hover:after:block hover:after:h-[3px] hover:after:rounded-b-4xl hover:after:bg-[#636AE8]"} onClick={() => setCategory('sports')}>
+            <Video color="#BBBBBB" />Sports
           </p>
-          <p className="text-lg flex justify-center items-center w-[25%] gap-x-1 relative hover:after:absolute hover:after:-bottom-[13px] hover:after:w-[115%] hover:after:-left-[6.5px] hover:after:block hover:after:h-[3px] hover:after:rounded-b-4xl hover:after:bg-[#636AE8]">
-            <Podcast color="#BBBBBB" />Podcasts
+          <p className={category === 'lifestyle' ? "text-lg flex justify-center items-center w-[25%] gap-x-1 relative after:absolute after:-bottom-[13px] after:w-[115%] after:-left-[6.5px] after:block after:h-[3px] after:rounded-b-4xl after:bg-[#636AE8]" : "text-lg flex justify-center items-center w-[25%] gap-x-1 relative hover:after:absolute hover:after:-bottom-[13px] hover:after:w-[115%] hover:after:-left-[6.5px] hover:after:block hover:after:h-[3px] hover:after:rounded-b-4xl hover:after:bg-[#636AE8]"} onClick={() => setCategory('lifestyle')}>
+            <Sofa color="#BBBBBB" />Lifestyle
           </p>
         </div>
       </div>
 
       {/* All Subscriptions */}
-      <div className={!isError || !isLoading ? "grid grid-cols-2 md:gap-5 gap-2 lg:gap-3 md:grid-cols-3 lg:grid-cols-4" : "h-52 flex items-center justify-center"}>
+      <div className={isError || isLoading ? "h-52 flex items-center justify-center" : "grid grid-cols-2 md:gap-5 gap-2 lg:gap-3 md:grid-cols-3 lg:grid-cols-4"}>
         {isError && <p className="text-2xl text-red-500">Something Went Wrong</p>}
-        {!isError && isLoading ? <FadeLoader
+        {!isError && (isLoading ? <FadeLoader
           color="#141010"
           height={19}
           width={6}
         /> :
-          filterSubscirpion?.map((subscription) => (
-            <SubsOverview key={subscription._id} name={subscription.name} renewalDate={subscription.renewalDate} status={subscription.status} />
-          ))
+          filterSubscirpion.length > 0 && filterSubscirpion?.map((subscription) => {
+            if (subscription.category === category) {
+              return <SubsOverview key={subscription._id} name={subscription.name}
+                renewalDate={subscription.renewalDate} status={subscription.status} />
+            } else if (category === 'All') {
+              return <SubsOverview key={subscription._id} name={subscription.name}
+                renewalDate={subscription.renewalDate} status={subscription.status} />
+            }
+          })
+        )
         }
       </div>
 

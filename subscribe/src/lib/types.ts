@@ -14,3 +14,13 @@ export type Subscription = {
 export type status = 'success' | 'loading' | 'error'
 
 export type Category = 'All' | 'entertainment' | 'sports' | 'lifestyle' | 'other'
+
+export type Tabs = {
+    category: Category,
+    name: string
+    idle: string
+    active: string
+    icon: React.ReactElement
+}
+
+export type SubsStatus = 'All' | 'active' | 'cancelled' | 'expired' 

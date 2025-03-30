@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { List, Music, Search, Sofa, Video } from "lucide-react"
 
-import { useAppDispatch, useAppSelector } from "@/app/store";
+import { useAppDispatch } from "@/app/store";
 import { useGetAllSubscriptionsQuery } from '@/services/subscriptions'
 import { setSubscription } from '@/features/slice'
 import { useAuth } from "@/context/Auth.tsx";
@@ -10,7 +10,39 @@ import { Input } from "@/components/ui/input"
 
 import SubsOverview from "@/components/common/SubsOverview.tsx";
 import { FadeLoader } from "react-spinners";
-import { Category, Subscription } from "@/lib/types";
+import { Category, Subscription, SubsStatus, Tabs } from "@/lib/types";
+
+const tabs: Tabs[] = [
+  {
+    category: "All",
+    name: "All",
+    idle: "text-lg flex justify-center items-center w-[25%] gap-x-1 relative hover:after:absolute hover:after:-bottom-[13px] hover:after:w-[115%] hover:after:-left-[6.5px] hover:after:block hover:after:h-[3px] hover:after:rounded-b-4xl hover:after:bg-[#636AE8]",
+    active: "text-lg flex justify-center items-center w-[25%] gap-x-1 relative after:absolute after:-bottom-[13px] after:w-[115%] after:-left-[6.5px] after:block after:h-[3px] after:rounded-b-4xl after:bg-[#636AE8]",
+    icon: <List color="#BBBBBB" />
+  },
+  {
+    category: "entertainment",
+    name: "Entertainment",
+    idle: "text-lg flex justify-center items-center w-[25%] gap-x-1 relative hover:after:absolute hover:after:-bottom-[13px] hover:after:w-[115%] hover:after:-left-[6.5px] hover:after:block hover:after:h-[3px] hover:after:rounded-b-4xl hover:after:bg-[#636AE8]",
+    active: "text-lg flex justify-center items-center w-[25%] gap-x-1 relative after:absolute after:-bottom-[13px] after:w-[115%] after:-left-[6.5px] after:block after:h-[3px] after:rounded-b-4xl after:bg-[#636AE8]",
+    icon: <Music color="#BBBBBB" />
+  },
+  {
+    category: "sports",
+    name: "Sports",
+    idle: "text-lg flex justify-center items-center w-[25%] gap-x-1 relative hover:after:absolute hover:after:-bottom-[13px] hover:after:w-[115%] hover:after:-left-[6.5px] hover:after:block hover:after:h-[3px] hover:after:rounded-b-4xl hover:after:bg-[#636AE8]",
+    active: "text-lg flex justify-center items-center w-[25%] gap-x-1 relative after:absolute after:-bottom-[13px] after:w-[115%] after:-left-[6.5px] after:block after:h-[3px] after:rounded-b-4xl after:bg-[#636AE8]",
+    icon: <Video color="#BBBBBB" />
+  },
+  {
+    category: "lifestyle",
+    name: "Lifestyle",
+    idle: "text-lg flex justify-center items-center w-[25%] gap-x-1 relative hover:after:absolute hover:after:-bottom-[13px] hover:after:w-[115%] hover:after:-left-[6.5px] hover:after:block hover:after:h-[3px] hover:after:rounded-b-4xl hover:after:bg-[#636AE8]",
+    active: "text-lg flex justify-center items-center w-[25%] gap-x-1 relative after:absolute after:-bottom-[13px] after:w-[115%] after:-left-[6.5px] after:block after:h-[3px] after:rounded-b-4xl after:bg-[#636AE8]",
+    icon: <Sofa color="#BBBBBB" />
+  },
+
+]
 
 const Dashborad = () => {
 
@@ -22,6 +54,8 @@ const Dashborad = () => {
   const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
 
   const [category, setCategory] = useState<Category>("All");
+  const [status, setStatus] = useState<SubsStatus>("All");
+  const [length, setLength] = useState<number>(1);
 
   const {
     isLoading,
@@ -34,6 +68,18 @@ const Dashborad = () => {
 
   // const isLoading = true
   // const isError = false
+
+  const handleChangeStatus = (newStatus: SubsStatus) => {
+    if (status === newStatus) {
+      setStatus("All")
+      setLength(1)
+    } else {
+      setStatus(newStatus);
+      const newSubsLen = subscriptions.filter((subscription) => subscription.status === newStatus);
+      setLength(newSubsLen.length);
+    }
+
+  }
 
   useEffect(() => {
     // console.log("isLoading -> " + isLoading);
@@ -60,13 +106,16 @@ const Dashborad = () => {
               placeholder="Search Subscription" />
           </div>
           <div className="tags text-[1em] flex items-center justify-between gap-x-2">
-            <span className="bg-gray-100 font-light px-2 rounded-2xl">
+            <span className={`bg-gray-100 font-light px-2 rounded-2xl cursor-pointer ${status === 'active' ? "font-semibold" : "font-light"}`}
+              onClick={() => handleChangeStatus("active")}>
               Active
             </span>
-            <span className="bg-blue-100 text-blue-500 font-light px-2 rounded-2xl">
+            <span className={`bg-blue-100 text-blue-500 px-2 rounded-2xl cursor-pointer ${status === 'cancelled' ? "font-semibold" : "font-light"}`}
+              onClick={() => handleChangeStatus("cancelled")}>
               Pending
             </span>
-            <span className="bg-red-100 text-red-500 font-light px-2 rounded-2xl">
+            <span className={`bg-red-100 text-red-500 px-2 rounded-2xl cursor-pointer ${status === 'expired' ? "font-semibold" : "font-light"}`}
+              onClick={() => handleChangeStatus("expired")}>
               Expired
             </span>
           </div>
@@ -74,16 +123,21 @@ const Dashborad = () => {
       </div>
 
       {/* All Subscriptions */}
-      <div className={isError || isLoading ? "h-52 flex items-center justify-center" : "grid grid-cols-2 md:gap-5 gap-2 lg:gap-3 md:grid-cols-3 lg:grid-cols-4"}>
-        {isError && <p className="text-2xl text-red-500">Something Went Wrong</p>}
+      <div className={isError || isLoading ? "h-52 flex items-center justify-center" : "grid grid-cols-2 md:gap-5 gap-2 lg:gap-3 md:grid-cols-3 lg:grid-cols-4 min-h-56"}>
+        {isError && <p className="text-2xl text-red-500 my-auto text-center">Something Went Wrong</p>}
         {!isError && (isLoading ? <FadeLoader
           color="#141010"
           height={19}
           width={6}
         /> :
-          subscriptions?.map((subscription) => (
-            <SubsOverview key={subscription._id} name={subscription.name} renewalDate={subscription.renewalDate} status={subscription.status} />
-          )))
+          length > 0 ? (subscriptions?.map((subscription) => {
+            if (subscription.status === status) {
+              return (<SubsOverview key={subscription._id} name={subscription.name} renewalDate={subscription.renewalDate} status={subscription.status} />)
+            } else if (status === "All") {
+              return <SubsOverview key={subscription._id} name={subscription.name} renewalDate={subscription.renewalDate} status={subscription.status} />
+            }
+          })) : <p className="text-xl my-auto text-center md:col-span-3 lg:col-span-4">You don't have {status} subscriptions</p>
+        )
         }
       </div>
 
@@ -101,20 +155,16 @@ const Dashborad = () => {
           </div>
         </div>
 
+        {/* Tabs */}
         <div className="flex items-center justify-evenly w-1/2 gap-1">
-          <p className={category === 'All' ? "text-lg flex justify-center items-center w-[25%] gap-x-1 relative after:absolute after:-bottom-[13px] after:w-[115%] after:-left-[6.5px] after:block after:h-[3px] after:rounded-b-4xl after:bg-[#636AE8]" : "text-lg flex justify-center items-center w-[25%] gap-x-1 relative hover:after:absolute hover:after:-bottom-[13px] hover:after:w-[115%] hover:after:-left-[6.5px] hover:after:block hover:after:h-[3px] hover:after:rounded-b-4xl hover:after:bg-[#636AE8]"}
-            onClick={() => setCategory("All")} >
-            <List color="#BBBBBB" />All
-          </p>
-          <p className={category === 'entertainment' ? "text-lg flex justify-center items-center w-[25%] gap-x-1 relative after:absolute after:-bottom-[13px] after:w-[115%] after:-left-[6.5px] after:block after:h-[3px] after:rounded-b-4xl after:bg-[#636AE8]" : "text-lg flex justify-center items-center w-[25%] gap-x-1 relative hover:after:absolute hover:after:-bottom-[13px] hover:after:w-[115%] hover:after:-left-[6.5px] hover:after:block hover:after:h-[3px] hover:after:rounded-b-4xl hover:after:bg-[#636AE8]"} onClick={() => setCategory('entertainment')} >
-            <Music color="#BBBBBB" />Entertainment
-          </p>
-          <p className={category === 'sports' ? "text-lg flex justify-center items-center w-[25%] gap-x-1 relative after:absolute after:-bottom-[13px] after:w-[115%] after:-left-[6.5px] after:block after:h-[3px] after:rounded-b-4xl after:bg-[#636AE8]" : "text-lg flex justify-center items-center w-[25%] gap-x-1 relative hover:after:absolute hover:after:-bottom-[13px] hover:after:w-[115%] hover:after:-left-[6.5px] hover:after:block hover:after:h-[3px] hover:after:rounded-b-4xl hover:after:bg-[#636AE8]"} onClick={() => setCategory('sports')}>
-            <Video color="#BBBBBB" />Sports
-          </p>
-          <p className={category === 'lifestyle' ? "text-lg flex justify-center items-center w-[25%] gap-x-1 relative after:absolute after:-bottom-[13px] after:w-[115%] after:-left-[6.5px] after:block after:h-[3px] after:rounded-b-4xl after:bg-[#636AE8]" : "text-lg flex justify-center items-center w-[25%] gap-x-1 relative hover:after:absolute hover:after:-bottom-[13px] hover:after:w-[115%] hover:after:-left-[6.5px] hover:after:block hover:after:h-[3px] hover:after:rounded-b-4xl hover:after:bg-[#636AE8]"} onClick={() => setCategory('lifestyle')}>
-            <Sofa color="#BBBBBB" />Lifestyle
-          </p>
+          {
+            tabs.map((tab, _) => (
+              <p key={_} className={tab.category === category ? tab.active : tab.idle}
+                onClick={() => setCategory(tab.category)} >
+                {tab.icon}{tab.name}
+              </p>
+            ))
+          }
         </div>
       </div>
 
@@ -139,7 +189,7 @@ const Dashborad = () => {
         }
       </div>
 
-    </section>
+    </section >
   )
 }
 

@@ -48,7 +48,6 @@ const tabs: Tabs[] = [
   },
 ]
 
-
 const Subscriptions = () => {
 
   const navigate = useNavigate();
@@ -75,12 +74,12 @@ const Subscriptions = () => {
       setLength(1)
     } else {
       setStatus(category);
-      const newSubsLen = allSubscriptions.filter((subscription) => subscription.category === category);
-      setLength(newSubsLen.length);
+      if (category !== 'All') {
+        const newSubsLen = allSubscriptions.filter((subscription) => subscription.category === category);
+        setLength(newSubsLen.length);
+      } else setLength(1);
     }
   }
-
-  console.log(status);
 
   useEffect(() => {
     setAllSubscriptions(subscriptions)

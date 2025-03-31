@@ -26,8 +26,12 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<Layout />}>
-          {/* Public routes */}
-          <Route index element={<Home />} />
+          {/* Public routes But Authorised User Can't See it */}
+          <Route index element={
+            <ProtectRoute>
+              <Home />
+            </ProtectRoute>
+          } />
           <Route path='/signup' element={<SignUp />} />
           <Route path='/signin' element={<SignIn />} />
 

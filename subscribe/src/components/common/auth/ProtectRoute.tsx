@@ -2,12 +2,13 @@ import { useAppSelector } from '@/app/store';
 import { useAuth } from '@/context/Auth';
 import { Loader } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 
 
 const ProtectRoute = ({ children }: { children: React.ReactNode }) => {
     const isAuth = useAppSelector((state) => state.rootReducers.isAuth);
     const [isLoading, setIsLoading] = useState(true);
+    const location = useLocation()
     const { user } = useAuth()
 
     useEffect(() => {
@@ -25,7 +26,15 @@ const ProtectRoute = ({ children }: { children: React.ReactNode }) => {
             <Loader size={70} className='animate-spin' />
         </div>;
     }
-    return isAuth ? <>{children}</> : <Navigate to="/" />;
+
+    if (!isAuth) {
+        return <Navigate to="/" />
+    }
+
+    if (isAuth && location.pathname === '/')
+        return <Navigate to="/dashboard" />
+
+    return <>{children}</>
 };
 
 export default ProtectRoute

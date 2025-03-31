@@ -5,7 +5,6 @@ import {
   Navigate
 } from 'react-router-dom';
 
-import './App.css';
 import Home from './pages/Home';
 import Layout from './components/layout/Layout';
 import Dashborad from './pages/Dashborad';
@@ -20,7 +19,6 @@ import Notifications from './pages/Notifications';
 import Profile from './pages/Profile';
 
 function App() {
-
 
   return (
     <BrowserRouter>

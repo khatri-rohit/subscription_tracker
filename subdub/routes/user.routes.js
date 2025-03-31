@@ -1,10 +1,11 @@
 import { Router } from 'express';
 
 import {
-    deleteUser,
-    getUser,
     getUsers,
-    updateUser
+    getUser,
+    updateUser,
+    updatePassword,
+    deleteUser
 } from '../controller/user.controller.js';
 import authorize from '../middleware/auth.middleware.js';
 
@@ -14,11 +15,9 @@ userRouter.get('/', getUsers);
 
 userRouter.post('/', authorize, getUser);
 
-// userRouter.post('/', (req, res) => {
-//     res.send({ title: "Create New User" });
-// });
-
 userRouter.put('/:id', authorize, updateUser);
+
+userRouter.put('/isagi/:id', authorize, updatePassword);
 
 userRouter.delete('/:id', authorize, deleteUser);
 

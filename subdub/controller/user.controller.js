@@ -1,4 +1,5 @@
 import User from '../models/user.model.js';
+import bcrypt from 'bcryptjs';
 
 export const getUsers = async (req, res, next) => {
     try {
@@ -40,17 +41,18 @@ export const updateUser = async (req, res, next) => {
             throw error;
         }
 
-        console.log("Updation");
+        console.log("Updation...");
 
-        const { name, email } = req.body;
+        const { firstName, lastName } = req.body;
 
-        const user = await User.findByIdAndUpdate(req.params.id, { name, email }); // exclude password from the response
+        const user = await User.findByIdAndUpdate(req.params.id, { firstName, lastName }); // exclude password from the response
 
         if (!user) {
             const error = new Error("User Not Found");
             error.statusCode = 404;
             throw error;
         }
+        console.log("User Updated")
 
         res.status(200).json({
             success: true,
@@ -60,6 +62,46 @@ export const updateUser = async (req, res, next) => {
         next(error);
     }
 };
+
+export const updatePassword = async (req, res, next) => {
+    try {
+        if (req.params.id !== req.user.id) {
+            const error = new Error("Unauthorized");
+            error.statusCode = 401;
+            throw error;
+        }
+        console.log("Updating Password...")
+
+        const user = await User.findById(req.params.id); // exclude password from the response
+        if (!user) {
+            const error = new Error("User Not Found");
+            error.statusCode = 404;
+            throw error;
+        }
+
+        const { password, confirmPassword } = req.body;
+
+        const isPassowrdValid = await bcrypt.compare(password, user.password);
+        if (!isPassowrdValid) {
+            const error = new Error('Invalid password');
+            error.statusCode = 401;
+            throw error;
+        }
+
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(confirmPassword, salt);
+        const updatePassword = await User.findByIdAndUpdate(req.params.id, { password: hashedPassword });
+
+        console.log("Password Updated")
+
+        res.status(200).json({
+            success: true,
+            data: updatePassword
+        });
+    } catch (error) {
+        next(error);
+    }
+}
 
 export const deleteUser = async (req, res, next) => {
     try {

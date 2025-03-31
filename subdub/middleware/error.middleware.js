@@ -1,10 +1,9 @@
 const errorMiddleware = (err, req, res, next) => {
-
+    console.log("New Error");
     try {
         let error = { ...err };
 
         error.message = err.message;
-        console.error(err);
 
         // Mongoose Bad OjectId
         if (err.name === 'CastError') {

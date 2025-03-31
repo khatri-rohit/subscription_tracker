@@ -28,9 +28,10 @@ const userSchema = new mongoose.Schema({
         required: [true, 'User Password is required'], // with error message
         minLength: 6,
     },
-    // image: {
-    //     type: String,
-    // }
+    notify: {
+        type: Boolean,
+        default: true
+    }
 }, { timestamps: true });
 
 const User = mongoose.model('User', userSchema);

@@ -1,12 +1,14 @@
-import { useEffect, useState } from "react"
+import { ChangeEvent, FormEvent, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { List, Rows4, Search, Sofa, Tv2Icon, Volleyball } from "lucide-react"
+import { X, List, Rows4, Search, Sofa, Tv2Icon, Volleyball } from "lucide-react"
 
 import { Input } from "@/components/ui/input"
 
 import SubscriptionCard from "@/components/common/SubscriptionCard"
-import { useAppSelector } from "@/app/store"
 import { Category, Subscription, Tabs } from "@/lib/types"
+import { Button } from "@/components/ui/button"
+import { useGetAllSubscriptionsQuery } from "@/services/subscriptions"
+import { useAuth } from "@/context/Auth"
 
 // enum: ['education', 'health', 'finance',],
 
@@ -51,12 +53,21 @@ const tabs: Tabs[] = [
 const Subscriptions = () => {
 
   const navigate = useNavigate();
+  const { user } = useAuth()
 
-  const { subscriptions } = useAppSelector((state) => state.rootReducers)
+  const {
+    data,
+  } = useGetAllSubscriptionsQuery(user?._id, {
+    skip: !user?._id.trim(),
+  });
 
   const [allSubscriptions, setAllSubscriptions] = useState<Subscription[]>([])
+
   const [status, setStatus] = useState<Category>('All')
   const [length, setLength] = useState<number>(1);
+
+  const [search, setSearch] = useState<string>("")
+  const [searchedSubs, setSearchSubs] = useState<Subscription[]>([]);
 
   const handleEdit = (id: string) => {
     console.log(id);
@@ -68,37 +79,70 @@ const Subscriptions = () => {
     console.log(id);
   }
 
+  function onSubmit(e: FormEvent) {
+    e.preventDefault()
+    console.log(search);
+    const subs = allSubscriptions.filter((m) => m.name.toLowerCase().includes(search));
+    console.log(subs);
+    setSearchSubs(subs)
+  }
+
   const handleChangeTabs = (category: Category) => {
-    if (status === category) {
-      setStatus("All")
-      setLength(1)
+    setSearch("");
+    setSearchSubs([]);
+    if (length > 0) {
+      if (status === category) {
+        setStatus("All")
+        setLength(1)
+      } else {
+        setStatus(category);
+        if (category !== 'All') {
+          const newSubsLen = allSubscriptions.filter((subscription) => subscription.category === category);
+          setLength(newSubsLen.length);
+        } else setLength(1);
+      }
+    }
+  }
+
+  const handleX = () => {
+    setSearch("")
+    setSearchSubs([]);
+  }
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (value.length === 0) {
+      setSearchSubs([]);
+      setSearch(value)
     } else {
-      setStatus(category);
-      if (category !== 'All') {
-        const newSubsLen = allSubscriptions.filter((subscription) => subscription.category === category);
-        setLength(newSubsLen.length);
-      } else setLength(1);
+      setSearch(value)
     }
   }
 
   useEffect(() => {
-    setAllSubscriptions(subscriptions)
-  }, [])
+    setAllSubscriptions((data as Subscription[]))
+    setLength((data?.length as number));
+  }, [data])
 
   return (
     <section className="p-10">
       <div className="p-2 space-y-5 w-1/2">
         <h3 className="text-3xl">Manage Subscriptions</h3>
         <div className="flex items-center gap-x-2 w-full">
-          <div className="border-[.12em] border-[#BCC1CA] w-1/2 flex items-center rounded-lg shadow-2xs">
+
+          <form onSubmit={onSubmit} className="border-[.12em] border-[#BCC1CA] w-1/2 flex items-center rounded-lg shadow-2xs">
             <Search className="mx-2" />
             <Input className="border-none md:text-xl shadow-none"
-              placeholder="Search Subscription" />
-          </div>
-          <button className="bg-[#636AE8] text-white px-4 py-2 rounded-lg hover:bg-[#4B51B8] transition-colors"
+              placeholder="Search Subscription"
+              value={search}
+              onChange={handleChange} />
+            {search.length > 0 && (<X className="cursor-pointer" onClick={handleX} />)}
+          </form>
+
+          <Button className="bg-[#636AE8] text-[1.1em] text-white px-4 py-2 rounded-lg hover:bg-[#4B51B8] cursor-pointer"
             onClick={() => navigate('/subscription/create-subs')}>
             Create Subscription
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -114,7 +158,13 @@ const Subscriptions = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 mt-10">
-        {length > 0 ? allSubscriptions.map((subscription) => {
+        {length > 0 ? searchedSubs.length > 0 ? searchedSubs.map((subscription) => (<SubscriptionCard
+          key={subscription._id}
+          subscription={subscription}
+          onEdit={(id) => handleEdit(id)}
+          onCancel={(id) => handleCancel(id)}
+          onRenew={(id) => handleRenew(id)}
+        />)) : allSubscriptions.map((subscription) => {
           if (status === 'All') {
             return (<SubscriptionCard
               key={subscription._id}
@@ -140,10 +190,10 @@ const Subscriptions = () => {
               onRenew={(id) => handleRenew(id)}
             />)
           }
-        }) : <p className="text-xl my-auto text-center md:col-span-3 lg:col-span-5 xl:col-span-5">You don't have {status} subscriptions</p>}
+        }) : <p className="text-xl my-auto text-center md:col-span-3 lg:col-span-5 xl:col-span-5">You don't have {length == 0 ? "Any" : status} subscriptions yet</p>}
       </div>
 
-    </section>
+    </section >
   )
 }
 

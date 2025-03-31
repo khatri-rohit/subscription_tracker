@@ -1,7 +1,8 @@
 import {
   BrowserRouter,
   Routes,
-  Route
+  Route,
+  Navigate
 } from 'react-router-dom';
 
 import './App.css';
@@ -18,37 +19,33 @@ import Account from './pages/Account';
 import Notifications from './pages/Notifications';
 import Profile from './pages/Profile';
 
-
 function App() {
+
 
   return (
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<Layout />}>
+          {/* Public routes */}
+          <Route index element={<Home />} />
           <Route path='/signup' element={<SignUp />} />
           <Route path='/signin' element={<SignIn />} />
-          <Route index element={
-            <ProtectRoute>
-              <Home />
-            </ProtectRoute>
-          } />
+
+          {/* Protected routes */}
           <Route path='/dashboard' element={
             <ProtectRoute>
               <Dashborad />
             </ProtectRoute>
           } />
 
-          <Route path='/dashboard/settings' element={<SettingLayout />}>
-            <Route index element={
-              <Account />
-            } />
-            <Route path='notifications' element={
-              <Notifications />
-            } />
-            <Route path='profile' element={
-              <Profile />
-            } />
-
+          <Route path='/dashboard/settings' element={
+            <ProtectRoute>
+              <SettingLayout />
+            </ProtectRoute>
+          }>
+            <Route index element={<Account />} />
+            <Route path='notifications' element={<Notifications />} />
+            <Route path='profile' element={<Profile />} />
           </Route>
 
           <Route path='/subscription' element={
@@ -56,11 +53,15 @@ function App() {
               <Subscriptions />
             </ProtectRoute>
           } />
+
           <Route path='/subscription/create-subs' element={
             <ProtectRoute>
               <CreateSubscription />
             </ProtectRoute>
           } />
+
+          {/* Redirect any unknown routes to home */}
+          <Route path="*" element={<Navigate to="/" />} />
         </Route>
       </Routes>
     </BrowserRouter>

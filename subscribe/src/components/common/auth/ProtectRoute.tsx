@@ -1,26 +1,31 @@
-import { useAppSelector } from "@/app/store";
-import { PropsWithChildren, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useAppSelector } from '@/app/store';
+import { useAuth } from '@/context/Auth';
+import { Loader } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Navigate } from 'react-router-dom';
 
-const ProtectRoute = ({ children }: PropsWithChildren) => {
-    const isAuth = useAppSelector((state) => state.rootReducers.isAuth)
-    const navigate = useNavigate();
-    const location = useLocation();
+
+const ProtectRoute = ({ children }: { children: React.ReactNode }) => {
+    const isAuth = useAppSelector((state) => state.rootReducers.isAuth);
+    const [isLoading, setIsLoading] = useState(true);
+    const { user } = useAuth()
 
     useEffect(() => {
-        if (!isAuth) {
-            navigate('/')
-        } else {
-            if (location.pathname === '/subscription')
-                navigate('/subscription');
-            else if (location.pathname === '/subscription/create-subs')
-                navigate('/subscription/create-subs');
-            else
-                navigate('/dashboard');
-        }
-    }, [isAuth])
+        // Short delay to allow auth check to complete
+        const timer = setTimeout(() => {
+            setIsLoading(false);
+        }, 100);
 
-    return children
-}
+        return () => clearTimeout(timer);
+    }, [user, isAuth]);
+
+    // Show loading state while checking authentication
+    if (isLoading) {
+        return <div className='h-screen flex items-center justify-center'>
+            <Loader size={70} className='animate-spin' />
+        </div>;
+    }
+    return isAuth ? <>{children}</> : <Navigate to="/" />;
+};
 
 export default ProtectRoute

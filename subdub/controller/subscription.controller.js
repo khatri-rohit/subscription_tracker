@@ -11,16 +11,18 @@ export const createSubscription = async (req, res, next) => {
         });
         console.log(subscription);
 
-        // await workflowClient.trigger({
-        //     url: `${SERVER_URL}/api/v1/workflows/subscription/reminder`,
-        //     body: {
-        //         subscriptionId: subscription.id,
-        //     },
-        //     headers: {
-        //         'content-type': 'application/json',
-        //     },
-        //     retries: 0,
-        // });
+        if (req.user.notify) {
+            await workflowClient.trigger({
+                url: `${SERVER_URL}/api/v1/workflows/subscription/reminder`,
+                body: {
+                    subscriptionId: subscription.id,
+                },
+                headers: {
+                    'content-type': 'application/json',
+                },
+                retries: 0,
+            });
+        }
 
         return res.status(200).json({
             success: true,

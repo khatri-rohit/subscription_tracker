@@ -1,6 +1,9 @@
-import * as z from 'zod';
+import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import * as z from 'zod';
+import { toast, } from "sonner"
+
 import {
     Form,
     FormControl,
@@ -11,8 +14,8 @@ import {
 } from '@/components/ui/form';
 import { useAuth } from '@/context/Auth';
 import { Input } from '@/components/ui/input';
-import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { useUpdatePassowrdMutation, useUpdateUserInfoMutation } from '@/services/users';
 
 const formSchema1 = z.object({
     firstName: z.string().min(2, "Name Atleast 2 Character Long").optional(),
@@ -30,6 +33,8 @@ const Account = () => {
     const { user } = useAuth();
 
     const [saveBtn1, setSaveBtn1] = useState<boolean>(true);
+    const [updateUserInfo, { isSuccess }] = useUpdateUserInfoMutation();
+    const [updatePassowrd, { isLoading }] = useUpdatePassowrdMutation()
 
     const form1 = useForm<z.infer<typeof formSchema1>>({
         resolver: zodResolver(formSchema1),
@@ -48,7 +53,6 @@ const Account = () => {
         }
     });
 
-
     const handleFormChange = () => {
         const { firstName, lastName } = form1.getValues()
         if (firstName !== user?.firstName || lastName !== user?.lastName) {
@@ -58,8 +62,38 @@ const Account = () => {
         }
     }
 
-    const handleSubmit = () => {
+    const confirmSubmit = async () => {
+        const { password, confirmPassword } = form2.getValues()
+        try {
+            await updatePassowrd({
+                _id: user?._id as string,
+                password: password as string,
+                confirmPassword: confirmPassword as string
+            });
 
+            toast.success("Password Changed");
+
+        } catch (error) {
+            toast.error("Check Your Password");
+            console.log(error);
+        }
+    }
+
+    const handleSubmit = async () => {
+        const { firstName, lastName, email } = form1.getValues()
+        try {
+            await updateUserInfo({
+                _id: user?._id as string,
+                firstName: firstName as string,
+                lastName: lastName as string,
+                email: email as string
+            });
+
+            toast.success("User Updated");
+
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     return (
@@ -119,11 +153,10 @@ const Account = () => {
                                 <FormItem>
                                     <FormLabel title="you can't change you registered email"
                                         className="block text-sm font-medium text-gray-600">
-                                        Email <span className='text-[10px]'>(you can't change you registered email)</span>
+                                        Email
                                     </FormLabel>
                                     <FormControl>
                                         <Input
-                                            title="you can't change you registered email"
                                             disabled
                                             placeholder="Enter Last Name"
                                             className="mt-1 block w-full px-4 py-2 border border-gray-300
@@ -206,7 +239,7 @@ const Account = () => {
                     onClick={() => form2.reset()}>
                     Cancel
                 </Button>
-                <Button className="px-6 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors">
+                <Button className="px-6 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors" onClick={confirmSubmit}>
                     Save Changes
                 </Button>
             </div>

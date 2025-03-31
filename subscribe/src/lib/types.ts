@@ -33,4 +33,25 @@ export type Tabs = {
     icon: React.ReactElement
 }
 
+export type UserInput = {
+    _id: string,
+    firstName: string,
+    lastName: string,
+    email: string
+}
+
+export type User = {
+    _id: string,
+    firstName: string,
+    lastName: string,
+    email: string,
+    notify: boolean
+}
+
+export type Pass = {
+    _id: string,
+    password: string,
+    confirmPassword: string,
+}
+
 export type SubsStatus = 'All' | 'active' | 'cancelled' | 'expired' 

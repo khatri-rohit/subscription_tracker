@@ -43,9 +43,9 @@ export const updateUser = async (req, res, next) => {
 
         console.log("Updation...");
 
-        const { firstName, lastName } = req.body;
+        const body = { ...req.body };
 
-        const user = await User.findByIdAndUpdate(req.params.id, { firstName, lastName }); // exclude password from the response
+        const user = await User.findByIdAndUpdate(req.params.id, { ...body }).select('-password');
 
         if (!user) {
             const error = new Error("User Not Found");
@@ -90,13 +90,13 @@ export const updatePassword = async (req, res, next) => {
 
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(confirmPassword, salt);
-        const updatePassword = await User.findByIdAndUpdate(req.params.id, { password: hashedPassword });
+        await User.findByIdAndUpdate(req.params.id, { password: hashedPassword }).select('-password');
 
         console.log("Password Updated")
 
         res.status(200).json({
             success: true,
-            data: updatePassword
+            data: user
         });
     } catch (error) {
         next(error);
@@ -119,11 +119,11 @@ export const deleteUser = async (req, res, next) => {
             throw error;
         }
 
-        await User.findByIdAndDelete(req.params.id);
+        await User.findByIdAndDelete(req.params.id).select('-password');
 
         res.status(200).json({
             success: true,
-            message: "User deleted"
+            data: user
         });
     } catch (error) {
         next(error);

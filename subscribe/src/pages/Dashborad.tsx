@@ -11,6 +11,8 @@ import { Input } from "@/components/ui/input"
 import SubsOverview from "@/components/common/SubsOverview.tsx";
 import { FadeLoader } from "react-spinners";
 import { Category, Subscription, SubsStatus, Tabs } from "@/lib/types";
+import { NavLink } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 const tabs: Tabs[] = [
   {
@@ -48,7 +50,6 @@ const Dashborad = () => {
 
   const { user } = useAuth()
   const dispatch = useAppDispatch()
-  // const { subscriptions } = useAppSelector((state) => state.rootReducers)
 
   const [filterSubscirpion, setFilterSubscription] = useState<Subscription[]>([]);
   const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
@@ -90,9 +91,10 @@ const Dashborad = () => {
       dispatch(setSubscription(data))
       setSubscriptions(data);
       setFilterSubscription(data);
+      setLength(data.length);
       console.log(data);
     }
-  }, [data])
+  }, [data, dispatch])
 
   return (
     <section className="p-10">
@@ -105,7 +107,7 @@ const Dashborad = () => {
             <Input className="border-none md:text-xl shadow-none"
               placeholder="Search Subscription" />
           </div>
-          <div className="tags text-[1em] flex items-center justify-between gap-x-2">
+          {length > 0 && (<div className="tags text-[1em] flex items-center justify-between gap-x-2">
             <span className={`bg-gray-100 font-light px-2 rounded-2xl cursor-pointer ${status === 'active' ? "font-semibold" : "font-light"}`}
               onClick={() => handleChangeStatus("active")}>
               Active
@@ -118,7 +120,7 @@ const Dashborad = () => {
               onClick={() => handleChangeStatus("expired")}>
               Expired
             </span>
-          </div>
+          </div>)}
         </div>
       </div>
 
@@ -136,8 +138,11 @@ const Dashborad = () => {
             } else if (status === "All") {
               return <SubsOverview key={subscription._id} name={subscription.name} renewalDate={subscription.renewalDate} status={subscription.status} />
             }
-          })) : <p className="text-xl my-auto text-center md:col-span-3 lg:col-span-4">You don't have {status} subscriptions</p>)
+          })) : <p className="text-xl my-auto text-center md:col-span-3 lg:col-span-4">You don't have {length == 0 ? "Any" : status} subscriptions</p>)
         }
+        {length === 0 && <NavLink to={'/subscription/create-subs'} className="text-xl my-auto text-center md:col-span-3 lg:col-span-4 ">
+          <Button variant={"secondary"} className="text-xl rounded-lg cursor-pointer p-5">Create You First Subscription Reminder</Button>
+        </NavLink>}
       </div>
 
       <div className="p-2 space-y-5 mt-8">
@@ -168,7 +173,7 @@ const Dashborad = () => {
       </div>
 
       {/* All Subscriptions */}
-      <div className={isError || isLoading ? "h-52 flex items-center justify-center" : "grid grid-cols-2 md:gap-5 gap-2 lg:gap-3 md:grid-cols-3 lg:grid-cols-4"}>
+      <div className={isError || isLoading ? "h-52 flex items-center justify-center" : "grid grid-cols-2 md:gap-5 gap-2 lg:gap-3 md:grid-cols-3 lg:grid-cols-4 min-h-56"}>
         {isError && <p className="text-2xl text-red-500">Something Went Wrong</p>}
         {!isError && (isLoading ? <FadeLoader
           color="#141010"
@@ -183,8 +188,10 @@ const Dashborad = () => {
               return <SubsOverview key={subscription._id} name={subscription.name}
                 renewalDate={subscription.renewalDate} status={subscription.status} />
             }
-          })
-        )
+          }))
+        }
+        {
+          filterSubscirpion.length === 0 && (<p className="text-xl my-auto text-center md:col-span-3 lg:col-span-4">You don't have {length == 0 ? "Any" : category} subscriptions</p>)
         }
       </div>
 

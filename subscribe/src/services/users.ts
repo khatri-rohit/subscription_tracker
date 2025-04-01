@@ -9,11 +9,11 @@ export const aboutUser = createApi({
     endpoints: (builder) => ({
         updateUserInfo: builder.mutation<User, UserInput>({
             query: (data) => {
-                const { _id, firstName, lastName } = data
+                const { _id, firstName, lastName, email } = data
                 return {
                     url: `/users/${_id}`,
                     method: 'PUT',
-                    body: { firstName, lastName }
+                    body: { firstName, lastName, email }
                 }
             }
         }),
@@ -36,12 +36,28 @@ export const aboutUser = createApi({
                     body: { notify }
                 }
             }
-        })
+        }),
+        updateUserAvatar: builder.mutation({
+            query: (data) => {
+                const { _id, profileImage } = data;
+
+                // Create FormData object
+                const formData = new FormData();
+                formData.append("profileImage", profileImage);
+                console.log(formData);
+                return {
+                    url: `/users/img/${_id}`,
+                    method: 'PUT',
+                    body: formData,
+                };
+            },
+        }),
     })
 })
 
 export const {
     useUpdateUserInfoMutation,
     useUpdatePassowrdMutation,
-    useUpdateEmailNotificationMutation
+    useUpdateEmailNotificationMutation,
+    useUpdateUserAvatarMutation
 } = aboutUser;

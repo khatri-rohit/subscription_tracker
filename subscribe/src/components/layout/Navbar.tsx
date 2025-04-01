@@ -6,12 +6,15 @@ import { useAppSelector } from '@/app/store';
 import { Button } from "../ui/button"
 import Setting from "../util/Setting";
 import DropDown from "../util/DropDown";
+import { useAuth } from "@/context/Auth";
 
 const Navbar = () => {
 
     const navigate = useNavigate();
     const { isAuth } = useAppSelector((state) => state.rootReducers);
     const [open, setOpen] = useState<boolean>(false);
+    const { user, imageUrl } = useAuth()
+    const img = user?.profileImage ? (imageUrl + "/" + user?.profileImage) : '/img/blank-avatar.webp';
 
     return (
         <header>
@@ -22,7 +25,8 @@ const Navbar = () => {
                 <div className="navbar flex items-center justify-between p-3">
                     <div className="nav-left flex items-end justify-between">
                         <div className="flex items-center">
-                            <img className="object-cover mx-1" src="/img/icon.png" alt="brand-icon" />
+                            <img className="object-cover mx-1"
+                                src={'/img/icon.png'} alt="profile" />
                             <NavLink to={isAuth ? "/dashboard" : "/"}>
                                 <h1 className="text-4xl mx-1">SubScribe</h1>
                             </NavLink>
@@ -48,7 +52,7 @@ const Navbar = () => {
                                 (<>
                                     {/* <Settings /> */}
                                     <div className="image z-10">
-                                        <img src="/img/blank-avatar.webp" alt="avatar"
+                                        <img src={img} alt="avatar"
                                             onClick={() => setOpen(prev => !prev)}
                                             className="object-contain w-10 rounded-full cursor-pointer" />
                                     </div>

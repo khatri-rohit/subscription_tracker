@@ -90,6 +90,7 @@ const Account = () => {
             });
 
             toast.success("User Updated");
+            window.location.reload()
 
         } catch (error) {
             console.log(error);

@@ -15,11 +15,13 @@ type User = {
     firstName: string
     lastName: string
     email: string
-    createdAt: string
+    createdAt: string,
+    profileImage: string
 }
 
 type AuthContextType = {
     apiUrl: string;
+    imageUrl: string;
     user: User | null
 }
 
@@ -27,7 +29,9 @@ const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
     const [user, setUser] = useState<User | null>(null);
+
     const apiUrl = import.meta.env.VITE_BACKEND_URL;
+    const imageUrl = import.meta.env.VITE_IMAGE_URL;
 
     const dispatch = useAppDispatch();
 
@@ -35,7 +39,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         try {
             axios.defaults.withCredentials = true;
             const request = await axios.post(`${apiUrl}/users/`);
-            console.log(request);
+            console.log(request.data.data);
             dispatch(isAuthenticated(true));
             setUser(request.data.data);
             console.log("Authenticated");
@@ -52,7 +56,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     }, [])
 
     return (
-        <AuthContext.Provider value={{ apiUrl, user }}>
+        <AuthContext.Provider value={{ apiUrl, user, imageUrl }}>
             {children}
         </AuthContext.Provider >
     )

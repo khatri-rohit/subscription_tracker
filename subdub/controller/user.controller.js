@@ -41,7 +41,6 @@ export const updateUser = async (req, res, next) => {
             throw error;
         }
 
-        console.log("Updation...");
 
         const body = { ...req.body };
 
@@ -52,7 +51,35 @@ export const updateUser = async (req, res, next) => {
             error.statusCode = 404;
             throw error;
         }
-        console.log("User Updated")
+
+        res.status(200).json({
+            success: true,
+            data: user
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const updateImage = async (req, res, next) => {
+    try {
+        console.log(req.file.path);
+
+        if (req.params.id !== req.user.id) {
+            const error = new Error("Unauthorized");
+            error.statusCode = 401;
+            throw error;
+        }
+
+        const user = await User.findByIdAndUpdate(req.params.id, {
+            profileImage: req.file.path
+        }).select('-password');
+
+        if (!user) {
+            const error = new Error("User Not Found");
+            error.statusCode = 404;
+            throw error;
+        }
 
         res.status(200).json({
             success: true,
@@ -70,7 +97,6 @@ export const updatePassword = async (req, res, next) => {
             error.statusCode = 401;
             throw error;
         }
-        console.log("Updating Password...")
 
         const user = await User.findById(req.params.id); // exclude password from the response
         if (!user) {
@@ -91,8 +117,6 @@ export const updatePassword = async (req, res, next) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(confirmPassword, salt);
         await User.findByIdAndUpdate(req.params.id, { password: hashedPassword }).select('-password');
-
-        console.log("Password Updated")
 
         res.status(200).json({
             success: true,

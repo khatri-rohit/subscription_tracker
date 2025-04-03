@@ -1,6 +1,10 @@
 import { JWT_SECRET } from '../config/env.js';
 import User from "../models/user.model.js";
 import jwt from "jsonwebtoken";
+import { privateDecrypt } from 'crypto';
+import fs from 'fs';
+
+const publicKey = fs.readFileSync('./private.pem', 'utf8');
 
 const authorize = async (req, res, next) => {
     try {
@@ -9,10 +13,17 @@ const authorize = async (req, res, next) => {
         // if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
         //     token = req.headers.authorization.split(' ')[1];
         // }
+        // console.log({ ...req.cookies });
         const { token } = req.cookies
-        if (!token) return res.status(401).json({ message: "Unauthorized" });
+        // console.log(token.data.toString());
 
-        const decoded = jwt.verify(token, JWT_SECRET);
+        const decryptedToken = privateDecrypt(publicKey, Buffer.from(token, 'base64')).toString('utf8');
+        // console.log(decryptedToken);
+        console.log("Authorized");
+
+        if (!decryptedToken) return res.status(401).json({ message: "Unauthorized" });
+
+        const decoded = jwt.verify(decryptedToken, JWT_SECRET);
 
         const user = await User.findById(decoded.userId).select('-password');
 
@@ -23,7 +34,7 @@ const authorize = async (req, res, next) => {
     } catch (error) {
         res.status(401).json({
             message: "Unauthorized",
-            error: error.message
+            error: error
         });
     }
 };

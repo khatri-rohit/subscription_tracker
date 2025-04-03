@@ -4,6 +4,7 @@ const errorMiddleware = (err, req, res, next) => {
         let error = { ...err };
 
         error.message = err.message;
+        console.log("Error Acrred -> ", error.message);
 
         // Mongoose Bad OjectId
         if (err.name === 'CastError') {
@@ -26,7 +27,6 @@ const errorMiddleware = (err, req, res, next) => {
             error.statusCode = 400;
         }
 
-        console.log("Error Acrred -> ", error);
         res.status(error.statusCode || 500).json({
             success: false, error: error.message || 'Server Error'
         });

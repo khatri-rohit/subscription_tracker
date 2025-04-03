@@ -63,7 +63,7 @@ export const updateUser = async (req, res, next) => {
 
 export const updateImage = async (req, res, next) => {
     try {
-        console.log(req.file.path);
+        console.log(req.file);
 
         if (req.params.id !== req.user.id) {
             const error = new Error("Unauthorized");

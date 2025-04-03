@@ -5,6 +5,11 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { JWT_EXPRIES_IN, JWT_SECRET, NODE_ENV } from "../config/env.js";
 import { userCreated } from "../utils/send-email.js";
+import { publicEncrypt } from 'crypto'
+import fs from 'fs';
+
+const privateKey = fs.readFileSync('./private.pem', 'utf8');
+
 
 export const signUp = async (req, res, next) => {
     const session = await mongoose.startSession(); // start a session for ATOMIC OPERATION
@@ -32,7 +37,10 @@ export const signUp = async (req, res, next) => {
 
         const token = jwt.sign({ userId: newUsers[0]._id }, JWT_SECRET, { expiresIn: JWT_EXPRIES_IN });
 
-        res.cookie('token', token, {
+        const encryptToken = publicEncrypt(privateKey, Buffer.from(token)).toString('base64');
+        // console.log(encryptToken);
+
+        res.cookie('token', encryptToken, {
             httpOnly: false,
             secure: NODE_ENV === 'production',
             sameSite: NODE_ENV === 'production' ? 'none' : 'strict',
@@ -81,13 +89,16 @@ export const signIn = async (req, res, next) => {
 
         const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: JWT_EXPRIES_IN });
 
-        res.cookie('token', token, {
+        // console.log(token);
+        const encryptToken = publicEncrypt(privateKey, Buffer.from(token)).toString('base64');
+        // console.log(encryptToken);
+
+        res.cookie('token', encryptToken, {
             httpOnly: false,
             secure: NODE_ENV === 'production',
             sameSite: NODE_ENV === 'production' ? 'none' : 'strict',
             maxAge: 7 * 24 * 60 * 60 * 1000
         });
-
         res.status(200).json({
             success: true,
             message: 'User Sign In in successfully',

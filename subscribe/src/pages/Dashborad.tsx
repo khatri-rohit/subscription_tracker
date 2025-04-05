@@ -129,8 +129,9 @@ const Dashborad = () => {
       setSubscriptions(data);
       setFilterSubscription(data);
       setLength(data.length);
-      // console.log(data);
+      console.log(data?.length);
     }
+    console.log(data);
   }, [data, dispatch])
 
   return (
@@ -179,9 +180,11 @@ const Dashborad = () => {
             } else if (status === "All") {
               return <SubsOverview key={subscription._id} name={subscription.name} renewalDate={subscription.renewalDate} status={subscription.status} />
             }
-          })) : <p className="text-xl my-auto text-center md:col-span-3 lg:col-span-4">You don't have {length == 0 ? "Any" : status} subscriptions</p>)
+          })) : <p className="text-xl my-auto text-center md:col-span-3 lg:col-span-4">
+            You don't have {length == 0 ? "Any" : status} subscriptions
+          </p>)
         }
-        {data?.length === 0 && <NavLink to={'/subscription/create-subs'}
+        {(data?.length === 0 || !data) && <NavLink to={'/subscription/create-subs'}
           className="text-xl my-auto text-center md:col-span-3 lg:col-span-4">
           <Button variant={"secondary"}
             className="text-xl rounded-lg cursor-pointer p-5">

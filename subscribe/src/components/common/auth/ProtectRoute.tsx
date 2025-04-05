@@ -14,7 +14,7 @@ const ProtectRoute = ({ children }: { children: React.ReactNode }) => {
         // Short delay to allow auth check to complete
         const timer = setTimeout(() => {
             setIsLoading(false);
-        }, 10);
+        }, 100);
 
         return () => clearTimeout(timer);
     }, [user, isAuth]);

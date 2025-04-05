@@ -52,6 +52,17 @@ export const aboutUser = createApi({
                 };
             },
         }),
+        deleteUser: builder.mutation({
+            query: (data) => {
+                const { _id } = data;
+                return {
+                    url: `/users/${_id}`,
+                    method: 'DELETE',
+                };
+            },
+        }),
+
+
     })
 })
 
@@ -59,5 +70,6 @@ export const {
     useUpdateUserInfoMutation,
     useUpdatePassowrdMutation,
     useUpdateEmailNotificationMutation,
-    useUpdateUserAvatarMutation
+    useUpdateUserAvatarMutation,
+    useDeleteUserMutation
 } = aboutUser;

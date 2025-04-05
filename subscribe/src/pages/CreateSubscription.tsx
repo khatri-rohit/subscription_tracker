@@ -43,8 +43,10 @@ const formSchema = z.object({
     frequency: z.enum(["monthly", "daily", "weekly", "yearly"]),
     category: z.string().min(1, "Category is required").toLowerCase(),
     paymentMethod: z.string().min(1, "Payment method is required"),
-    startDate: z.date(),
-    // status: z.enum(["active", "cancelled", "expired"])
+    startDate: z.date().refine(
+        (date) => date <= new Date(),
+        { message: "Start date cannot be in the  future" }
+    )
 });
 
 const CreateSubscription = () => {
@@ -92,11 +94,9 @@ const CreateSubscription = () => {
                 paymentMethod,
                 startDate
             }
-            console.log(newSubscription);
             await createSubscription(newSubscription)
-            console.log(isError);
             if (!isError && !isLoading)
-                navigate('/subscription', { replace: true })
+                navigate('/subscription')
         } catch (error) {
             console.log(error);
         }

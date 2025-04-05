@@ -33,8 +33,8 @@ const Account = () => {
     const { user } = useAuth();
 
     const [saveBtn1, setSaveBtn1] = useState<boolean>(true);
-    const [updateUserInfo, { isSuccess }] = useUpdateUserInfoMutation();
-    const [updatePassowrd, { isLoading }] = useUpdatePassowrdMutation()
+    const [updateUserInfo] = useUpdateUserInfoMutation();
+    const [updatePassowrd] = useUpdatePassowrdMutation()
 
     const form1 = useForm<z.infer<typeof formSchema1>>({
         resolver: zodResolver(formSchema1),

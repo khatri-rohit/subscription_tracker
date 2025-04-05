@@ -32,6 +32,23 @@ export const createSubscription = async (req, res, next) => {
     }
 };
 
+export const getSubscription = async (req, res, next) => {
+    try {
+        const id = req.params.id;
+
+        const subscription = await Subscription.findById(id);
+
+        // return res.status(200).json({
+        // success:true,
+        // data: subscription
+        // })
+
+        return res.status(200).json(subscription)
+    } catch (error) {
+        next(error);
+    }
+};
+
 export const getUserSubscriptions = async (req, res, next) => {
     try {
         if (req.user.id !== req.params.id) {

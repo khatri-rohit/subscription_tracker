@@ -15,7 +15,6 @@ import { Button } from "@/components/ui/button"
 import {
     Form,
     FormControl,
-    // FormDescription,
     FormField,
     FormItem,
     FormLabel,
@@ -53,7 +52,6 @@ const CreateSubscription = () => {
     const navigate = useNavigate()
     const [showCustomInput, setShowCustomInput] = useState<boolean>(false);
 
-
     const [createSubscription, { isError, isLoading }] = useCreateSubscriptionMutation();
 
     const form = useForm<z.infer<typeof formSchema>>({
@@ -72,10 +70,11 @@ const CreateSubscription = () => {
 
     // Update UI when platform changes
     useEffect(() => {
-        setShowCustomInput(selectedPlatform === "other");
+        setShowCustomInput(selectedPlatform === "Other");
         if (selectedPlatform !== "other") {
             form.setValue("customPlatform", "");
         }
+        console.log(selectedPlatform);
     }, [selectedPlatform, form]);
 
 
@@ -83,7 +82,7 @@ const CreateSubscription = () => {
 
         try {
             const { platformId, price, currency, category, frequency, paymentMethod, startDate, customPlatform } = values;
-            const name: string = platformId === 'other' ? (customPlatform as string) : platformId;
+            const name: string = platformId === 'Other' ? (customPlatform as string) : platformId;
             const newSubscription: CreateSubscriptions = {
                 name,
                 price,

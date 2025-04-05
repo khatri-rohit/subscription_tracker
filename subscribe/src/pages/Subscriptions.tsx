@@ -3,10 +3,10 @@ import { useNavigate } from "react-router-dom"
 import { X, List, Rows4, Search, Sofa, Tv2Icon, Volleyball } from "lucide-react"
 
 import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
 
 import SubscriptionCard from "@/components/common/SubscriptionCard"
 import { Category, Subscription, Tabs } from "@/lib/types"
-import { Button } from "@/components/ui/button"
 import { useGetAllSubscriptionsQuery } from "@/services/subscriptions"
 import { useAuth } from "@/context/Auth"
 
@@ -81,9 +81,7 @@ const Subscriptions = () => {
 
   function onSubmit(e: FormEvent) {
     e.preventDefault()
-    console.log(search);
     const subs = allSubscriptions.filter((m) => m.name.toLowerCase().includes(search));
-    console.log(subs);
     setSearchSubs(subs)
   }
 
@@ -97,9 +95,14 @@ const Subscriptions = () => {
       } else {
         setStatus(category);
         if (category !== 'All') {
-          const newSubsLen = allSubscriptions.filter((subscription) => subscription.category === category);
-          setLength(newSubsLen.length);
-        } else setLength(1);
+          const newSubsLen =
+            allSubscriptions.filter((subscription) => subscription.category === category);
+          if (newSubsLen.length > 0)
+            setLength(newSubsLen.length);
+        } else {
+          setLength(1);
+          setSearchSubs([]);
+        }
       }
     }
   }
@@ -136,7 +139,7 @@ const Subscriptions = () => {
               placeholder="Search Subscription"
               value={search}
               onChange={handleChange} />
-            {search.length > 0 && (<X className="cursor-pointer" onClick={handleX} />)}
+            {search.length > 0 && (<X className="cursor-pointer mr-1.5 p-0.5" onClick={handleX} />)}
           </form>
 
           <Button className="bg-[#636AE8] text-[1.1em] text-white px-4 py-2 rounded-lg hover:bg-[#4B51B8] cursor-pointer"

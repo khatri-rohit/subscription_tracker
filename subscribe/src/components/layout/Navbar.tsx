@@ -54,7 +54,7 @@ const Navbar = () => {
                                     <div className="image z-10">
                                         <img src={img} alt="avatar"
                                             onClick={() => setOpen(prev => !prev)}
-                                            className="object-contain w-10 rounded-full cursor-pointer" />
+                                            className="object-cover w-10 h-10 rounded-full cursor-pointer" />
                                     </div>
                                 </>) :
                                 (

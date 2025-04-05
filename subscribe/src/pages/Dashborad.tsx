@@ -1,49 +1,47 @@
-import { useEffect, useState } from "react";
-import { List, Music, Search, Sofa, Video } from "lucide-react"
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { NavLink } from "react-router-dom";
+import { List, Music, Search, Sofa, Video, X } from "lucide-react"
+import { FadeLoader } from "react-spinners";
 
-import { useAppDispatch } from "@/app/store";
-import { useGetAllSubscriptionsQuery } from '@/services/subscriptions'
+import { Category, Subscription, SubsStatus, Tabs } from "@/lib/types";
+import SubsOverview from "@/components/common/SubsOverview.tsx";
 import { setSubscription } from '@/features/slice'
+import { useGetAllSubscriptionsQuery } from '@/services/subscriptions'
+import { useAppDispatch } from "@/app/store";
 import { useAuth } from "@/context/Auth.tsx";
 
 import { Input } from "@/components/ui/input"
-
-import SubsOverview from "@/components/common/SubsOverview.tsx";
-import { FadeLoader } from "react-spinners";
-import { Category, Subscription, SubsStatus, Tabs } from "@/lib/types";
-import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
 const tabs: Tabs[] = [
   {
     category: "All",
     name: "All",
-    idle: "text-lg flex justify-center items-center w-[25%] gap-x-1 relative hover:after:absolute hover:after:-bottom-[13px] hover:after:w-[115%] hover:after:-left-[6.5px] hover:after:block hover:after:h-[3px] hover:after:rounded-b-4xl hover:after:bg-[#636AE8]",
-    active: "text-lg flex justify-center items-center w-[25%] gap-x-1 relative after:absolute after:-bottom-[13px] after:w-[115%] after:-left-[6.5px] after:block after:h-[3px] after:rounded-b-4xl after:bg-[#636AE8]",
+    idle: "text-lg flex justify-center items-center w-[25%] gap-x-1 relative hover:after:absolute hover:after:-bottom-[13px] hover:after:w-[100%] hover:after:-left-[6.5px] hover:after:block hover:after:h-[3px] hover:after:rounded-b-4xl hover:after:bg-[#636AE8]",
+    active: "text-lg flex justify-center items-center w-[25%] gap-x-1 relative after:absolute after:-bottom-[13px] after:w-[100%] after:-left-[6.5px] after:block after:h-[3px] after:rounded-b-4xl after:bg-[#636AE8]",
     icon: <List color="#BBBBBB" />
   },
   {
     category: "entertainment",
     name: "Entertainment",
-    idle: "text-lg flex justify-center items-center w-[25%] gap-x-1 relative hover:after:absolute hover:after:-bottom-[13px] hover:after:w-[115%] hover:after:-left-[6.5px] hover:after:block hover:after:h-[3px] hover:after:rounded-b-4xl hover:after:bg-[#636AE8]",
-    active: "text-lg flex justify-center items-center w-[25%] gap-x-1 relative after:absolute after:-bottom-[13px] after:w-[115%] after:-left-[6.5px] after:block after:h-[3px] after:rounded-b-4xl after:bg-[#636AE8]",
+    idle: "text-lg flex justify-center items-center w-[25%] gap-x-1 relative hover:after:absolute hover:after:-bottom-[13px] hover:after:w-[100%] hover:after:-left-[6.5px] hover:after:block hover:after:h-[3px] hover:after:rounded-b-4xl hover:after:bg-[#636AE8]",
+    active: "text-lg flex justify-center items-center w-[25%] gap-x-1 relative after:absolute after:-bottom-[13px] after:w-[100%] after:-left-[6.5px] after:block after:h-[3px] after:rounded-b-4xl after:bg-[#636AE8]",
     icon: <Music color="#BBBBBB" />
   },
   {
     category: "sports",
     name: "Sports",
-    idle: "text-lg flex justify-center items-center w-[25%] gap-x-1 relative hover:after:absolute hover:after:-bottom-[13px] hover:after:w-[115%] hover:after:-left-[6.5px] hover:after:block hover:after:h-[3px] hover:after:rounded-b-4xl hover:after:bg-[#636AE8]",
-    active: "text-lg flex justify-center items-center w-[25%] gap-x-1 relative after:absolute after:-bottom-[13px] after:w-[115%] after:-left-[6.5px] after:block after:h-[3px] after:rounded-b-4xl after:bg-[#636AE8]",
+    idle: "text-lg flex justify-center items-center w-[25%] gap-x-1 relative hover:after:absolute hover:after:-bottom-[13px] hover:after:w-[100%] hover:after:-left-[6.5px] hover:after:block hover:after:h-[3px] hover:after:rounded-b-4xl hover:after:bg-[#636AE8]",
+    active: "text-lg flex justify-center items-center w-[25%] gap-x-1 relative after:absolute after:-bottom-[13px] after:w-[100%] after:-left-[6.5px] after:block after:h-[3px] after:rounded-b-4xl after:bg-[#636AE8]",
     icon: <Video color="#BBBBBB" />
   },
   {
     category: "lifestyle",
     name: "Lifestyle",
-    idle: "text-lg flex justify-center items-center w-[25%] gap-x-1 relative hover:after:absolute hover:after:-bottom-[13px] hover:after:w-[115%] hover:after:-left-[6.5px] hover:after:block hover:after:h-[3px] hover:after:rounded-b-4xl hover:after:bg-[#636AE8]",
-    active: "text-lg flex justify-center items-center w-[25%] gap-x-1 relative after:absolute after:-bottom-[13px] after:w-[115%] after:-left-[6.5px] after:block after:h-[3px] after:rounded-b-4xl after:bg-[#636AE8]",
+    idle: "text-lg flex justify-center items-center w-[25%] gap-x-1 relative hover:after:absolute hover:after:-bottom-[13px] hover:after:w-[100%] hover:after:-left-[6.5px] hover:after:block hover:after:h-[3px] hover:after:rounded-b-4xl hover:after:bg-[#636AE8]",
+    active: "text-lg flex justify-center items-center w-[25%] gap-x-1 relative after:absolute after:-bottom-[13px] after:w-[100%] after:-left-[6.5px] after:block after:h-[3px] after:rounded-b-4xl after:bg-[#636AE8]",
     icon: <Sofa color="#BBBBBB" />
   },
-
 ]
 
 const Dashborad = () => {
@@ -57,18 +55,16 @@ const Dashborad = () => {
   const [category, setCategory] = useState<Category>("All");
   const [status, setStatus] = useState<SubsStatus>("All");
   const [length, setLength] = useState<number>(1);
+  const [search, setSearch] = useState<string>("");
+  const [filterSearch, setFilterSearch] = useState<string>("");
 
   const {
     isLoading,
     data,
-    // error,
     isError
   } = useGetAllSubscriptionsQuery(user?._id, {
     skip: !user?._id.trim(),
   });
-
-  // const isLoading = true
-  // const isError = false
 
   const handleChangeStatus = (newStatus: SubsStatus) => {
     if (status === newStatus) {
@@ -79,20 +75,61 @@ const Dashborad = () => {
       const newSubsLen = subscriptions.filter((subscription) => subscription.status === newStatus);
       setLength(newSubsLen.length);
     }
+  }
 
+  const handleSearch = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (search.length > 0) {
+      const subs = subscriptions.filter((m) => m.name.toLowerCase().includes(search));
+      setSubscriptions(subs);
+    }
+  }
+
+  const handleChange1 = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (value.length === 0) {
+      setSearch(value)
+      setSubscriptions(data as Subscription[])
+    } else {
+      setSearch(value)
+    }
+  }
+
+  const handleChange2 = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (value.length === 0) {
+      setFilterSearch(value)
+      setFilterSubscription(data as Subscription[])
+    } else {
+      setFilterSearch(value)
+    }
+  }
+
+  const handleFilterSearch = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (filterSearch.length > 0) {
+      const subs = filterSubscirpion.filter((m) => m.name.toLowerCase().includes(filterSearch));
+      setFilterSubscription(subs);
+    }
+  }
+
+  const handleX1 = () => {
+    setSearch("");
+    setSubscriptions(data as Subscription[]);
+  }
+
+  const handleX2 = () => {
+    setFilterSearch("");
+    setFilterSubscription(data as Subscription[]);
   }
 
   useEffect(() => {
-    // console.log("isLoading -> " + isLoading);
-    // console.log("isError -> " + isError);
-    // console.log("Error -> " + error);
-
     if (data !== undefined) {
       dispatch(setSubscription(data))
       setSubscriptions(data);
       setFilterSubscription(data);
       setLength(data.length);
-      console.log(data);
+      // console.log(data);
     }
   }, [data, dispatch])
 
@@ -102,12 +139,16 @@ const Dashborad = () => {
         <h3 className="text-3xl">Subscription Overview</h3>
         {/* Search Overview */}
         <div className="flex items-center gap-x-2 w-full">
-          <div className="border-[.12em] border-[#BCC1CA] min-w-[75%] flex items-center rounded-lg shadow-2xs">
+          <form onSubmit={handleSearch} className="border-[.12em] border-[#BCC1CA] min-w-[75%] flex items-center rounded-lg shadow-2xs">
             <Search className="mx-2" />
             <Input className="border-none md:text-xl shadow-none"
-              placeholder="Search Subscription" />
-          </div>
-          {length > 0 && (<div className="tags text-[1em] flex items-center justify-between gap-x-2">
+              placeholder="Search Subscription"
+              value={search}
+              onChange={handleChange1} />
+            {search.length > 0 && (<X className="cursor-pointer mr-1.5 p-0.5" onClick={handleX1} />)}
+          </form>
+
+          {(data?.length as number) > 0 && (<div className="tags text-[1em] flex items-center justify-between gap-x-2">
             <span className={`bg-gray-100 font-light px-2 rounded-2xl cursor-pointer ${status === 'active' ? "font-semibold" : "font-light"}`}
               onClick={() => handleChangeStatus("active")}>
               Active
@@ -140,22 +181,31 @@ const Dashborad = () => {
             }
           })) : <p className="text-xl my-auto text-center md:col-span-3 lg:col-span-4">You don't have {length == 0 ? "Any" : status} subscriptions</p>)
         }
-        {length === 0 && <NavLink to={'/subscription/create-subs'} className="text-xl my-auto text-center md:col-span-3 lg:col-span-4 ">
-          <Button variant={"secondary"} className="text-xl rounded-lg cursor-pointer p-5">Create You First Subscription Reminder</Button>
+        {data?.length === 0 && <NavLink to={'/subscription/create-subs'}
+          className="text-xl my-auto text-center md:col-span-3 lg:col-span-4">
+          <Button variant={"secondary"}
+            className="text-xl rounded-lg cursor-pointer p-5">
+            Create Reminder Now
+          </Button>
         </NavLink>}
       </div>
 
-      <div className="p-2 space-y-5 mt-8">
+      <div className="p-2 space-y-5 mt-8 mb-3">
         {/* Search Overview */}
         <div className="p-2 space-y-5 w-fit">
           <h3 className="text-3xl">Filter & Search Subscriptions</h3>
           {/* Search Overview */}
           <div className="flex items-center gap-x-2 w-full">
-            <div className="border-[.12em] border-[#BCC1CA] w-full flex items-center rounded-lg shadow-2xs">
+            <form onSubmit={handleFilterSearch} className="border-[.12em] border-[#BCC1CA] w-full flex items-center rounded-lg shadow-2xs">
               <Search className="mx-2" />
-              <Input className="border-none md:text-xl shadow-none"
+              <Input value={filterSearch}
+                // onChange={(e) => setFilterSearch(e.target.value)}
+                onChange={handleChange2}
+                className="border-none md:text-xl shadow-none"
                 placeholder="Search Subscription" />
-            </div>
+              {filterSearch.length > 0 &&
+                (<X className="cursor-pointer mr-1.5 p-0.5" onClick={handleX2} />)}
+            </form>
           </div>
         </div>
 

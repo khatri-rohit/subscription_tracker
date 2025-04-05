@@ -26,9 +26,9 @@ function App() {
         <Route path='/' element={<Layout />}>
           {/* Public routes But Authorised User Can't See it */}
           <Route index element={
-            <ProtectRoute>
-              <Home />
-            </ProtectRoute>
+            // <ProtectRoute>
+            <Home />
+            // </ProtectRoute>
           } />
           <Route path='/signup' element={<SignUp />} />
           <Route path='/signin' element={<SignIn />} />
@@ -40,6 +40,7 @@ function App() {
             </ProtectRoute>
           } />
 
+          {/* Setting Pages Layout */}
           <Route path='/dashboard/settings' element={
             <ProtectRoute>
               <SettingLayout />
@@ -62,8 +63,8 @@ function App() {
             </ProtectRoute>
           } />
 
-          {/* Redirect any unknown routes to home */}
           <Route path="*" element={<Navigate to="/" />} />
+          {/* Redirect any unknown routes to home */}
         </Route>
       </Routes>
     </BrowserRouter>

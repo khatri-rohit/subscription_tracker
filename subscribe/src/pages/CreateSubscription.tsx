@@ -1,10 +1,15 @@
+import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
 import { CalendarIcon } from "lucide-react"
-import { format } from "date-fns"
-import { useEffect, useState } from "react"
 import { BeatLoader } from "react-spinners"
+import { useNavigate } from "react-router-dom"
+import { format } from "date-fns"
+
+import { cn, platforms } from "@/lib/utils"
+import { CreateSubscriptions } from "@/lib/types"
+import { useCreateSubscriptionMutation } from "@/services/subscriptions"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -30,11 +35,6 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover"
-import { cn, platforms } from "@/lib/utils"
-
-import { CreateSubscriptions } from "@/lib/types"
-import { useCreateSubscriptionMutation } from "@/services/subscriptions"
-import { useNavigate } from "react-router-dom"
 
 const formSchema = z.object({
     platformId: z.string().min(1, "Please select a platform"),

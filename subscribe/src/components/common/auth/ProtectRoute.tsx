@@ -1,9 +1,8 @@
-import { useAppSelector } from '@/app/store';
-import { useAuth } from '@/context/Auth';
-import { Loader } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-
+import { Loader } from 'lucide-react';
+import { useAppSelector } from '@/app/store';
+import { useAuth } from '@/context/Auth';
 
 const ProtectRoute = ({ children }: { children: React.ReactNode }) => {
     const isAuth = useAppSelector((state) => state.rootReducers.isAuth);
@@ -28,11 +27,13 @@ const ProtectRoute = ({ children }: { children: React.ReactNode }) => {
     }
 
     if (!isAuth) {
+        console.log("Rohit");
         return <Navigate to="/" />
     }
 
-    if (isAuth && location.pathname === '/')
+    if (isAuth && location.pathname === '/'){
         return <Navigate to="/dashboard" />
+    }
 
     return <>{children}</>
 };

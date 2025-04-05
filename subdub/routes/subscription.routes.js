@@ -12,7 +12,7 @@ import authorize from '../middleware/auth.middleware.js';
 
 const subscriptionRouter = Router();
 
-subscriptionRouter.get('/', getSubscriptions);
+subscriptionRouter.get('/', authorize, getSubscriptions);
 
 // subscriptionRouter.get('/:id', (req, res) => {
 //     res.send("Subscription");

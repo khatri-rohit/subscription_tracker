@@ -6,7 +6,7 @@ type Props = {
 
 const Model = ({ children, setting }: Props) => {
     return (
-        <div className={`${setting ? "bg-white/50" : "bg-white"} h-screen absolute top-0 w-full flex items-center justify-center`}>
+        <div className={`${setting ? "bg-white/80" : "bg-white"} h-screen absolute top-0 w-full flex items-center justify-center z-10`}>
             {children}
         </div>
     )

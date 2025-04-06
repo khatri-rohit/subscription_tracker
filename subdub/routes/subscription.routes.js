@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import {
+    getSubscription,
     createSubscription,
     getUserSubscriptions,
     updateSubscription,
@@ -14,9 +15,7 @@ const subscriptionRouter = Router();
 
 subscriptionRouter.get('/', authorize, getSubscriptions);
 
-// subscriptionRouter.get('/:id', (req, res) => {
-//     res.send("Subscription");
-// });
+subscriptionRouter.get('/:id', authorize, getSubscription);
 
 subscriptionRouter.get('/upcoming_renewals', authorize, renewalSubscription);
 

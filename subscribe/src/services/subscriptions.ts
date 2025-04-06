@@ -10,17 +10,22 @@ export const allSubscriptions = createApi({
         getAllSubscriptions: builder.query<Subscription[], string | undefined>({
             query: (userId) => `/subscriptions/user/${userId}`,
         }),
+        getSubscription: builder.query<Subscription, string | undefined>({
+            query: (userId) => `/subscriptions/${userId}`,
+        }),
         createSubscription: builder.mutation<Subscription[], CreateSubscriptions>({
             query: (newSubscription) => ({
                 url: '/subscriptions',
                 method: 'POST',
                 body: newSubscription
             })
-        })
+        }),
+
     })
 })
 
 export const {
     useGetAllSubscriptionsQuery,
+    useGetSubscriptionQuery,
     useCreateSubscriptionMutation
 } = allSubscriptions;

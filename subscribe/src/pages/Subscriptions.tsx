@@ -75,13 +75,12 @@ const Subscriptions = () => {
   const [searchedSubs, setSearchSubs] = useState<Subscription[]>([]);
 
   const handleEdit = (id: string) => {
-    console.log(id);
     setId(id);
     setEdit(true);
-    console.log(allSubscriptions.find((subs) => subs._id === id));
   }
   const handleCancel = (id: string) => {
     console.log(id);
+
   }
   const handleRenew = (id: string) => {
     console.log(id);
@@ -90,7 +89,7 @@ const Subscriptions = () => {
   function onSubmit(e: FormEvent) {
     e.preventDefault()
     const subs = allSubscriptions.filter((m) => m.name.toLowerCase().includes(search));
-    setSearchSubs(subs)
+    setSearchSubs(subs);
   }
 
   const handleChangeTabs = (category: Category) => {
@@ -139,7 +138,8 @@ const Subscriptions = () => {
     <>
       {edit && (
         <Model setting="edit">
-          <EditSubscription setEdit={setEdit} subscription={allSubscriptions.find((subs) => subs._id === id)} />
+          <EditSubscription setEdit={setEdit}
+            subscription={allSubscriptions.find((subs) => subs._id === id)} />
         </Model>
       )}
       <section className="p-10">

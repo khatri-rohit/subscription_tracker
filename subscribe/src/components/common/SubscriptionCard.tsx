@@ -1,5 +1,6 @@
 import { formatDate, formatCurrency } from '@/lib/utils';
 import { AlertCircle, Edit2, Trash2, RefreshCw } from 'lucide-react';
+import { Button } from '../ui/button';
 
 interface SubscriptionCardProps {
     subscription: {
@@ -57,23 +58,23 @@ const SubscriptionCard = ({ subscription, onEdit, onCancel, onRenew }: Subscript
                 {/* Hover Actions */}
                 <div className="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
                     <div className="flex gap-2 justify-end">
-                        <button
-                            className="p-2 rounded-full bg-blue-50 hover:bg-blue-100 text-blue-600"
+                        <Button
+                            className="p-2 rounded-full bg-blue-50 hover:bg-blue-100 text-blue-600 cursor-pointer"
                             onClick={() => onEdit(subscription._id)}>
                             <Edit2 size={16} />
-                        </button>
+                        </Button>
                         {isExpired ? (
-                            <button
-                                className="p-2 rounded-full bg-green-50 hover:bg-green-100 text-green-600"
+                            <Button
+                                className="p-2 rounded-full bg-green-50 hover:bg-green-100 text-green-600 cursor-pointer"
                                 onClick={() => onRenew(subscription._id)}>
                                 <RefreshCw size={16} />
-                            </button>
+                            </Button>
                         ) : (
-                            <button
-                                className="p-2 rounded-full bg-red-50 hover:bg-red-100 text-red-600"
+                            <Button
+                                className="p-2 rounded-full bg-red-50 hover:bg-red-100 text-red-600 cursor-pointer"
                                 onClick={() => onCancel(subscription._id)}>
                                 <Trash2 size={16} />
-                            </button>
+                            </Button>
                         )}
                     </div>
                 </div>

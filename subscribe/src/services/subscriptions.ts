@@ -7,12 +7,6 @@ export const allSubscriptions = createApi({
     reducerPath: "subscriptionAPi",
     baseQuery: fetchBaseQuery({ baseUrl: BASE_URL, credentials: 'include' }),
     endpoints: (builder) => ({
-        getAllSubscriptions: builder.query<Subscription[], string | undefined>({
-            query: (userId) => `/subscriptions/user/${userId}`,
-        }),
-        getSubscription: builder.query<Subscription, string | undefined>({
-            query: (userId) => `/subscriptions/${userId}`,
-        }),
         createSubscription: builder.mutation<Subscription[], CreateSubscriptions>({
             query: (newSubscription) => ({
                 url: '/subscriptions',
@@ -20,12 +14,25 @@ export const allSubscriptions = createApi({
                 body: newSubscription
             })
         }),
-
+        getSubscription: builder.query<Subscription, string | undefined>({
+            query: (userId) => `/subscriptions/${userId}`,
+        }),
+        getAllSubscriptions: builder.query<Subscription[], string | undefined>({
+            query: (userId) => `/subscriptions/user/${userId}`,
+        }),
+        updateSubscription: builder.mutation<Subscription, CreateSubscriptions>({
+            query: (newSubscription) => ({
+                url: `/subscriptions/${newSubscription._id}`,
+                method: 'PUT',
+                body: newSubscription
+            })
+        })
     })
 })
 
 export const {
     useGetAllSubscriptionsQuery,
     useGetSubscriptionQuery,
-    useCreateSubscriptionMutation
+    useCreateSubscriptionMutation,
+    useUpdateSubscriptionMutation
 } = allSubscriptions;

@@ -97,10 +97,7 @@ export const updateSubscription = async (req, res, next) => {
 
         await Subscription.findByIdAndUpdate(req.params.id, { ...req.body }); // destructure all the updated value and pass into the query
 
-        return res.status(200).json({
-            success: true,
-            message: "Subscription Updated",
-        });
+        return res.status(200).json(subscription);
     } catch (error) {
         next(error);
     }

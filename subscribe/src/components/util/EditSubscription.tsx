@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Subscription } from "@/lib/types"
+import { CreateSubscriptions, Subscription } from "@/lib/types"
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { format, parseISO } from "date-fns";
@@ -32,11 +32,12 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { useForm } from "react-hook-form";
+import { useUpdateSubscriptionMutation } from "@/services/subscriptions";
 
 
 interface Props {
     subscription?: Subscription,
-    setEdit: (edit: boolean) => void
+    setEdit: (edit: boolean) => void,
 }
 
 // Form validation schema
@@ -56,8 +57,9 @@ const formSchema = z.object({
 
 const EditSubscription = ({ subscription, setEdit }: Props) => {
 
-    // const [subscription, setSubscription] = useState<Subscription | null>(null);
     const [showCustomInput, setShowCustomInput] = useState(false);
+
+    const [updateSubscription] = useUpdateSubscriptionMutation()
 
     // Convert the date value to proper format for form initialization
     const getInitialDate = () => {
@@ -94,17 +96,37 @@ const EditSubscription = ({ subscription, setEdit }: Props) => {
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         console.log("Form values:", values);
         // Implement your submission logic here
+        const { platformId, price, currency, category, frequency, paymentMethod, startDate, customPlatform } = values;
+        const name: string = platformId === 'Other' ? (customPlatform as string) : platformId;
+        const newSubscription: CreateSubscriptions = {
+            _id: subscription?._id,
+            name,
+            price,
+            category,
+            currency,
+            frequency,
+            paymentMethod,
+            startDate
+        }
+        const sub = await updateSubscription(newSubscription)
+        console.log(sub.data);
         setEdit(false);
+        window.location.reload();
     }
 
-    const date = form.watch("startDate");
+    const platformName = form.watch("customPlatform");
 
     useEffect(() => {
-        console.log("Current date value:", date);
-    }, [date]);
+        const name = platforms.find((platform) => platform.name === subscription?.name)
+        if (!name) {
+            setShowCustomInput(true);
+            form.setValue("customPlatform", subscription?.name)
+            form.setValue("platformId", "Other")
+        }
+    }, [platformName]);
 
     return (
-        <div className="border p-3">
+        <div className="p-5 bg-gray-100 rounded-2xl">
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                     <div className="space-y-6">
@@ -123,7 +145,7 @@ const EditSubscription = ({ subscription, setEdit }: Props) => {
                                                 setShowCustomInput(value === "Other");
                                             }}
                                             value={field.value}>
-                                            <SelectTrigger className="h-12 text-base px-4 w-full">
+                                            <SelectTrigger className="h-12 text-base px-4 w-full bg-white">
                                                 <SelectValue placeholder="Select a platform" />
                                             </SelectTrigger>
                                             <SelectContent>
@@ -153,7 +175,7 @@ const EditSubscription = ({ subscription, setEdit }: Props) => {
                                         <FormControl>
                                             <Input
                                                 placeholder="Enter platform name"
-                                                className="h-12 text-base px-4"
+                                                className="h-12 text-base px-4 bg-white"
                                                 {...field}
                                             />
                                         </FormControl>
@@ -174,7 +196,7 @@ const EditSubscription = ({ subscription, setEdit }: Props) => {
                                     <FormLabel className="text-base font-medium">Category</FormLabel>
                                     <Select onValueChange={field.onChange} value={field.value}>
                                         <FormControl>
-                                            <SelectTrigger className="h-12 text-base px-4 w-full">
+                                            <SelectTrigger className="h-12 text-base px-4 w-full bg-white">
                                                 <SelectValue placeholder="Select category" />
                                             </SelectTrigger>
                                         </FormControl>
@@ -198,7 +220,7 @@ const EditSubscription = ({ subscription, setEdit }: Props) => {
                                     <FormLabel className="text-base font-medium">Billing Frequency</FormLabel>
                                     <Select onValueChange={field.onChange} value={field.value}>
                                         <FormControl>
-                                            <SelectTrigger className="h-12 text-base px-4 w-full">
+                                            <SelectTrigger className="h-12 text-base px-4 w-full bg-white">
                                                 <SelectValue placeholder="Select frequency" />
                                             </SelectTrigger>
                                         </FormControl>
@@ -224,7 +246,7 @@ const EditSubscription = ({ subscription, setEdit }: Props) => {
                                         <Input
                                             type="number"
                                             placeholder="0.00"
-                                            className="h-12 text-base px-4"
+                                            className="h-12 text-base px-4 bg-white"
                                             onChange={(e) => field.onChange(Number(e.target.value))}
                                             value={field.value || ''}
                                         />
@@ -242,7 +264,7 @@ const EditSubscription = ({ subscription, setEdit }: Props) => {
                                     <FormLabel className="text-base font-medium">Currency</FormLabel>
                                     <Select onValueChange={field.onChange} value={field.value}>
                                         <FormControl>
-                                            <SelectTrigger className="h-12 text-base px-4 w-full">
+                                            <SelectTrigger className="h-12 text-base px-4 w-full bg-white">
                                                 <SelectValue placeholder="Select currency" />
                                             </SelectTrigger>
                                         </FormControl>
@@ -266,7 +288,7 @@ const EditSubscription = ({ subscription, setEdit }: Props) => {
                                     <FormLabel className="text-base font-medium">Payment Method</FormLabel>
                                     <Select onValueChange={field.onChange} value={field.value}>
                                         <FormControl>
-                                            <SelectTrigger className="h-12 text-base px-4 w-full">
+                                            <SelectTrigger className="h-12 text-base px-4 w-full bg-white">
                                                 <SelectValue placeholder="Select payment method" />
                                             </SelectTrigger>
                                         </FormControl>

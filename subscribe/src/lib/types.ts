@@ -12,6 +12,7 @@ export type Subscription = {
 }
 
 export type CreateSubscriptions = {
+    _id?: string;
     name: string;
     price: number;
     currency: 'INR' | 'USD' | 'EUR' | 'GBP';

@@ -113,7 +113,7 @@ const Profile = () => {
                         className="w-24 h-24 rounded-full bg-gray-300 cursor-pointer relative overflow-hidden"
                         onClick={handleProfilePictureClick}>
                         <img
-                            src={profileImage ? `${imageUrl}/${profileImage}` : profileImage}
+                            src={profileImage || `${imageUrl}/${profileImage}`}
                             width='100'
                             height='100'
                             alt="Profile"

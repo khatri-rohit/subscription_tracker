@@ -11,6 +11,7 @@ import { useGetAllSubscriptionsQuery } from "@/services/subscriptions"
 import { useAuth } from "@/context/Auth"
 import EditSubscription from "@/components/util/EditSubscription"
 import Model from "@/components/util/Model"
+import DeleteSubscription from "@/components/util/DeleteSubscription"
 
 // enum: ['education', 'health', 'finance',],
 
@@ -58,6 +59,7 @@ const Subscriptions = () => {
   const { user } = useAuth()
 
   const [edit, setEdit] = useState<boolean>(false);
+  const [del, setDelete] = useState<boolean>(false);
   const [id, setId] = useState<string | null>(null);
 
   const {
@@ -79,8 +81,8 @@ const Subscriptions = () => {
     setEdit(true);
   }
   const handleCancel = (id: string) => {
-    console.log(id);
-
+    setId(id);
+    setDelete(true);
   }
   const handleRenew = (id: string) => {
     console.log(id);
@@ -140,6 +142,13 @@ const Subscriptions = () => {
         <Model setting="edit">
           <EditSubscription setEdit={setEdit}
             subscription={allSubscriptions.find((subs) => subs._id === id)} />
+        </Model>
+      )}
+      {del && (
+        <Model setting="edit">
+          <DeleteSubscription
+            subscription={allSubscriptions.find((subs) => subs._id === id)}
+            setDelete={setDelete} />
         </Model>
       )}
       <section className="p-10">

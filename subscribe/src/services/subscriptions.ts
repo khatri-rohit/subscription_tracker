@@ -26,7 +26,14 @@ export const allSubscriptions = createApi({
                 method: 'PUT',
                 body: newSubscription
             })
-        })
+        }),
+        deleteSubscription: builder.mutation<Subscription, { _id: string }>({
+            query: (data) => ({
+                url: `/subscriptions/${data._id}`,
+                method: 'DELETE',
+            })
+        }),
+
     })
 })
 
@@ -34,5 +41,6 @@ export const {
     useGetAllSubscriptionsQuery,
     useGetSubscriptionQuery,
     useCreateSubscriptionMutation,
-    useUpdateSubscriptionMutation
+    useUpdateSubscriptionMutation,
+    useDeleteSubscriptionMutation
 } = allSubscriptions;

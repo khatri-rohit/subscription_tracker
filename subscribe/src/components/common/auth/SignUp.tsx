@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form"
 import { useNavigate } from "react-router-dom"
 import { ALargeSmall, EyeIcon, MailIcon, X } from "lucide-react"
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { SyncLoader } from 'react-spinners'
 
 import Model from "../../util/Model"
@@ -58,8 +58,8 @@ const SignUp = () => {
         }
 
         try {
-            setStatus("loading");
             const { email, firstName, lastName, password } = data;
+            setStatus("loading");
             const response = await axios.post(`${apiUrl}/auth/sign-up`,
                 { email, firstName, lastName, password }, {
                 withCredentials: true,
@@ -73,7 +73,12 @@ const SignUp = () => {
             dispatch(isAuthenticated(true))
         } catch (error) {
             setStatus("error");
-            console.log(error);
+            if (axios.isAxiosError(error)) {
+                const axiosError = error as AxiosError;
+                if (axiosError.response?.status === 409) {
+                    form.setError('email', { message: axiosError.response.data.error });
+                }
+            }
         }
     }
 
@@ -178,7 +183,7 @@ const SignUp = () => {
                             <FormField
                                 control={form.control}
                                 name="password"
-                                rules={{ required: "Password is important" }}
+                                rules={{ required: "Password is required" }}
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormLabel className="">
@@ -187,7 +192,8 @@ const SignUp = () => {
                                         <div className="flex items-center border border-[#5A3E2B] ps-1.5 md:px-3 rounded-lg">
                                             <EyeIcon color="#5A3E2B" />
                                             <Input className="border-none shadow-none text-sm md:text-lg placeholder:text-gray-500/50"
-                                                placeholder="********" type="password" {...field} />
+                                                placeholder="********"
+                                                type="password" {...field} />
                                         </div>
                                         <FormMessage />
                                     </FormItem>
@@ -197,7 +203,7 @@ const SignUp = () => {
                                 control={form.control}
                                 name="Confpassword"
                                 rules={{
-                                    required: "Re-enter your password before continue",
+                                    required: "Verify password before continue",
                                     validate: (value) => value === form.getValues('password') || "Password is not same"
                                 }}
                                 render={({ field }) => (
@@ -221,13 +227,13 @@ const SignUp = () => {
                                 {status === 'loading' ? <SyncLoader
                                     color="#31363F"
                                     size={8}
-                                /> : 'Register ? Verify'}
+                                /> : 'Register'}
                             </Button>
                         </form>
                     </Form>
 
                     <div className="m-auto md:w-[80%] pt-10 md:p-0">
-                        <p className="text-center text-[#3f291a] text-sm relative flex items-center justify-center before:content-[''] before:absolute before:left-0 before:w-[10%] sm:before:w-[15%] md:before:w-[20%] lg:before:w-[25%] before:h-[1px] before:bg-white/50 after:content-[''] after:absolute after:right-0 after:w-[10%] sm:after:w-[15%] md:after:w-[20%] lg:after:w-[25%] after:h-[1px] after:bg-white/50">
+                        <p className="text-center text-[#3f291a] text-sm relative flex items-center justify-center before:content-[''] before:absolute before:left-0 before:w-[10%] sm:before:w-[15%] md:before:w-[20%] lg:before:w-[25%] before:h-[1px] before:bg-white/80 after:content-[''] after:absolute after:right-0 after:w-[10%] sm:after:w-[15%] md:after:w-[20%] lg:after:w-[25%] after:h-[1px] after:bg-white/80">
                             Or Continue With
                         </p>
                         <div className="icons flex justify-center gap-x-7 mt-4">

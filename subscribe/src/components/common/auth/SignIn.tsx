@@ -13,7 +13,7 @@ import { EyeIcon, MailIcon, X } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "@/context/Auth"
 import { useState } from "react"
-import axios from "axios"
+import axios, { AxiosError } from "axios"
 import { useAppDispatch, useAppSelector } from "@/app/store"
 import { isAuthenticated } from "@/features/slice"
 
@@ -28,7 +28,7 @@ const SignIn = () => {
   const [status, setStatus] = useState<Status>('success')
 
   const navigate = useNavigate()
-    const isAuth = useAppSelector((state) => state.rootReducers.isAuth)
+  const isAuth = useAppSelector((state) => state.rootReducers.isAuth)
 
   const dispatch = useAppDispatch()
   const { apiUrl } = useAuth()
@@ -46,8 +46,20 @@ const SignIn = () => {
       return
     }
     try {
-      setStatus("loading");
       const { email, password } = data;
+      if (email.length == 0 || password.length == 0) {
+        if (email.length == 0 && password.length == 0) {
+          form.setError('email', { message: "Enter Email" });
+          form.setError('password', { message: "Enter Password" });
+
+        } else if (email.length == 0) {
+          form.setError('email', { message: "Enter Email" });
+        } else {
+          form.setError('password', { message: "Enter Password" });
+        }
+        return
+      }
+      setStatus("loading");
       const response = await axios.post(
         `${apiUrl}/auth/sign-in`,
         { email, password },
@@ -62,13 +74,18 @@ const SignIn = () => {
       if (response.data) {
         setStatus("success");
         dispatch(isAuthenticated(true));
-        navigate('/dashboard', { replace: true });
+        navigate('/dashboard');
       }
     } catch (error) {
       setStatus("error");
-      console.log(error);
-      form.setError('email', { message: 'Invalid credentials' });
-      form.setError('password', { message: 'Invalid credentials' });
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError;
+        if (axiosError.response?.status === 404) {
+          form.setError('email', { message: axiosError.response.data.error });
+        } else if (axiosError.response?.status === 401) {
+          form.setError('password', { message: axiosError.response.data.error });
+        }
+      }
     }
   }
 

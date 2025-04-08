@@ -42,12 +42,12 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
             console.log(request.data.data);
             dispatch(isAuthenticated(true));
             setUser(request.data.data);
-            console.log("Authenticated");
-        } catch (error: unknown) {
+            console.log("Previous Session");
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        } catch (error) {
             setUser(null);
             dispatch(isAuthenticated(false));
-            console.log("UnAuthorised Token");
-            console.log(error);
+            console.log("No Session");
         }
     })
 

@@ -16,14 +16,12 @@ export const signUp = async (req, res, next) => {
     session.startTransaction(); // start a transaction for ATOMIC OPERATION
 
     try {
-        // Logic to create a a new user
         const { firstName, lastName, email, password } = req.body;
 
-        // check if user already exists
         const existingUser = await User.findOne({ email });
-        // console.log(existingUser);
+
         if (existingUser) {
-            const error = new Error('User already exists');
+            const error = new Error('Email already exists');
             error.statusCode = 409;
             throw error;
         }
@@ -74,7 +72,7 @@ export const signIn = async (req, res, next) => {
         const user = await User.findOne({ email });
 
         if (!user) {
-            const error = new Error('User not found');
+            const error = new Error("Email doesn't exixts");
             error.statusCode = 404;
             throw error;
         }
@@ -82,7 +80,7 @@ export const signIn = async (req, res, next) => {
         const isPassowrdValid = await bcrypt.compare(password, user.password); // compare the password by converting password to hash and comparing it with the hash in the database
 
         if (!isPassowrdValid) {
-            const error = new Error('Invalid password');
+            const error = new Error('InCorrect Password');
             error.statusCode = 401;
             throw error;
         }

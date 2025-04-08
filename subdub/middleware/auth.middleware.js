@@ -19,7 +19,7 @@ const authorize = async (req, res, next) => {
 
         const decryptedToken = privateDecrypt(publicKey, Buffer.from(token, 'base64')).toString('utf8');
         // console.log(decryptedToken);
-        console.log("Authorized");
+        console.log("Auth Middleware");
 
         if (!decryptedToken) return res.status(401).json({ message: "Unauthorized" });
 

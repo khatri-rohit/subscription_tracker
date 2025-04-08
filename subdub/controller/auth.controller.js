@@ -93,8 +93,8 @@ export const signIn = async (req, res, next) => {
 
         res.cookie('token', encryptToken, {
             httpOnly: false,
-            secure: NODE_ENV === 'production',
-            sameSite: NODE_ENV === 'production' ? 'none' : 'strict',
+            secure: true,  // Must be true when sameSite is 'none'
+            sameSite: 'none',  // Make sure this is a string
             maxAge: 7 * 24 * 60 * 60 * 1000
         });
         res.status(200).json({

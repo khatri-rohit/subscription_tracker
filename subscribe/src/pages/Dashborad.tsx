@@ -124,14 +124,13 @@ const Dashborad = () => {
   }
 
   useEffect(() => {
-    if (data !== undefined) {
+    if (data) {
       dispatch(setSubscription(data))
       setSubscriptions(data);
       setFilterSubscription(data);
       setLength(data.length);
       console.log(data?.length);
     }
-    console.log(data);
   }, [data, dispatch])
 
   return (

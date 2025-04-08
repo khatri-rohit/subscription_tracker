@@ -14,7 +14,7 @@ const ProtectRoute = ({ children }: { children: React.ReactNode }) => {
         // Short delay to allow auth check to complete
         const timer = setTimeout(() => {
             setIsLoading(false);
-        }, 100);
+        }, 500);
 
         return () => clearTimeout(timer);
     }, [user, isAuth]);
@@ -22,17 +22,12 @@ const ProtectRoute = ({ children }: { children: React.ReactNode }) => {
     // Show loading state while checking authentication
     if (isLoading) {
         return <div className='h-screen flex items-center justify-center'>
-            <Loader size={70} className='animate-spin' />
+            <Loader size={50} className='animate-spin' />
         </div>;
     }
 
-    if (!isAuth) {
-        console.log("Rohit");
-        return <Navigate to="/" />
-    }
-
-    if (isAuth && location.pathname === '/'){
-        return <Navigate to="/dashboard" />
+    if (isAuth && location.pathname === '/') {
+        return <Navigate to="/dashboard" replace />
     }
 
     return <>{children}</>

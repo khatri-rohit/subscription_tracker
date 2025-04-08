@@ -6,7 +6,7 @@ import { SyncLoader } from 'react-spinners'
 
 import Model from "../../util/Model"
 import { useAuth } from "@/context/Auth"
-import { useAppDispatch } from "@/app/store";
+import { useAppDispatch, useAppSelector } from "@/app/store";
 import { isAuthenticated } from '@/features/slice';
 
 import { Button } from "@/components/ui/button"
@@ -37,6 +37,7 @@ const SignUp = () => {
 
     const { apiUrl } = useAuth();
     const dispatch = useAppDispatch()
+    const isAuth = useAppSelector((state) => state.rootReducers.isAuth)
 
     const navigate = useNavigate();
     const form = useForm<FormValues>({
@@ -51,6 +52,11 @@ const SignUp = () => {
     });
 
     const onSubmit = async (data: FormValues) => {
+        if (isAuth) {
+            alert("You already have a session running\nLog out and try again")
+            return
+        }
+
         try {
             setStatus("loading");
             const { email, firstName, lastName, password } = data;

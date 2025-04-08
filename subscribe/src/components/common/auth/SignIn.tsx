@@ -14,7 +14,7 @@ import { useNavigate } from "react-router-dom"
 import { useAuth } from "@/context/Auth"
 import { useState } from "react"
 import axios from "axios"
-import { useAppDispatch } from "@/app/store"
+import { useAppDispatch, useAppSelector } from "@/app/store"
 import { isAuthenticated } from "@/features/slice"
 
 type FormValues = {
@@ -28,6 +28,7 @@ const SignIn = () => {
   const [status, setStatus] = useState<Status>('success')
 
   const navigate = useNavigate()
+    const isAuth = useAppSelector((state) => state.rootReducers.isAuth)
 
   const dispatch = useAppDispatch()
   const { apiUrl } = useAuth()
@@ -40,6 +41,10 @@ const SignIn = () => {
   })
 
   const onSubmit = async (data: FormValues) => {
+    if (isAuth) {
+      alert("You already have a session running\nLog out and try again")
+      return
+    }
     try {
       setStatus("loading");
       const { email, password } = data;

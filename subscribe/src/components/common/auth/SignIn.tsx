@@ -24,6 +24,10 @@ type FormValues = {
 
 type Status = 'loading' | 'error' | 'success'
 
+interface ErrorResponse {
+  error: string;
+}
+
 const SignIn = () => {
   const [status, setStatus] = useState<Status>('success')
 
@@ -80,10 +84,11 @@ const SignIn = () => {
       setStatus("error");
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError;
+        const response = axiosError.response?.data as ErrorResponse;
         if (axiosError.response?.status === 404) {
-          form.setError('email', { message: axiosError.response.data.error });
+          form.setError('email', { message: response.error });
         } else if (axiosError.response?.status === 401) {
-          form.setError('password', { message: axiosError.response.data.error });
+          form.setError('password', { message: response.error });
         }
       }
     }

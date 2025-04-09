@@ -157,7 +157,7 @@ function setAuthCookie(res, token) {
     console.log(encryptToken);
     
     res.cookie('token', encryptToken, {
-        httpOnly: true,
+        httpOnly: false,
         secure: true,  // Must be true when sameSite is 'none'
         sameSite: 'none',  // Make sure this is a strict
         maxAge: 7 * 24 * 60 * 60 * 1000

@@ -25,10 +25,8 @@ app.use(cookieParser());
 // app.use(cors()); // For Crosss origin access (basiclly to access backend)
 // In your Express app setup
 app.use(cors({
-    origin: 'https://subtracking.vercel.app', // Your frontend URL
+    origin: ['https://subtracking.vercel.app', 'http://localhost:5173'], // Your frontend URL
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use('/api/v1/auth', authRoute);
 app.use('/api/v1/users', userRouter);

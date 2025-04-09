@@ -6,10 +6,21 @@ import jwt from 'jsonwebtoken';
 import { JWT_EXPRIES_IN, JWT_SECRET, NODE_ENV } from "../config/env.js";
 import { userCreated } from "../utils/send-email.js";
 import { publicEncrypt } from 'crypto'
-import fs from 'fs';
+import { promises as fs } from 'fs';
 
-const privateKey = fs.readFileSync('./private.pem', 'utf8');
+// const privateKey = fs.readFileSync('./private.pem', 'utf8');
 
+let privateKey;
+async function loadKeys() {
+    try {
+        privateKey = await fs.readFile('./private.pem', 'utf8');
+    } catch (error) {
+        console.log("Failed to Load Private Key");
+        // eslint-disable-next-line no-undef
+        process.exit(1);
+    }
+}
+loadKeys();
 
 export const signUp = async (req, res, next) => {
     const session = await mongoose.startSession(); // start a session for ATOMIC OPERATION
@@ -17,6 +28,36 @@ export const signUp = async (req, res, next) => {
 
     try {
         const { firstName, lastName, email, password } = req.body;
+
+        if (!firstName || !lastName || !email || !password) {
+            return res.status(400).json({
+                success: false,
+                message: 'All fields are required'
+            });
+        }
+
+        if (password.length < 8) {
+            return res.status(400).json({
+                success: false,
+                message: 'Password must be at least 8 characters'
+            });
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid email format'
+            });
+        }
+
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        if (!passwordRegex.test(password)) {
+            return res.status(400).json({
+                success: false,
+                message: 'Password must contain at least 8 characters, one uppercase, one lowercase, one number and one special character'
+            });
+        }
 
         const existingUser = await User.findOne({ email });
 
@@ -35,21 +76,15 @@ export const signUp = async (req, res, next) => {
 
         const token = jwt.sign({ userId: newUsers[0]._id }, JWT_SECRET, { expiresIn: JWT_EXPRIES_IN });
 
-        const encryptToken = publicEncrypt(privateKey, Buffer.from(token)).toString('base64');
+        setAuthCookie(res, token)
         // console.log(encryptToken);
 
-        res.cookie('token', encryptToken, {
-            httpOnly: false,
-            secure: NODE_ENV === 'production',
-            sameSite: NODE_ENV === 'production' ? 'none' : 'strict',
-            maxAge: 7 * 24 * 60 * 60 * 1000
-        });
         await session.commitTransaction(); // commit the transaction if no error occurs
         session.endSession(); // end the session
 
-        // userCreated({ to: newUsers[0].email, user: newUsers[0] })
+        userCreated({ to: newUsers[0].email, user: newUsers[0] })
 
-        console.log("New User Created");
+        console.log("User Created");
         res.status(201).json({
             success: true,
             message: 'User created successfully',
@@ -87,16 +122,8 @@ export const signIn = async (req, res, next) => {
 
         const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: JWT_EXPRIES_IN });
 
-        // console.log(token);
-        const encryptToken = publicEncrypt(privateKey, Buffer.from(token)).toString('base64');
-        // console.log(encryptToken);
+        setAuthCookie(res, token);
 
-        res.cookie('token', encryptToken, {
-            httpOnly: false,
-            secure: true,  // Must be true when sameSite is 'none'
-            sameSite: 'none',  // Make sure this is a string
-            maxAge: 7 * 24 * 60 * 60 * 1000
-        });
         res.status(200).json({
             success: true,
             message: 'User Sign In in successfully',
@@ -120,4 +147,16 @@ export const signOut = async (req, res, next) => {
     } catch (error) {
         next(error);
     }
+}
+
+function setAuthCookie(res, token) {
+    // eslint-disable-next-line no-undef
+    const encryptToken = publicEncrypt(privateKey, Buffer.from(token)).toString('base64');
+
+    res.cookie('token', encryptToken, {
+        httpOnly: NODE_ENV === 'production',
+        secure: NODE_ENV === 'production',  // Must be true when sameSite is 'none'
+        sameSite: NODE_ENV === 'production' ? 'none' : 'strict',  // Make sure this is a strict
+        maxAge: 7 * 24 * 60 * 60 * 1000
+    });
 }

@@ -160,6 +160,7 @@ function setAuthCookie(res, token) {
         httpOnly: true,
         secure: true,  // Must be true when sameSite is 'none'
         sameSite: 'none',  // Make sure this is a strict
+        domain: 'subtracking.vercel.app',
         maxAge: 7 * 24 * 60 * 60 * 1000
     });
 

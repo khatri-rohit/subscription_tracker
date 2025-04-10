@@ -12,6 +12,8 @@ import { useAuth } from "@/context/Auth"
 import EditSubscription from "@/components/util/EditSubscription"
 import Model from "@/components/util/Model"
 import DeleteSubscription from "@/components/util/DeleteSubscription"
+import useSearch from "@/hooks/useSearch"
+import { search } from '@/lib/search'
 
 // enum: ['education', 'health', 'finance',],
 
@@ -74,8 +76,18 @@ const Subscriptions = () => {
   const [status, setStatus] = useState<Category>('All')
   const [length, setLength] = useState<number>(1);
 
-  const [search, setSearch] = useState<string>("")
+  const [query, setSearch] = useState<string>("")
   const [searchedSubs, setSearchSubs] = useState<Subscription[]>([]);
+
+
+  const results: Subscription[] = useSearch(
+    allSubscriptions,
+    query,
+    search({
+      fields: ["name"],
+      matchType: "fuzzySearch",
+    })
+  );
 
   const handleEdit = (id: string) => {
     setId(id);
@@ -91,8 +103,13 @@ const Subscriptions = () => {
 
   function onSubmit(e: FormEvent) {
     e.preventDefault()
-    const subs = allSubscriptions.filter((m) => m.name.toLowerCase().includes(search));
-    setSearchSubs(subs);
+    if (results.length > 0) {
+      setSearchSubs(results);
+    } else {
+      const subs = allSubscriptions.filter((m) => m.name.toLowerCase().includes(query));
+      setSearchSubs(subs);
+    }
+    console.log(results);
   }
 
   const handleChangeTabs = (category: Category) => {
@@ -168,9 +185,9 @@ const Subscriptions = () => {
               <Search className="mx-2" />
               <Input className="border-none md:text-xl shadow-none"
                 placeholder="Search Subscription"
-                value={search}
+                value={query}
                 onChange={handleChange} />
-              {search.length > 0 && (<X className="cursor-pointer mr-1.5 p-0.5" onClick={handleX} />)}
+              {query.length > 0 && (<X className="cursor-pointer mr-1.5 p-0.5" onClick={handleX} />)}
             </form>
 
             <Button className="bg-[#636AE8] text-[1.1em] text-white px-4 py-2 rounded-lg hover:bg-[#4B51B8] cursor-pointer"

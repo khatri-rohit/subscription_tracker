@@ -344,7 +344,7 @@ const CreateSubscription = () => {
                             className="h-12 px-8 text-base bg-primary hover:bg-primary/90 cursor-pointer"
                             disabled={isLoading}
                         >
-                            {isLoading ? <BeatLoader color="#ffffff" /> : 'Create Subscription'}
+                            {isLoading ? <BeatLoader size={10} color="#ffffff" /> : 'Create Subscription'}
                         </Button>
                     </div>
                 </form>

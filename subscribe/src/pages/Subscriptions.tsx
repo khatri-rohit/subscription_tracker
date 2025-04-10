@@ -64,6 +64,7 @@ const Subscriptions = () => {
 
   const {
     data,
+    refetch
   } = useGetAllSubscriptionsQuery(user?._id, {
     skip: !user?._id.trim(),
   });
@@ -130,6 +131,13 @@ const Subscriptions = () => {
       setSearch(value)
     }
   }
+
+  useEffect(() => {
+    if (user?._id) {
+      refetch();
+      console.log("Refetching");
+    }
+  }, [user, refetch]);
 
   useEffect(() => {
     setAllSubscriptions((data as Subscription[]))

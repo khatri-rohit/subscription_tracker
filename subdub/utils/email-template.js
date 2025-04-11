@@ -5,6 +5,7 @@ export const generateEmailTemplate = ({
     planName,
     price,
     paymentMethod,
+    // eslint-disable-next-line no-unused-vars
     accountSettingsLink,
     supportLink,
     daysLeft,
@@ -13,7 +14,7 @@ export const generateEmailTemplate = ({
     <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #ffffff; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
         <tr>
             <td style="background-color: #4a90e2; text-align: center;">
-                <p style="font-size: 54px; line-height: 54px; font-weight: 800;">SubDub</p>
+                <p style="font-size: 54px; line-height: 54px; font-weight: 800;">Subscription Tracker</p>
             </td>
         </tr>
         <tr>
@@ -40,7 +41,7 @@ export const generateEmailTemplate = ({
                     </tr>
                 </table>
                 
-                <p style="font-size: 16px; margin-bottom: 25px;">If you'd like to make changes or cancel your subscription, please visit your <a href="${accountSettingsLink}" style="color: #4a90e2; text-decoration: none;">account settings</a> before the renewal date.</p>
+                <p style="font-size: 16px; margin-bottom: 25px;">If you'd like to make changes or cancel your subscription, please visit your <a href="http://localhost:5173/dashboard/settings" style="color: #4a90e2; text-decoration: none;">account settings</a> before the renewal date.</p>
                 
                 <p style="font-size: 16px; margin-top: 30px;">Need help? <a href="${supportLink}" style="color: #4a90e2; text-decoration: none;">Contact our support team</a> anytime.</p>
                 
@@ -99,7 +100,7 @@ export const generateWelcomeEmailTemplate = (name) => `
         <!-- Header with Logo -->
         <tr>
             <td style="background-color: #4a90e2; text-align: center; padding: 30px;">
-                <p style="font-size: 54px; line-height: 54px; font-weight: 800; color: #ffffff; margin: 0;">SubDub</p>
+                <p style="font-size: 54px; line-height: 54px; font-weight: 800; color: #ffffff; margin: 0;">Subscription Tracker</p>
                 <p style="color: #ffffff; font-size: 24px; margin: 10px 0 0;">Welcome Aboard! 🎉</p>
             </td>
         </tr>
@@ -135,10 +136,10 @@ export const generateWelcomeEmailTemplate = (name) => `
                 
                 <!-- Getting Started Button -->
                 <div style="text-align: center; margin: 30px 0;">
-                    <a href="" style="background-color: #4a90e2; color: #ffffff; padding: 12px 30px; text-decoration: none; border-radius: 5px; font-weight: bold;">Get Started Now</a>
+                    <a href="http://localhost:5173/" style="background-color: #4a90e2; color: #ffffff; padding: 12px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; cursor: pointer;">Get Started Now</a>
                 </div>
                 
-                <p style="font-size: 16px; margin-bottom: 25px;">Need help getting started? Our support team is here for you! <a href="" style="color: #4a90e2; text-decoration: none;">Reach out anytime</a>.</p>
+                <p style="font-size: 16px; margin-bottom: 25px;">Need help getting started? Our support team is here for you! <a href="http://localhost:5173/dashboard/settings" style="color: #4a90e2; text-decoration: none;">Reach out anytime</a>.</p>
                 
                 <p style="font-size: 16px; margin-top: 30px;">
                     Welcome to better subscription management!<br>

@@ -17,7 +17,7 @@ export const sendReminders = serve(async (context) => {
 
     const renewalDate = dayjs(subscription.renewalDate);
     // console.log(renewalDate);
-
+    console.log(subscription);
     if (renewalDate.isBefore(dayjs())) {
         console.log(`Renewal Date has passed from subscription ${subscription}. Stopping workflow`);
         return;
@@ -40,7 +40,7 @@ export const sendReminders = serve(async (context) => {
 
 const fetchSubscription = async (context, subscriptionId) => {
     return await context.run('get subscription', async () => {
-        return Subscription.findById(subscriptionId).populate('user', 'name email')
+        return Subscription.findById(subscriptionId).populate('user', 'firstName email')
     });
 };
 

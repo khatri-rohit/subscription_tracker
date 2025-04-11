@@ -30,7 +30,7 @@ const userSchema = new mongoose.Schema({
     },
     notify: {
         type: Boolean,
-        default: true
+        default: false // To prevent upstash workflow rate limit 
     },
     profileImage: {
         type: String,

@@ -11,6 +11,7 @@ export const createSubscription = async (req, res, next) => {
         });
 
         if (req.user.notify) {
+            console.log("Upstash Workflow triggreed");
             await workflowClient.trigger({
                 url: `${SERVER_URL}/api/v1/workflows/subscription/reminder`,
                 body: {
@@ -22,7 +23,7 @@ export const createSubscription = async (req, res, next) => {
                 retries: 0,
             });
         }
-        
+
         console.log("Subscription Created");
         return res.status(200).json({
             success: true,

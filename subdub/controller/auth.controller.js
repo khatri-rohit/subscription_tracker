@@ -54,7 +54,6 @@ export const signUp = async (req, res, next) => {
 
         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
-        console.log(passwordRegex.test(password));
         if (!passwordRegex.test(password)) {
             return res.status(400).json({
                 success: false,
@@ -63,7 +62,6 @@ export const signUp = async (req, res, next) => {
         }
 
         const existingUser = await User.findOne({ email });
-        console.log(existingUser);
 
         if (existingUser) {
             const error = new Error('Email already exists');
@@ -86,7 +84,7 @@ export const signUp = async (req, res, next) => {
         await session.commitTransaction(); // commit the transaction if no error occurs
         session.endSession(); // end the session
 
-        userCreated({ to: newUsers[0].email, user: newUsers[0] })
+        userCreated({ to: newUsers[0].email, user: newUsers[0].firstName })
 
         console.log("User Created");
         res.status(201).json({
@@ -165,7 +163,7 @@ function setAuthCookie(res, token) {
         httpOnly: false,
         secure: true,  // Must be true when sameSite is 'none'
         sameSite: 'none',  // Make sure this is a strict
-        maxAge: 24 * 60 * 60 * 1000
+        maxAge: 24 * 60 * 60 * 1000 * 2
     });
     // res.cookie('token', encryptToken, {
     //     httpOnly: NODE_ENV === 'production',

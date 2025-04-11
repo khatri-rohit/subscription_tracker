@@ -12,7 +12,7 @@ const Navbar = () => {
 
     const navigate = useNavigate();
     const { isAuth } = useAppSelector((state) => state.rootReducers);
-    const [open, setOpen] = useState<boolean>(false);
+    const [open, setOpen] = useState<boolean>(true);
     const { user, imageUrl } = useAuth()
     const img = user?.profileImage ? (imageUrl + "/" + user?.profileImage) : '/img/blank-avatar.webp';
 

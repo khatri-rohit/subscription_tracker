@@ -79,7 +79,13 @@ const SignUp = () => {
             if (axios.isAxiosError(error)) {
                 const axiosError = error as AxiosError;
                 const response = axiosError.response?.data as ErrorResponse;
-                if (axiosError.response?.status === 409) {
+                console.log(axiosError.response);
+                console.log(response.error);
+                if (axiosError.response?.status === 401) {
+                    form.setError('email', { message: response.error });
+                } else if (axiosError.response?.status === 400) {
+                    form.setError('password', { message: response.error });
+                } else if (axiosError.response?.status === 409) {
                     form.setError('email', { message: response.error });
                 }
             }
@@ -162,7 +168,7 @@ const SignUp = () => {
                                             <Input className="border-none shadow-none text-sm md:text-lg placeholder:text-gray-500/50"
                                                 placeholder="Email" {...field} />
                                         </div>
-                                        {status === 'error' ? <p className="text-red-600 text-sm">Email Already Exists</p> : <FormMessage />}
+                                       <FormMessage />
                                     </FormItem>
                                 )}
                             />

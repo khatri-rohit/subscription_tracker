@@ -17,53 +17,57 @@ import SettingLayout from './components/layout/SettingLayout';
 import Account from './pages/Account';
 import Notifications from './pages/Notifications';
 import Profile from './pages/Profile';
+import { ThemeProvider } from "@/components/theme-provider"
+
 
 function App() {
 
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path='/' element={<Layout />}>
-          <Route index element={<Home />} />
-          
-          <Route path='/signup' element={<SignUp />} />
-          <Route path='/signin' element={<SignIn />} />
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <BrowserRouter>
+        <Routes>
+          <Route path='/' element={<Layout />}>
+            <Route index element={<Home />} />
 
-          {/* Protected routes */}
-          <Route path='/dashboard' element={
-            <ProtectRoute>
-              <Dashborad />
-            </ProtectRoute>
-          } />
+            <Route path='/signup' element={<SignUp />} />
+            <Route path='/signin' element={<SignIn />} />
 
-          {/* Setting Pages Layout */}
-          <Route path='/dashboard/settings' element={
-            <ProtectRoute>
-              <SettingLayout />
-            </ProtectRoute>
-          }>
-            <Route index element={<Account />} />
-            <Route path='notifications' element={<Notifications />} />
-            <Route path='profile' element={<Profile />} />
+            {/* Protected routes */}
+            <Route path='/dashboard' element={
+              <ProtectRoute>
+                <Dashborad />
+              </ProtectRoute>
+            } />
+
+            {/* Setting Pages Layout */}
+            <Route path='/dashboard/settings' element={
+              <ProtectRoute>
+                <SettingLayout />
+              </ProtectRoute>
+            }>
+              <Route index element={<Account />} />
+              <Route path='notifications' element={<Notifications />} />
+              <Route path='profile' element={<Profile />} />
+            </Route>
+
+            <Route path='/subscription' element={
+              <ProtectRoute>
+                <Subscriptions />
+              </ProtectRoute>
+            } />
+
+            <Route path='/subscription/create-subs' element={
+              <ProtectRoute>
+                <CreateSubscription />
+              </ProtectRoute>
+            } />
+
+            <Route path="*" element={<Navigate to="/" />} />
+            {/* Redirect any unknown routes to home */}
           </Route>
-
-          <Route path='/subscription' element={
-            <ProtectRoute>
-              <Subscriptions />
-            </ProtectRoute>
-          } />
-
-          <Route path='/subscription/create-subs' element={
-            <ProtectRoute>
-              <CreateSubscription />
-            </ProtectRoute>
-          } />
-
-          <Route path="*" element={<Navigate to="/" />} />
-          {/* Redirect any unknown routes to home */}
-        </Route>
-      </Routes>
-    </BrowserRouter>
+        </Routes>
+      </BrowserRouter>
+    </ThemeProvider>
   )
 }
 

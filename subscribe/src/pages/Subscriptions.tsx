@@ -84,7 +84,7 @@ const Subscriptions = () => {
     allSubscriptions,
     query,
     search({
-      fields: ["name"],
+      fields: ["name","renewalDate"],
       matchType: "fuzzySearch",
     })
   );
@@ -109,7 +109,7 @@ const Subscriptions = () => {
       const subs = allSubscriptions.filter((m) => m.name.toLowerCase().includes(query));
       setSearchSubs(subs);
     }
-    console.log(results);
+    // console.log(results);
   }
 
   const handleChangeTabs = (category: Category) => {
@@ -152,7 +152,7 @@ const Subscriptions = () => {
   useEffect(() => {
     if (user?._id) {
       refetch();
-      console.log("Refetching");
+      // console.log("Refetching");
     }
   }, [user, refetch]);
 

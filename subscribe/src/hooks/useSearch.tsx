@@ -2,8 +2,9 @@ import { Subscription } from "@/lib/types";
 import { useMemo } from "react";
 import useDebounce from "./UseDebounce";
 
+type FilterFunction = (data: Subscription[], query: string) => Subscription[];
 
-function useSearch(data: Subscription[], query: string, ...filters) {
+function useSearch(data: Subscription[], query: string, ...filters: FilterFunction[]) {
     const debouncedQuery = useDebounce(query, 300);
 
     return useMemo(() => {

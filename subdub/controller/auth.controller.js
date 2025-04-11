@@ -154,13 +154,13 @@ function setAuthCookie(res, token) {
     const encryptToken = publicEncrypt(privateKey, Buffer.from(token)).toString('base64');
 
     console.log(NODE_ENV === 'production');
-    console.log(encryptToken);
-    
+    // console.log(encryptToken);
+
     res.cookie('token', encryptToken, {
-        httpOnly: false,
-        secure: true,  // Must be true when sameSite is 'none'
+        httpOnly: NODE_ENV === 'production',
+        secure: NODE_ENV === 'production',  // Must be true when sameSite is 'none'
         sameSite: 'none',  // Make sure this is a strict
-        maxAge: 7 * 24 * 60 * 60 * 1000
+        maxAge: 24 * 60 * 60 * 1000
     });
 
     // res.cookie('token', encryptToken, {

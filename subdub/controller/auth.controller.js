@@ -32,34 +32,38 @@ export const signUp = async (req, res, next) => {
         if (!firstName || !lastName || !email || !password) {
             return res.status(400).json({
                 success: false,
-                message: 'All fields are required'
+                error: 'All fields are required'
             });
         }
 
         if (password.length < 8) {
             return res.status(400).json({
                 success: false,
-                message: 'Password must be at least 8 characters'
+                error: 'Password must be at least 8 characters'
             });
         }
 
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@(gmail|yahoo|outlook|hotmail|aol|proton|icloud)\.(com|net|org|edu)$/i;
+
         if (!emailRegex.test(email)) {
-            return res.status(400).json({
+            return res.status(401).json({
                 success: false,
-                message: 'Invalid email format'
+                error: 'Invalid email format'
             });
         }
 
         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+        console.log(passwordRegex.test(password));
         if (!passwordRegex.test(password)) {
             return res.status(400).json({
                 success: false,
-                message: 'Password must contain at least 8 characters, one uppercase, one lowercase, one number and one special character'
+                error: 'Password must contain at least 8 characters, one uppercase, one lowercase, one number and one special character'
             });
         }
 
         const existingUser = await User.findOne({ email });
+        console.log(existingUser);
 
         if (existingUser) {
             const error = new Error('Email already exists');
@@ -140,6 +144,7 @@ export const signIn = async (req, res, next) => {
 export const signOut = async (req, res, next) => {
     try {
         res.clearCookie('token')
+        console.log("Cookies Cleared");
         res.status(200).json({
             success: true,
             message: 'User logged out successfully',
@@ -153,15 +158,21 @@ function setAuthCookie(res, token) {
     // eslint-disable-next-line no-undef
     const encryptToken = publicEncrypt(privateKey, Buffer.from(token)).toString('base64');
 
-    console.log(NODE_ENV === 'production');
+    console.log(NODE_ENV === 'production', " Cookies");
     // console.log(encryptToken);
 
     res.cookie('token', encryptToken, {
-        httpOnly: NODE_ENV === 'production',
-        secure: NODE_ENV === 'production',  // Must be true when sameSite is 'none'
+        httpOnly: false,
+        secure: true,  // Must be true when sameSite is 'none'
         sameSite: 'none',  // Make sure this is a strict
         maxAge: 24 * 60 * 60 * 1000
     });
+    // res.cookie('token', encryptToken, {
+    //     httpOnly: NODE_ENV === 'production',
+    //     secure: true,  // Must be true when sameSite is 'none'
+    //     sameSite: 'none',  // Make sure this is a strict
+    //     maxAge: 24 * 60 * 60 * 1000
+    // });
 
     // res.cookie('token', encryptToken, {
     //     httpOnly: NODE_ENV === 'production',

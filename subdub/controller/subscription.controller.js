@@ -22,7 +22,8 @@ export const createSubscription = async (req, res, next) => {
                 retries: 0,
             });
         }
-
+        
+        console.log("Subscription Created");
         return res.status(200).json({
             success: true,
             data: subscription

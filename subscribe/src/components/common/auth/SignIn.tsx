@@ -79,7 +79,7 @@ const SignIn = () => {
         setStatus("success");
         dispatch(isAuthenticated(true));
         navigate('/dashboard');
-        window.location.reload()
+        // window.location.reload()
       }
     } catch (error) {
       setStatus("error");

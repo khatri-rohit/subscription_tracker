@@ -12,7 +12,7 @@ const Navbar = () => {
 
     const navigate = useNavigate();
     const { isAuth } = useAppSelector((state) => state.rootReducers);
-    const [open, setOpen] = useState<boolean>(true);
+    const [open, setOpen] = useState<boolean>(false);
     const { user, imageUrl } = useAuth()
     const img = user?.profileImage ? (imageUrl + "/" + user?.profileImage) : '/img/blank-avatar.webp';
 
@@ -28,7 +28,7 @@ const Navbar = () => {
                             <img className="object-cover mx-1"
                                 src={'/img/icon.png'} alt="profile" />
                             <NavLink to={isAuth ? "/dashboard" : "/"}>
-                                <h1 className="text-4xl mx-1">SubScribe</h1>
+                                <h1 className="text-4xl mx-1">Subscribe</h1>
                             </NavLink>
                         </div>
                         <div className="navbar px-6 z-0 space-x-5">

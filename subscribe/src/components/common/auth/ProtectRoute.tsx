@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { Loader } from 'lucide-react';
 import { useAppSelector } from '@/app/store';
 import { useAuth } from '@/context/Auth';
+import Loading from '@/components/Loading';
 
 const ProtectRoute = ({ children }: { children: React.ReactNode }) => {
     const isAuth = useAppSelector((state) => state.rootReducers.isAuth);
@@ -21,9 +21,7 @@ const ProtectRoute = ({ children }: { children: React.ReactNode }) => {
 
     // Show loading state while checking authentication
     if (isLoading) {
-        return <div className='h-screen flex items-center justify-center'>
-            <Loader size={50} className='animate-spin' />
-        </div>;
+        return <Loading />
     }
 
     if (!isAuth)

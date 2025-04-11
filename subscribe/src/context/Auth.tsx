@@ -1,13 +1,13 @@
 import { useAppDispatch } from "@/app/store";
 import { isAuthenticated } from "@/features/slice";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import {
     createContext,
     useContext,
     PropsWithChildren,
     useState,
     useEffect,
-    cache
+    // cache
 } from "react";
 
 type User = {
@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
 
     const dispatch = useAppDispatch();
 
-    const getLoggedInUser = cache(async () => {
+    const getLoggedInUser = async () => {
         try {
             axios.defaults.withCredentials = true;
             const request = await axios.post(`${apiUrl}/users/`);
@@ -43,13 +43,15 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
             dispatch(isAuthenticated(true));
             setUser(request.data.data);
             console.log("Previous Session");
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
+            const axiosError = error as AxiosError;
+            console.log(axiosError);
+
             setUser(null);
             dispatch(isAuthenticated(false));
             console.log("No Session");
         }
-    })
+    }
 
     useEffect(() => {
         getLoggedInUser();

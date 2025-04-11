@@ -124,6 +124,10 @@ const Dashborad = () => {
   }
 
   useEffect(() => {
+    console.log(user);
+  }, [user])
+
+  useEffect(() => {
     if (data) {
       dispatch(setSubscription(data))
       setSubscriptions(data);
@@ -131,11 +135,10 @@ const Dashborad = () => {
       setLength(data.length);
       console.log(data?.length);
     }
-    console.log(isLoading);
-  }, [dispatch, isLoading, data])
+  }, [dispatch, data])
 
   return (
-    <section className="p-10">
+    <main className="p-10">
       <div className="p-2 space-y-5 w-fit">
         <h3 className="text-3xl">Subscription Overview</h3>
         {/* Search Overview */}
@@ -248,7 +251,7 @@ const Dashborad = () => {
         }
       </div>
 
-    </section >
+    </main>
   )
 }
 

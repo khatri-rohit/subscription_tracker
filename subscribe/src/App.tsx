@@ -18,6 +18,8 @@ import Account from './pages/Account';
 import Notifications from './pages/Notifications';
 import Profile from './pages/Profile';
 import { ThemeProvider } from "@/components/theme-provider"
+import { Suspense } from 'react';
+import Loading from './components/Loading';
 
 
 function App() {
@@ -35,7 +37,9 @@ function App() {
             {/* Protected routes */}
             <Route path='/dashboard' element={
               <ProtectRoute>
-                <Dashborad />
+                <Suspense fallback={<Loading />}>
+                  <Dashborad />
+                </Suspense>
               </ProtectRoute>
             } />
 
@@ -67,7 +71,7 @@ function App() {
           </Route>
         </Routes>
       </BrowserRouter>
-    </ThemeProvider>
+    </ThemeProvider >
   )
 }
 

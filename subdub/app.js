@@ -12,7 +12,6 @@ import workflowRouter from './routes/workflow.routes.js';
 import connectToDB from './database/mongodb.js';
 
 import errorMiddleware from './middleware/error.middleware.js';
-// eslint-disable-next-line no-unused-vars
 import arcjetMiddleware from './middleware/arcjet.middleware.js';
 
 const app = express();
@@ -21,7 +20,7 @@ app.use("/uploads", express.static('uploads'))
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-// app.use(arcjetMiddleware);
+app.use(arcjetMiddleware);
 // app.use(cors()); // For Crosss origin access (basiclly to access backend)
 // In your Express app setup
 app.use(cors({

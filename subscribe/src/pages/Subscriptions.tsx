@@ -1,6 +1,6 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { X, List, Rows4, Search, Sofa, Tv2Icon, Volleyball } from "lucide-react"
+import { X, List, Rows4, Search, Sofa, Volleyball, Tv2 } from "lucide-react"
 
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -28,9 +28,9 @@ const tabs: Tabs[] = [
   {
     name: "Entertainment",
     category: "entertainment",
-    icon: <Tv2Icon color="#BBBBBB" />,
-    idle: "cursor-pointer text-lg flex justify-center items-center w-[6%] gap-x-3 relative hover:after:absolute hover:after:-bottom-[13px] hover:after:w-[115%] hover:after:-left-[6.5px] hover:after:block hover:after:h-[3px] hover:after:rounded-b-4xl hover:after:bg-[#636AE8]",
-    active: "cursor-pointer text-lg flex justify-center items-center w-[6%] gap-x-3 relative after:absolute after:-bottom-[13px] after:w-[115%] after:-left-[6.5px] after:block after:h-[3px] after:rounded-b-4xl after:bg-[#636AE8]"
+    icon: <Tv2 color="#BBBBBB" />,
+    idle: "cursor-pointer text-lg flex justify-center items-center w-[6.5%] gap-x-3 relative hover:after:absolute hover:after:-bottom-[13px] hover:after:w-[115%] hover:after:-left-[6.5px] hover:after:block hover:after:h-[3px] hover:after:rounded-b-4xl hover:after:bg-[#636AE8]",
+    active: "cursor-pointer text-lg flex justify-center items-center w-[6.5%] gap-x-3 relative after:absolute after:-bottom-[13px] after:w-[115%] after:-left-[6.5px] after:block after:h-[3px] after:rounded-b-4xl after:bg-[#636AE8]"
   },
   {
     name: "Sports",
@@ -84,7 +84,7 @@ const Subscriptions = () => {
     allSubscriptions,
     query,
     search({
-      fields: ["name","renewalDate"],
+      fields: ["name", "renewalDate"],
       matchType: "fuzzySearch",
     })
   );
@@ -166,6 +166,8 @@ const Subscriptions = () => {
       {edit && (
         <Model setting="edit">
           <EditSubscription setEdit={setEdit}
+            allSubscriptions={allSubscriptions}
+            setAllSubscriptions={setAllSubscriptions}
             subscription={allSubscriptions.find((subs) => subs._id === id)} />
         </Model>
       )}
@@ -173,24 +175,25 @@ const Subscriptions = () => {
         <Model setting="edit">
           <DeleteSubscription
             subscription={allSubscriptions.find((subs) => subs._id === id)}
+            allSubscriptions={allSubscriptions}
+            setAllSubscriptions={setAllSubscriptions}
             setDelete={setDelete} />
         </Model>
       )}
-      <section className="p-10">
+      <main className="p-10 dark:bg-gray-900 dark:text-white h-screen">
         <div className="p-2 space-y-5 w-1/2">
           <h3 className="text-3xl">Manage Subscriptions</h3>
           <div className="flex items-center gap-x-2 w-full">
-
-            <form onSubmit={onSubmit} className="border-[.12em] border-[#BCC1CA] w-1/2 flex items-center rounded-lg shadow-2xs">
+            <form onSubmit={onSubmit} className="border-[.12em] border-[#BCC1CA] dark:border-gray-700 w-1/2 flex items-center rounded-lg shadow-2xs dark:bg-gray-800">
               <Search className="mx-2" />
-              <Input className="border-none md:text-xl shadow-none"
+              <Input className="border-none md:text-xl shadow-none dark:text-white"
                 placeholder="Search Subscription"
                 value={query}
                 onChange={handleChange} />
               {query.length > 0 && (<X className="cursor-pointer mr-1.5 p-0.5" onClick={handleX} />)}
             </form>
 
-            <Button className="bg-[#636AE8] text-[1.1em] text-white px-4 py-2 rounded-lg hover:bg-[#4B51B8] cursor-pointer"
+            <Button className="bg-[#636AE8] text-[1.1em] text-white px-4 py-2 rounded-lg hover:bg-[#4B51B8] cursor-pointer dark:bg-[#4B51B8] dark:hover:bg-[#636AE8]"
               onClick={() => navigate('/subscription/create-subs')}>
               Create Subscription
             </Button>
@@ -200,7 +203,7 @@ const Subscriptions = () => {
         <div className="flex items-center justify-start gap-1 p-1 gap-x-14 mt-3">
           {
             tabs.map((tab, _) => (
-              <p key={_} className={tab.category === status ? tab.active : tab.idle}
+              <p key={_} className={`${tab.category === status ? tab.active : tab.idle} dark:text-gray-300`}
                 onClick={() => handleChangeTabs(tab.category)}>
                 {tab.icon}{tab.name}
               </p>
@@ -209,13 +212,15 @@ const Subscriptions = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 mt-10">
-          {length > 0 ? searchedSubs.length > 0 ? searchedSubs.map((subscription) => (<SubscriptionCard
-            key={subscription._id}
-            subscription={subscription}
-            onEdit={(id) => handleEdit(id)}
-            onCancel={(id) => handleCancel(id)}
-            onRenew={(id) => handleRenew(id)}
-          />)) : allSubscriptions.map((subscription) => {
+          {length > 0 ? searchedSubs.length > 0 ? searchedSubs.map((subscription) => (
+            <SubscriptionCard
+              key={subscription._id}
+              subscription={subscription}
+              onEdit={(id) => handleEdit(id)}
+              onCancel={(id) => handleCancel(id)}
+              onRenew={(id) => handleRenew(id)}
+            />
+          )) : allSubscriptions.map((subscription) => {
             if (status === 'All') {
               return (<SubscriptionCard
                 key={subscription._id}
@@ -223,7 +228,7 @@ const Subscriptions = () => {
                 onEdit={(id) => handleEdit(id)}
                 onCancel={(id) => handleCancel(id)}
                 onRenew={(id) => handleRenew(id)}
-              />)
+              />);
             } else if (subscription.category === status) {
               return (<SubscriptionCard
                 key={subscription._id}
@@ -231,7 +236,7 @@ const Subscriptions = () => {
                 onEdit={(id) => handleEdit(id)}
                 onCancel={(id) => handleCancel(id)}
                 onRenew={(id) => handleRenew(id)}
-              />)
+              />);
             } else if ((status !== 'entertainment' && status !== 'lifestyle' && status !== 'sports') && status === 'other') {
               return (<SubscriptionCard
                 key={subscription._id}
@@ -239,12 +244,11 @@ const Subscriptions = () => {
                 onEdit={(id) => handleEdit(id)}
                 onCancel={(id) => handleCancel(id)}
                 onRenew={(id) => handleRenew(id)}
-              />)
+              />);
             }
-          }) : <p className="text-xl my-auto text-center md:col-span-3 lg:col-span-5 xl:col-span-5">You don't have {length == 0 ? "Any" : status} subscriptions yet</p>}
+          }) : <p className="text-xl my-auto text-center md:col-span-3 lg:col-span-5 xl:col-span-5 dark:text-gray-400">you don't have {length == 0 ? "Any" : status} subscriptions yet</p>}
         </div>
-
-      </section >
+      </main>
     </>
   )
 }

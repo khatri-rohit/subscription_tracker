@@ -99,21 +99,21 @@ const Profile = () => {
     };
 
     return (
-        <div className="max-w-4xl mx-auto p-8">
-            <h1 className="text-3xl font-bold text-gray-800 mb-8">
+        <div className="max-w-4xl mx-auto p-8 dark:bg-gray-800 dark:text-white rounded-lg">
+            <h1 className="text-3xl font-bold mb-8">
                 Profile Settings
             </h1>
 
             <div className="mb-8">
-                <h2 className="text-xl font-semibold text-gray-700 mb-4">
+                <h2 className="text-xl font-semibold mb-4">
                     Profile Picture
                 </h2>
                 <div className="flex items-center space-x-4">
                     <div
-                        className="w-24 h-24 rounded-full bg-gray-300 cursor-pointer relative overflow-hidden"
+                        className="w-24 h-24 rounded-full bg-gray-700 cursor-pointer relative overflow-hidden"
                         onClick={handleProfilePictureClick}>
                         <img
-                            src={profileImage || `${imageUrl}/${profileImage}`}
+                            src={profileImage.includes("blank-avatar") ? profileImage : `${imageUrl}/${profileImage}`}
                             width='100'
                             height='100'
                             alt="Profile"
@@ -145,7 +145,7 @@ const Profile = () => {
             </div>
 
             <div className="mb-8">
-                <h2 className="text-xl font-semibold text-gray-700 mb-4">
+                <h2 className="text-xl font-semibold mb-4">
                     Profile Information
                 </h2>
                 <Form {...form}>
@@ -155,13 +155,13 @@ const Profile = () => {
                             name="firstName"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel className="block text-sm font-medium text-gray-600">
+                                    <FormLabel className="block text-sm font-medium dark:text-gray-300">
                                         First Name
                                     </FormLabel>
                                     <FormControl>
                                         <Input
                                             {...field}
-                                            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            className="mt-1 block w-full px-4 py-2 border border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                                         />
                                     </FormControl>
                                     <FormMessage className="text-sm" />
@@ -174,13 +174,13 @@ const Profile = () => {
                             name="lastName"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel className="block text-sm font-medium text-gray-600">
+                                    <FormLabel className="block text-sm font-medium dark:text-gray-300">
                                         Last Name
                                     </FormLabel>
                                     <FormControl>
                                         <Input
                                             {...field}
-                                            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            className="mt-1 block w-full px-4 py-2 border border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                                         />
                                     </FormControl>
                                     <FormMessage className="text-sm" />
@@ -193,14 +193,14 @@ const Profile = () => {
                             name="email"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel className="block text-sm font-medium text-gray-600">
+                                    <FormLabel className="block text-sm font-medium dark:text-gray-300">
                                         Email Address
                                     </FormLabel>
                                     <FormControl>
                                         <Input
                                             type="email"
                                             {...field}
-                                            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            className="mt-1 block w-full px-4 py-2 border border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                                         />
                                     </FormControl>
                                     <FormMessage className="text-sm" />
@@ -211,7 +211,7 @@ const Profile = () => {
                         <div className="flex justify-end space-x-4 mt-5">
                             <Button
                                 type="button"
-                                className="px-6 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                                className="px-6 py-2 text-gray-900 hover:text-white bg-white rounded-lg hover:bg-gray-600 transition-colors dark:text-gray-300 dark:bg-gray-900 dark:hover:bg-gray-600"
                                 onClick={() => {
                                     form.reset();
                                     setSaveBtn(true);
@@ -221,7 +221,7 @@ const Profile = () => {
                             <Button
                                 type="submit"
                                 disabled={saveBtn}
-                                className="px-6 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors">
+                                className="px-6 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors dark:bg-blue-700 dark:hover:bg-blue-800">
                                 Save Changes
                             </Button>
                         </div>

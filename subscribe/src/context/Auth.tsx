@@ -16,7 +16,8 @@ type User = {
     lastName: string
     email: string
     createdAt: string,
-    profileImage: string
+    profileImage: string,
+    notify: boolean
 }
 
 type AuthContextType = {

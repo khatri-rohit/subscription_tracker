@@ -66,12 +66,12 @@ const Account = () => {
     }
 
     return (
-        <div className="max-w-4xl mx-auto rounded-lg p-8">
-            <h1 className="text-3xl font-bold text-gray-800 mb-8">
+        <div className="max-w-4xl mx-auto rounded-lg p-8 bg-white dark:bg-gray-800">
+            <h1 className="text-3xl font-bold text-gray-800 mb-8 dark:text-gray-200">
                 Account Settings
             </h1>
             <div className="mb-8">
-                <h2 className="text-xl font-semibold text-gray-700 mb-4">Security</h2>
+                <h2 className="text-xl font-semibold text-gray-700 mb-4 dark:text-gray-300">Security</h2>
 
                 <Form {...form}>
                     <form className="space-y-4">
@@ -80,15 +80,14 @@ const Account = () => {
                             name='password'
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel className="block text-sm font-medium text-gray-600">
+                                    <FormLabel className="block text-sm font-medium text-gray-600 dark:text-gray-400">
                                         Password
                                     </FormLabel>
                                     <FormControl>
                                         <Input
                                             type="password"
                                             placeholder="Enter new password"
-                                            className="mt-1 block w-full px-4 py-2 border border-gray-300
-                 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                                             {...field}
                                         />
                                     </FormControl>
@@ -101,15 +100,14 @@ const Account = () => {
                             name='confirmPassword'
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel className="block text-sm font-medium text-gray-600">
-                                        Password
+                                    <FormLabel className="block text-sm font-medium text-gray-600 dark:text-gray-400">
+                                        Confirm Password
                                     </FormLabel>
                                     <FormControl>
                                         <Input
                                             type="password"
-                                            placeholder="Enter new password"
-                                            className="mt-1 block w-full px-4 py-2 border border-gray-300
-                 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            placeholder="Confirm new password"
+                                            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                                             {...field}
                                         />
                                     </FormControl>
@@ -123,7 +121,7 @@ const Account = () => {
 
             <div className="flex justify-end space-x-4">
                 <Button
-                    className="px-6 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors cursor-pointer"
+                    className="px-6 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors cursor-pointer dark:bg-gray-600 dark:text-gray-200 dark:hover:bg-gray-500"
                     onClick={() => form.reset()}>
                     Cancel
                 </Button>
@@ -133,13 +131,13 @@ const Account = () => {
             </div>
 
             <div className="my-8">
-                <h2 className="text-xl font-semibold text-gray-700 mb-4">
-                    Dranger Zone
+                <h2 className="text-xl font-semibold text-gray-700 mb-4 dark:text-gray-300">
+                    Danger Zone
                 </h2>
                 <div className="py-2 flex justify-between">
                     <div>
                         <p className="text-[1em]">Delete My Account</p>
-                        <p className="text-[0.9em]">Once you delte your account, there is no going back. Please be certain</p>
+                        <p className="text-[0.9em]">Once you delete your account, there is no going back. Please be certain</p>
                     </div>
                     <Button
                         onClick={handleSubmit}
@@ -148,7 +146,6 @@ const Account = () => {
                     </Button>
                 </div>
             </div>
-
         </div>
     )
 }

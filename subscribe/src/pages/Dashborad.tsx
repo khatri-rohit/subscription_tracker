@@ -124,28 +124,23 @@ const Dashborad = () => {
   }
 
   useEffect(() => {
-    console.log(user);
-  }, [user])
-
-  useEffect(() => {
     if (data) {
       dispatch(setSubscription(data))
       setSubscriptions(data);
       setFilterSubscription(data);
       setLength(data.length);
-      console.log(data?.length);
     }
-  }, [dispatch, data])
+  }, [data])
 
   return (
-    <main className="p-10">
+    <main className="p-10 dark:bg-gray-900 h-full min-h-screen">
       <div className="p-2 space-y-5 w-fit">
-        <h3 className="text-3xl">Subscription Overview</h3>
+        <h3 className="text-3xl dark:text-white">Subscription Overview</h3>
         {/* Search Overview */}
         <div className="flex items-center gap-x-2 w-full">
-          <form onSubmit={handleSearch} className="border-[.12em] border-[#BCC1CA] min-w-[75%] flex items-center rounded-lg shadow-2xs">
+          <form onSubmit={handleSearch} className="border-[.12em] border-[#BCC1CA] min-w-[75%] flex items-center rounded-lg shadow-2xs dark:border-gray-600 dark:bg-[#2E2E2E]">
             <Search className="mx-2" />
-            <Input className="border-none md:text-xl shadow-none"
+            <Input className="border-none md:text-xl shadow-none  dark:text-white"
               placeholder="Search Subscription"
               value={search}
               onChange={handleChange1} />
@@ -153,15 +148,15 @@ const Dashborad = () => {
           </form>
 
           {(data?.length as number) > 0 && (<div className="tags text-[1em] flex items-center justify-between gap-x-2">
-            <span className={`bg-gray-100 font-light px-2 rounded-2xl cursor-pointer ${status === 'active' ? "font-semibold" : "font-light"}`}
+            <span className={`bg-gray-100 font-light px-2 rounded-2xl cursor-pointer ${status === 'active' ? "font-semibold" : "font-light"} dark:bg-gray-600 dark:text-white`}
               onClick={() => handleChangeStatus("active")}>
               Active
             </span>
-            <span className={`bg-blue-100 text-blue-500 px-2 rounded-2xl cursor-pointer ${status === 'cancelled' ? "font-semibold" : "font-light"}`}
+            <span className={`bg-blue-100 text-blue-500 px-2 rounded-2xl cursor-pointer ${status === 'cancelled' ? "font-semibold" : "font-light"} dark:bg-blue-600 dark:text-white`}
               onClick={() => handleChangeStatus("cancelled")}>
               Pending
             </span>
-            <span className={`bg-red-100 text-red-500 px-2 rounded-2xl cursor-pointer ${status === 'expired' ? "font-semibold" : "font-light"}`}
+            <span className={`bg-red-100 text-red-500 px-2 rounded-2xl cursor-pointer ${status === 'expired' ? "font-semibold" : "font-light"} dark:bg-red-600 dark:text-white`}
               onClick={() => handleChangeStatus("expired")}>
               Expired
             </span>
@@ -179,9 +174,11 @@ const Dashborad = () => {
         /> :
           length > 0 ? (subscriptions?.map((subscription) => {
             if (subscription.status === status) {
-              return (<SubsOverview key={subscription._id} name={subscription.name} renewalDate={subscription.renewalDate} status={subscription.status} />)
+              return (<SubsOverview key={subscription._id} name={subscription.name}
+                renewalDate={subscription.renewalDate as Date} status={subscription.status} />)
             } else if (status === "All") {
-              return <SubsOverview key={subscription._id} name={subscription.name} renewalDate={subscription.renewalDate} status={subscription.status} />
+              return <SubsOverview key={subscription._id} name={subscription.name}
+                renewalDate={subscription.renewalDate as Date} status={subscription.status} />
             }
           })) : <p className="text-xl my-auto text-center md:col-span-3 lg:col-span-4">
             You don't have {length == 0 ? "Any" : status} subscriptions
@@ -199,15 +196,14 @@ const Dashborad = () => {
       <div className="p-2 space-y-5 mt-8 mb-3">
         {/* Search Overview */}
         <div className="p-2 space-y-5 w-fit">
-          <h3 className="text-3xl">Filter & Search Subscriptions</h3>
+          <h3 className="text-3xl dark:text-white">Filter & Search Subscriptions</h3>
           {/* Search Overview */}
           <div className="flex items-center gap-x-2 w-full">
-            <form onSubmit={handleFilterSearch} className="border-[.12em] border-[#BCC1CA] w-full flex items-center rounded-lg shadow-2xs">
+            <form onSubmit={handleFilterSearch} className="border-[.12em] border-[#BCC1CA] w-full flex items-center rounded-lg shadow-2xs dark:border-gray-600 dark:bg-gray-700">
               <Search className="mx-2" />
               <Input value={filterSearch}
-                // onChange={(e) => setFilterSearch(e.target.value)}
                 onChange={handleChange2}
-                className="border-none md:text-xl shadow-none"
+                className="border-none md:text-xl shadow-none dark:text-white"
                 placeholder="Search Subscription" />
               {filterSearch.length > 0 &&
                 (<X className="cursor-pointer mr-1.5 p-0.5" onClick={handleX2} />)}
@@ -239,10 +235,10 @@ const Dashborad = () => {
           filterSubscirpion.length > 0 && filterSubscirpion?.map((subscription) => {
             if (subscription.category === category) {
               return <SubsOverview key={subscription._id} name={subscription.name}
-                renewalDate={subscription.renewalDate} status={subscription.status} />
+                renewalDate={subscription.renewalDate as Date} status={subscription.status} />
             } else if (category === 'All') {
               return <SubsOverview key={subscription._id} name={subscription.name}
-                renewalDate={subscription.renewalDate} status={subscription.status} />
+                renewalDate={subscription.renewalDate as Date} status={subscription.status} />
             }
           }))
         }
@@ -250,7 +246,6 @@ const Dashborad = () => {
           filterSubscirpion.length === 0 && (<p className="text-xl my-auto text-center md:col-span-3 lg:col-span-4">You don't have {length == 0 ? "Any" : category} subscriptions</p>)
         }
       </div>
-
     </main>
   )
 }

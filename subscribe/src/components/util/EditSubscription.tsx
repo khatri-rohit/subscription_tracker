@@ -1,13 +1,11 @@
-import { useEffect, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import { CreateSubscriptions, Subscription } from "@/lib/types"
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { format, parseISO } from "date-fns";
-// import { BeatLoader } from "react-spinners";
 import { CalendarIcon } from "lucide-react";
 import { cn, platforms } from "@/lib/utils";
 
-// UI Components
 import {
     Form,
     FormControl,
@@ -33,11 +31,14 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { useForm } from "react-hook-form";
 import { useUpdateSubscriptionMutation } from "@/services/subscriptions";
+import { Dispatch } from "react";
 
 
 interface Props {
     subscription?: Subscription,
-    setEdit: (edit: boolean) => void,
+    setEdit: Dispatch<SetStateAction<boolean>>,
+    allSubscriptions: Subscription[],
+    setAllSubscriptions: Dispatch<SetStateAction<Subscription[]>>
 }
 
 // Form validation schema
@@ -55,7 +56,7 @@ const formSchema = z.object({
     ),
 });
 
-const EditSubscription = ({ subscription, setEdit }: Props) => {
+const EditSubscription = ({ subscription, setEdit, allSubscriptions, setAllSubscriptions }: Props) => {
 
     const [showCustomInput, setShowCustomInput] = useState(false);
 
@@ -94,12 +95,12 @@ const EditSubscription = ({ subscription, setEdit }: Props) => {
     });
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
-        console.log("Form values:", values);
+        // console.log("Form values:", values);
         // Implement your submission logic here
         const { platformId, price, currency, category, frequency, paymentMethod, startDate, customPlatform } = values;
         const name: string = platformId === 'Other' ? (customPlatform as string) : platformId;
         const newSubscription: CreateSubscriptions = {
-            _id: subscription?._id,
+            _id: subscription?._id as string,
             name,
             price,
             category,
@@ -108,10 +109,14 @@ const EditSubscription = ({ subscription, setEdit }: Props) => {
             paymentMethod,
             startDate
         }
-        const sub = await updateSubscription(newSubscription)
-        console.log(sub.data);
+        await updateSubscription(newSubscription)
+
+        const updatedSubscription = { ...subscription, ...newSubscription };
+        console.log(updatedSubscription);
+        const subscriptions = allSubscriptions.filter((subs) => subs._id !== subscription?._id);
+        subscriptions.push(updatedSubscription)
+        setAllSubscriptions(subscriptions);
         setEdit(false);
-        window.location.reload();
     }
 
     const platformName = form.watch("customPlatform");
@@ -126,7 +131,7 @@ const EditSubscription = ({ subscription, setEdit }: Props) => {
     }, [platformName]);
 
     return (
-        <div className="p-5 bg-gray-100 rounded-2xl">
+        <div className="p-5 bg-gray-100 dark:bg-gray-800 rounded-2xl">
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                     <div className="space-y-6">
@@ -135,7 +140,7 @@ const EditSubscription = ({ subscription, setEdit }: Props) => {
                             name="platformId"
                             render={({ field }) => (
                                 <FormItem className="w-full">
-                                    <FormLabel className="text-base font-medium">
+                                    <FormLabel className="text-base font-medium text-gray-900 dark:text-gray-200">
                                         Select Platform
                                     </FormLabel>
                                     <FormControl className="w-full">
@@ -145,7 +150,7 @@ const EditSubscription = ({ subscription, setEdit }: Props) => {
                                                 setShowCustomInput(value === "Other");
                                             }}
                                             value={field.value}>
-                                            <SelectTrigger className="h-12 text-base px-4 w-full bg-white">
+                                            <SelectTrigger className="h-12 text-base px-4 w-full bg-white dark:bg-gray-700">
                                                 <SelectValue placeholder="Select a platform" />
                                             </SelectTrigger>
                                             <SelectContent>
@@ -153,7 +158,7 @@ const EditSubscription = ({ subscription, setEdit }: Props) => {
                                                     <SelectItem
                                                         key={platform.id}
                                                         value={platform.name}
-                                                        className="text-base py-3">
+                                                        className="text-base py-3 text-gray-900 dark:text-gray-200">
                                                         {platform.name}
                                                     </SelectItem>
                                                 ))}
@@ -171,11 +176,11 @@ const EditSubscription = ({ subscription, setEdit }: Props) => {
                                 name="customPlatform"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel className="text-base font-medium">Platform Name</FormLabel>
+                                        <FormLabel className="text-base font-medium text-gray-900 dark:text-gray-200">Platform Name</FormLabel>
                                         <FormControl>
                                             <Input
                                                 placeholder="Enter platform name"
-                                                className="h-12 text-base px-4 bg-white"
+                                                className="h-12 text-base px-4 bg-white dark:bg-gray-700"
                                                 {...field}
                                             />
                                         </FormControl>
@@ -193,18 +198,18 @@ const EditSubscription = ({ subscription, setEdit }: Props) => {
                             name="category"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel className="text-base font-medium">Category</FormLabel>
+                                    <FormLabel className="text-base font-medium text-gray-900 dark:text-gray-200">Category</FormLabel>
                                     <Select onValueChange={field.onChange} value={field.value}>
                                         <FormControl>
-                                            <SelectTrigger className="h-12 text-base px-4 w-full bg-white">
+                                            <SelectTrigger className="h-12 text-base px-4 w-full bg-white dark:bg-gray-700">
                                                 <SelectValue placeholder="Select category" />
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>
-                                            <SelectItem value="entertainment" className="text-base py-3">Entertainment</SelectItem>
-                                            <SelectItem value="sports" className="text-base py-3">Sports</SelectItem>
-                                            <SelectItem value="lifestyle" className="text-base py-3">Lifestyle</SelectItem>
-                                            <SelectItem value="Other" className="text-base py-3">Others</SelectItem>
+                                            <SelectItem value="entertainment" className="text-base py-3 text-gray-900 dark:text-gray-200">Entertainment</SelectItem>
+                                            <SelectItem value="sports" className="text-base py-3 text-gray-900 dark:text-gray-200">Sports</SelectItem>
+                                            <SelectItem value="lifestyle" className="text-base py-3 text-gray-900 dark:text-gray-200">Lifestyle</SelectItem>
+                                            <SelectItem value="Other" className="text-base py-3 text-gray-900 dark:text-gray-200">Others</SelectItem>
                                         </SelectContent>
                                     </Select>
                                     <FormMessage className="text-sm" />
@@ -217,18 +222,18 @@ const EditSubscription = ({ subscription, setEdit }: Props) => {
                             name="frequency"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel className="text-base font-medium">Billing Frequency</FormLabel>
+                                    <FormLabel className="text-base font-medium text-gray-900 dark:text-gray-200">Billing Frequency</FormLabel>
                                     <Select onValueChange={field.onChange} value={field.value}>
                                         <FormControl>
-                                            <SelectTrigger className="h-12 text-base px-4 w-full bg-white">
+                                            <SelectTrigger className="h-12 text-base px-4 w-full bg-white dark:bg-gray-700">
                                                 <SelectValue placeholder="Select frequency" />
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>
-                                            <SelectItem value="monthly" className="text-base py-3">Monthly</SelectItem>
-                                            <SelectItem value="yearly" className="text-base py-3">Yearly</SelectItem>
-                                            <SelectItem value="weekly" className="text-base py-3">Weekly</SelectItem>
-                                            <SelectItem value="daily" className="text-base py-3">Daily</SelectItem>
+                                            <SelectItem value="monthly" className="text-base py-3 text-gray-900 dark:text-gray-200">Monthly</SelectItem>
+                                            <SelectItem value="yearly" className="text-base py-3 text-gray-900 dark:text-gray-200">Yearly</SelectItem>
+                                            <SelectItem value="weekly" className="text-base py-3 text-gray-900 dark:text-gray-200">Weekly</SelectItem>
+                                            <SelectItem value="daily" className="text-base py-3 text-gray-900 dark:text-gray-200">Daily</SelectItem>
                                         </SelectContent>
                                     </Select>
                                     <FormMessage className="text-sm" />
@@ -241,12 +246,12 @@ const EditSubscription = ({ subscription, setEdit }: Props) => {
                             name="price"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel className="text-base font-medium">Price</FormLabel>
+                                    <FormLabel className="text-base font-medium text-gray-900 dark:text-gray-200">Price</FormLabel>
                                     <FormControl>
                                         <Input
                                             type="number"
                                             placeholder="0.00"
-                                            className="h-12 text-base px-4 bg-white"
+                                            className="h-12 text-base px-4 bg-white dark:bg-gray-700"
                                             onChange={(e) => field.onChange(Number(e.target.value))}
                                             value={field.value || ''}
                                         />
@@ -261,18 +266,18 @@ const EditSubscription = ({ subscription, setEdit }: Props) => {
                             name="currency"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel className="text-base font-medium">Currency</FormLabel>
+                                    <FormLabel className="text-base font-medium text-gray-900 dark:text-gray-200">Currency</FormLabel>
                                     <Select onValueChange={field.onChange} value={field.value}>
                                         <FormControl>
-                                            <SelectTrigger className="h-12 text-base px-4 w-full bg-white">
+                                            <SelectTrigger className="h-12 text-base px-4 w-full bg-white dark:bg-gray-700">
                                                 <SelectValue placeholder="Select currency" />
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>
-                                            <SelectItem value="INR" className="text-base py-3">INR</SelectItem>
-                                            <SelectItem value="USD" className="text-base py-3">USD</SelectItem>
-                                            <SelectItem value="EUR" className="text-base py-3">EUR</SelectItem>
-                                            <SelectItem value="GBP" className="text-base py-3">GBP</SelectItem>
+                                            <SelectItem value="INR" className="text-base py-3 text-gray-900 dark:text-gray-200">INR</SelectItem>
+                                            <SelectItem value="USD" className="text-base py-3 text-gray-900 dark:text-gray-200">USD</SelectItem>
+                                            <SelectItem value="EUR" className="text-base py-3 text-gray-900 dark:text-gray-200">EUR</SelectItem>
+                                            <SelectItem value="GBP" className="text-base py-3 text-gray-900 dark:text-gray-200">GBP</SelectItem>
                                         </SelectContent>
                                     </Select>
                                     <FormMessage className="text-sm" />
@@ -285,18 +290,18 @@ const EditSubscription = ({ subscription, setEdit }: Props) => {
                             name="paymentMethod"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel className="text-base font-medium">Payment Method</FormLabel>
+                                    <FormLabel className="text-base font-medium text-gray-900 dark:text-gray-200">Payment Method</FormLabel>
                                     <Select onValueChange={field.onChange} value={field.value}>
                                         <FormControl>
-                                            <SelectTrigger className="h-12 text-base px-4 w-full bg-white">
+                                            <SelectTrigger className="h-12 text-base px-4 w-full bg-white dark:bg-gray-700">
                                                 <SelectValue placeholder="Select payment method" />
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>
-                                            <SelectItem value="Credit Card" className="text-base py-3">Credit Card</SelectItem>
-                                            <SelectItem value="Debit Card" className="text-base py-3">Debit Card</SelectItem>
-                                            <SelectItem value="UPI" className="text-base py-3">UPI</SelectItem>
-                                            <SelectItem value="Net Banking" className="text-base py-3">Net Banking</SelectItem>
+                                            <SelectItem value="Credit Card" className="text-base py-3 text-gray-900 dark:text-gray-200">Credit Card</SelectItem>
+                                            <SelectItem value="Debit Card" className="text-base py-3 text-gray-900 dark:text-gray-200">Debit Card</SelectItem>
+                                            <SelectItem value="UPI" className="text-base py-3 text-gray-900 dark:text-gray-200">UPI</SelectItem>
+                                            <SelectItem value="Net Banking" className="text-base py-3 text-gray-900 dark:text-gray-200">Net Banking</SelectItem>
                                         </SelectContent>
                                     </Select>
                                     <FormMessage className="text-sm" />
@@ -309,14 +314,14 @@ const EditSubscription = ({ subscription, setEdit }: Props) => {
                             name="startDate"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel className="text-base font-medium">Start Date</FormLabel>
+                                    <FormLabel className="text-base font-medium text-gray-900 dark:text-gray-200">Start Date</FormLabel>
                                     <Popover>
                                         <PopoverTrigger asChild>
                                             <FormControl>
                                                 <Button
                                                     variant={"outline"}
                                                     className={cn(
-                                                        "h-12 text-base px-4 w-full pl-3 text-left font-normal",
+                                                        "h-12 text-base px-4 w-full pl-3 text-left font-normal dark:bg-gray-700",
                                                         !field.value && "text-muted-foreground"
                                                     )}
                                                 >
@@ -350,15 +355,13 @@ const EditSubscription = ({ subscription, setEdit }: Props) => {
                         <Button
                             type="button"
                             variant="outline"
-                            className="h-10 px-5 text-base cursor-pointer"
-                            onClick={() => setEdit(false)}
-                        >
+                            className="h-10 px-5 text-base cursor-pointer dark:hover:bg-black/80"
+                            onClick={() => setEdit(false)}>
                             Cancel
                         </Button>
                         <Button
                             type="submit"
-                            className="h-10 px-5 text-base bg-primary hover:bg-primary/90 cursor-pointer"
-                        >
+                            className="h-10 px-5 text-base bg-primary hover:bg-primary/90 cursor-pointer">
                             Confirm
                         </Button>
                     </div>

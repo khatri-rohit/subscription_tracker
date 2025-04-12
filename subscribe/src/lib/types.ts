@@ -5,14 +5,14 @@ export type Subscription = {
     currency: 'INR' | 'USD' | 'EUR' | 'GBP';
     frequency: 'monthly' | 'daily' | 'weekly' | 'yearly';
     category: string;
-    status: 'active' | 'cancelled' | 'expired';
+    status?: 'active' | 'cancelled' | 'expired';
     startDate: Date;
-    renewalDate: Date;
+    renewalDate?: Date;
     paymentMethod: string;
 }
 
 export type CreateSubscriptions = {
-    _id?: string;
+    _id: string;
     name: string;
     price: number;
     currency: 'INR' | 'USD' | 'EUR' | 'GBP';

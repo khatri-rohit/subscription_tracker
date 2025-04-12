@@ -34,6 +34,7 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover"
+import { AxiosError } from "axios"
 
 const formSchema = z.object({
     platformId: z.string().min(1, "Please select a platform"),
@@ -85,6 +86,12 @@ const CreateSubscription = () => {
         try {
             const { platformId, price, currency, category, frequency, paymentMethod, startDate, customPlatform } = values;
             const name: string = platformId === 'Other' ? (customPlatform as string) : platformId;
+
+            if (platformId === 'Other' && (customPlatform?.trim()?.length as number) <= 0) {
+                throw new Error("Subscription Name is Required");
+            } else if (platformId === 'Other' && (customPlatform?.trim()?.length as number) <= 3) {
+                throw new Error("Enter a valid subscription name");
+            }
             const newSubscription: CreateSubscriptions = {
                 name,
                 price,
@@ -98,15 +105,16 @@ const CreateSubscription = () => {
             if (!isError && !isLoading)
                 navigate('/subscription')
         } catch (error) {
-            console.log(error);
+            const axiosError = error as AxiosError;
+            form.setError("customPlatform", { message: axiosError.message })
         }
     }
 
     return (
-        <div className="max-w-3xl mx-auto px-6 py-8">
+        <div className="max-w-3xl mx-auto px-6 py-8 h-screen">
             <div className="mb-10">
-                <h1 className="text-4xl font-bold tracking-tight">Create New Subscription</h1>
-                <p className="text-gray-500 mt-3 text-lg">Add a new subscription to track your expenses</p>
+                <h1 className="text-4xl font-bold tracking-tight text-gray-900 dark:text-white">Create New Subscription</h1>
+                <p className="text-gray-500 mt-3 text-lg dark:text-gray-400">Add a new subscription to track your expenses</p>
             </div>
 
             <Form {...form}>
@@ -118,7 +126,7 @@ const CreateSubscription = () => {
                             name="platformId"
                             render={({ field }) => (
                                 <FormItem className="w-full">
-                                    <FormLabel className="text-base font-medium">
+                                    <FormLabel className="text-base font-medium text-gray-900 dark:text-white">
                                         Select Platform
                                     </FormLabel>
                                     <FormControl className="w-full">
@@ -127,8 +135,7 @@ const CreateSubscription = () => {
                                                 field.onChange(value);
                                                 setShowCustomInput(value === "other");
                                             }}
-                                            value={field.value}
-                                        >
+                                            value={field.value}>
                                             <SelectTrigger className="h-12 text-base px-4 w-full">
                                                 <SelectValue placeholder="Select a platform" />
                                             </SelectTrigger>
@@ -156,11 +163,11 @@ const CreateSubscription = () => {
                                 name="customPlatform"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel className="text-base font-medium">Platform Name</FormLabel>
+                                        <FormLabel className="text-base font-medium text-gray-900 dark:text-white">Platform Name</FormLabel>
                                         <FormControl>
                                             <Input
                                                 placeholder="Enter platform name"
-                                                className="h-12 text-base px-4"
+                                                className="h-12 text-base px-4 bg-[#1b1f27]"
                                                 {...field}
                                             />
                                         </FormControl>
@@ -178,7 +185,7 @@ const CreateSubscription = () => {
                             name="category"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel className="text-base font-medium">Category</FormLabel>
+                                    <FormLabel className="text-base font-medium text-gray-900 dark:text-white">Category</FormLabel>
                                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                                         <FormControl>
                                             <SelectTrigger className="h-12 text-base px-4 w-full">
@@ -202,10 +209,10 @@ const CreateSubscription = () => {
                             name="frequency"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel className="text-base font-medium">Billing Frequency</FormLabel>
+                                    <FormLabel className="text-base font-medium text-gray-900 dark:text-white">Billing Frequency</FormLabel>
                                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                                         <FormControl>
-                                            <SelectTrigger className="h-12 text-base px-4  w-full">
+                                            <SelectTrigger className="h-12 text-base px-4 w-full">
                                                 <SelectValue placeholder="Select frequency" />
                                             </SelectTrigger>
                                         </FormControl>
@@ -226,12 +233,12 @@ const CreateSubscription = () => {
                             name="price"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel className="text-base font-medium">Price</FormLabel>
+                                    <FormLabel className="text-base font-medium text-gray-900 dark:text-white">Price</FormLabel>
                                     <FormControl>
                                         <Input
                                             type="number"
                                             placeholder="0.00"
-                                            className="h-12 text-base px-4"
+                                            className="h-12 text-base px-4 dark:bg-[#1b1f27]"
                                             onChange={(e) => field.onChange(Number(e.target.value))}
                                             value={field.value || ''}
                                         />
@@ -246,7 +253,7 @@ const CreateSubscription = () => {
                             name="currency"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel className="text-base font-medium">Currency</FormLabel>
+                                    <FormLabel className="text-base font-medium text-gray-900 dark:text-white">Currency</FormLabel>
                                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                                         <FormControl>
                                             <SelectTrigger className="h-12 text-base px-4 w-full">
@@ -270,7 +277,7 @@ const CreateSubscription = () => {
                             name="paymentMethod"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel className="text-base font-medium">Payment Method</FormLabel>
+                                    <FormLabel className="text-base font-medium text-gray-900 dark:text-white">Payment Method</FormLabel>
                                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                                         <FormControl>
                                             <SelectTrigger className="h-12 text-base px-4 w-full">
@@ -294,17 +301,16 @@ const CreateSubscription = () => {
                             name="startDate"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel className="text-base font-medium">Start Date</FormLabel>
+                                    <FormLabel className="text-base font-medium text-gray-900 dark:text-white">Start Date</FormLabel>
                                     <Popover>
                                         <PopoverTrigger asChild>
                                             <FormControl>
                                                 <Button
                                                     variant={"outline"}
                                                     className={cn(
-                                                        "h-12 text-base px-4 w-full pl-3 text-left font-normal",
+                                                        "h-12 text-base px-4 w-full pl-3 text-left font-normal dark:bg-[#1b1f27]",
                                                         !field.value && "text-muted-foreground"
-                                                    )}
-                                                >
+                                                    )}>
                                                     {field.value ? (
                                                         format(field.value, "PPP")
                                                     ) : (
@@ -336,6 +342,7 @@ const CreateSubscription = () => {
                             variant="outline"
                             className="h-12 px-6 text-base cursor-pointer"
                             disabled={isLoading}
+                            onClick={() => form.reset()}
                         >
                             Cancel
                         </Button>

@@ -97,9 +97,9 @@ export const updateSubscription = async (req, res, next) => {
             throw error;
         }
 
-        await Subscription.findByIdAndUpdate(req.params.id, { ...req.body }); // destructure all the updated value and pass into the query
+        const updatedSubscription = await Subscription.findByIdAndUpdate(req.params.id, { ...req.body }); // destructure all the updated value and pass into the query
 
-        return res.status(200).json(subscription);
+        return res.status(200).json(updatedSubscription);
     } catch (error) {
         next(error);
     }

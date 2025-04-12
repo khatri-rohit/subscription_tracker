@@ -20,7 +20,7 @@ app.use("/uploads", express.static('uploads'))
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-// app.use(arcjetMiddleware);
+app.use(arcjetMiddleware);
 // app.use(cors()); // For Crosss origin access (basiclly to access backend)
 // In your Express app setup
 app.use(cors({

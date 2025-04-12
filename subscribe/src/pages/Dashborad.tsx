@@ -184,7 +184,7 @@ const Dashborad = () => {
             You don't have {length == 0 ? "Any" : status} subscriptions
           </p>)
         }
-        {(data?.length === 0 || !data) && <NavLink to={'/subscription/create-subs'}
+        {(data?.length === 0 || !data) && !isLoading && <NavLink to={'/subscription/create-subs'}
           className="text-xl my-auto text-center md:col-span-3 lg:col-span-4">
           <Button variant={"secondary"}
             className="text-xl rounded-lg cursor-pointer p-5">
@@ -243,7 +243,7 @@ const Dashborad = () => {
           }))
         }
         {
-          filterSubscirpion.length === 0 && (<p className="text-xl my-auto text-center md:col-span-3 lg:col-span-4">You don't have {length == 0 ? "Any" : category} subscriptions</p>)
+          filterSubscirpion.length === 0 && !isLoading &&(<p className="text-xl my-auto text-center md:col-span-3 lg:col-span-4">You don't have {length == 0 ? "Any" : category} subscriptions</p>)
         }
       </div>
     </main>

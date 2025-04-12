@@ -4,7 +4,6 @@ import { ALargeSmall, EyeIcon, MailIcon, X } from "lucide-react"
 import axios, { AxiosError } from 'axios';
 import { SyncLoader } from 'react-spinners'
 
-import Model from "../../util/Model"
 import { useAuth } from "@/context/Auth"
 import { useAppDispatch, useAppSelector } from "@/app/store";
 import { isAuthenticated } from '@/features/slice';
@@ -93,11 +92,11 @@ const SignUp = () => {
     }
 
     return (
-        <Model>
+        <div className="h-screen flex justify-center items-center">
             <div className="absolute right-10 top-5 cursor-pointer"
                 onClick={() => navigate('/')}>
                 <X size={25} />
-            </div>
+            </div >
             <div className="bg-[#FFCF8D] w-[85%] md:w-[90%] lg:w-[75%] min-h-[80vh] lg:min-h-[65%] md:grid md:grid-cols-2">
                 <img className="hidden md:block object-cover w-full h-full" src="/img/signIn.png" alt="girl-illestration" />
 
@@ -168,7 +167,7 @@ const SignUp = () => {
                                             <Input className="border-none shadow-none text-sm md:text-lg placeholder:text-gray-500/50"
                                                 placeholder="Email" {...field} />
                                         </div>
-                                       <FormMessage />
+                                        <FormMessage />
                                     </FormItem>
                                 )}
                             />
@@ -262,7 +261,7 @@ const SignUp = () => {
 
                 </div>
             </div>
-        </Model>
+        </div>
     )
 }
 

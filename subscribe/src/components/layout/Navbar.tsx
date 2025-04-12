@@ -41,9 +41,9 @@ const Navbar = () => {
                                     <ProfileBtn />
                                 </>) :
                                 (
-                                    <Button className="bg-[#636AE8] hover:bg-[#565ba9] transition-all duration-300 cursor-pointer"
-                                        onClick={() => navigate('/signup')}>
-                                        <img src="/img/newsletter.png" /> SignUp
+                                    <Button className="bg-[#636AE8] dark:text-white hover:bg-[#565ba9] transition-all duration-300 cursor-pointer"
+                                        onClick={() => navigate('/signin')}>
+                                        <img src="/img/newsletter.png" /> SignIn
                                     </Button>
                                 )
                         }

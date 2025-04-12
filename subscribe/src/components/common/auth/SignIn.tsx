@@ -8,7 +8,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import Model from "../../util/Model"
+
 import { EyeIcon, MailIcon, X } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "@/context/Auth"
@@ -96,7 +96,7 @@ const SignIn = () => {
   }
 
   return (
-    <Model>
+    <div className="h-screen flex justify-center items-center">
       <div className="absolute right-10 top-5 cursor-pointer"
         onClick={() => navigate('/')}>
         <X size={25} />
@@ -169,7 +169,7 @@ const SignIn = () => {
             </div>
           </div>
 
-          <p className="text-sm lg:text-[1em] text-center pt-10 pb-5 md:pb-4">Don't have an account? <span className="hover:underline text-gray-300 cursor-pointer" onClick={() => navigate('/signup')}>SignUp here</span></p>
+          <p className="text-sm lg:text-[1em] text-center pt-10 pb-5 md:pb-4">Don't have an account? <span className="hover:underline text-gray-50 cursor-pointer" onClick={() => navigate('/signup')}>Signup</span></p>
 
         </div>
 
@@ -179,7 +179,7 @@ const SignIn = () => {
         {/* </div> */}
 
       </div>
-    </Model>
+    </div>
   )
 }
 

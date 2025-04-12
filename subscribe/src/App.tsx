@@ -23,11 +23,11 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path='/signup' element={<SignUp />} />
+        <Route path='/signin' element={<SignIn />} />
+
         <Route path='/' element={<Layout />}>
           <Route index element={<Home />} />
-
-          <Route path='/signup' element={<SignUp />} />
-          <Route path='/signin' element={<SignIn />} />
 
           {/* Protected routes */}
           <Route path='/dashboard' element={

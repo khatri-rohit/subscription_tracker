@@ -16,7 +16,7 @@ const Footer = () => {
           </p>
         </div>
         <div className="flex items-center space-x-4">
-          <a href="https://github.com/khatri-rohit/subscription_tracker" target="_blank" rel="noopener noreferrer" aria-label="GitHub Repository">
+          <a href="https://github.com/khatri-rohit/" target="_blank" rel="noopener noreferrer" aria-label="GitHub Repository">
             <GithubIcon className="size-6 hover:text-primary transition-colors duration-200" />
           </a>
           <a href="mailto:rohitkhatri.dev@gmail.com" rel="noopener noreferrer" aria-label="Send support email">

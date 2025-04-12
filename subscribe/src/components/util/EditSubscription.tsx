@@ -1,5 +1,5 @@
 import { SetStateAction, useEffect, useState } from "react";
-import { CreateSubscriptions, Subscription } from "@/lib/types"
+import { Subscription, UpdateSubscriptions } from "@/lib/types"
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { format, parseISO } from "date-fns";
@@ -99,7 +99,7 @@ const EditSubscription = ({ subscription, setEdit, allSubscriptions, setAllSubsc
         // Implement your submission logic here
         const { platformId, price, currency, category, frequency, paymentMethod, startDate, customPlatform } = values;
         const name: string = platformId === 'Other' ? (customPlatform as string) : platformId;
-        const newSubscription: CreateSubscriptions = {
+        const newSubscription: UpdateSubscriptions = {
             _id: subscription?._id as string,
             name,
             price,

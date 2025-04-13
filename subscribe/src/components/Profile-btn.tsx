@@ -1,7 +1,7 @@
 import { MonitorCog, Moon, Sun } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { motion } from 'motion/react'
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
 import {
     DropdownMenu,
@@ -32,10 +32,15 @@ function ProfileBtn() {
     const { apiUrl } = useAuth()
 
     const signOut = async () => {
-        axios.defaults.withCredentials = true
-        await axios.post(`${apiUrl}/auth/sign-out`)
-        dispatch(isAuthenticated(false))
-        setTimeout(() => navigation('/'), 500)
+        try {
+            axios.defaults.withCredentials = true
+            await axios.post(`${apiUrl}/auth/sign-out`)
+            dispatch(isAuthenticated(false))
+            setTimeout(() => navigation('/'), 500)
+        } catch (error) {
+            const axiosError = error as AxiosError;
+            console.log(axiosError.cause);
+        }
     }
 
     return (

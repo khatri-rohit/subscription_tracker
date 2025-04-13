@@ -63,7 +63,7 @@ const Dashborad = () => {
     isLoading,
     data,
     isError
-  } = useGetAllSubscriptionsQuery(user?._id, {
+  } = useGetAllSubscriptionsQuery({ userId: user?._id as string }, {
     skip: !user?._id.trim(),
   });
 
@@ -90,7 +90,7 @@ const Dashborad = () => {
     const value = e.target.value;
     if (value.length === 0) {
       setSearch(value)
-      setSubscriptions(data as Subscription[])
+      setSubscriptions(data?.subscriptions as Subscription[])
     } else {
       setSearch(value)
     }
@@ -100,7 +100,7 @@ const Dashborad = () => {
     const value = e.target.value;
     if (value.length === 0) {
       setFilterSearch(value)
-      setFilterSubscription(data as Subscription[])
+      setFilterSubscription(data?.subscriptions as Subscription[])
     } else {
       setFilterSearch(value)
     }
@@ -116,20 +116,20 @@ const Dashborad = () => {
 
   const handleX1 = () => {
     setSearch("");
-    setSubscriptions(data as Subscription[]);
+    setSubscriptions(data?.subscriptions as Subscription[]);
   }
 
   const handleX2 = () => {
     setFilterSearch("");
-    setFilterSubscription(data as Subscription[]);
+    setFilterSubscription(data?.subscriptions as Subscription[]);
   }
 
   useEffect(() => {
     if (data) {
-      dispatch(setSubscription(data))
-      setSubscriptions(data);
-      setFilterSubscription(data);
-      setLength(data.length);
+      dispatch(setSubscription(data?.subscriptions))
+      setSubscriptions(data?.subscriptions);
+      setFilterSubscription(data?.subscriptions);
+      setLength(data?.subscriptions.length);
     }
   }, [data])
 
@@ -149,7 +149,7 @@ const Dashborad = () => {
             {search.length > 0 && (<X className="cursor-pointer mr-1.5 p-0.5" onClick={handleX1} />)}
           </form>
 
-          {(data?.length as number) > 0 && (<div className="tags text-[1em] flex items-center justify-between gap-x-2">
+          {(data?.subscriptions.length as number) > 0 && (<div className="tags text-[1em] flex items-center justify-between gap-x-2">
             <span className={`bg-gray-100 font-light px-2 rounded-2xl cursor-pointer ${status === 'active' ? "font-semibold" : "font-light"} dark:bg-gray-600 dark:text-white`}
               onClick={() => handleChangeStatus("active")}>
               Active
@@ -186,7 +186,7 @@ const Dashborad = () => {
             You don't have {length == 0 ? "Any" : status} subscriptions
           </p>)
         }
-        {(data?.length === 0 || !data) && !isLoading && <NavLink to={'/subscription/create-subs'}
+        {(data?.subscriptions.length === 0 || !data) && !isLoading && <NavLink to={'/subscription/create-subs'}
           className="text-xl my-auto text-center md:col-span-3 lg:col-span-4">
           <Button variant={"secondary"}
             className="text-xl rounded-lg cursor-pointer p-5">

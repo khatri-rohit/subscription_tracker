@@ -35,7 +35,7 @@ export type UpdateSubscriptions = {
 
 export type status = 'success' | 'loading' | 'error'
 
-export type Category = 'All' | 'entertainment' | 'sports' | 'lifestyle' | 'other'
+export type Category = 'All' | 'entertainment' | 'sports' | 'lifestyle' | 'Other'
 
 export type Tabs = {
     category: Category,
@@ -67,3 +67,16 @@ export type Pass = {
 }
 
 export type SubsStatus = 'All' | 'active' | 'cancelled' | 'expired' 
+
+
+export interface Pagination {
+    total: number;
+    page: number;
+    limit: number;
+    pages: number;
+}
+
+export interface PaginatedResponse<T> {
+    subscriptions: T[];
+    pagination: Pagination;
+}

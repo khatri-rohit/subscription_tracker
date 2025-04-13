@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction } from "react"
-import { Subscription } from "@/lib/types"
+import { motion } from "motion/react";
 
+import { Subscription } from "@/lib/types"
 import { useDeleteSubscriptionMutation } from "@/services/subscriptions"
 
 import { Button } from "../ui/button"
@@ -26,43 +27,82 @@ const DeleteSubscription = ({ setDelete, subscription, allSubscriptions, setAllS
     }
 
     return (
-        <div className="w-72 p-6 rounded-md shadow-lg bg-white dark:bg-gray-800">
-            <div className="flex flex-col items-center">
-                <div className="text-5xl mb-4 text-gray-900 dark:text-white">🗑️</div>
-                <h2 className="text-xl font-semibold text-center mb-2 text-gray-900 dark:text-gray-200">
+
+        <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }}
+            className="w-72 p-6 rounded-md shadow-lg bg-white dark:bg-gray-800">
+            <motion.div
+                className="flex flex-col items-center"
+                initial={{ y: 20 }}
+                animate={{ y: 0 }}
+                transition={{ delay: 0.1 }}>
+                <motion.div
+                    className="text-5xl mb-4 text-gray-900 dark:text-white"
+                    animate={{ rotate: [0, -10, 10, -10, 0] }}
+                    transition={{ duration: 0.5, delay: 0.2 }}>
+                    🗑️
+                </motion.div>
+                <motion.h2
+                    className="text-xl font-semibold text-center mb-2 text-gray-900 dark:text-gray-200"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.3 }}>
                     Delete Subscription
-                </h2>
-                <p className="text-lg text-center text-gray-800 dark:text-gray-300">
+                </motion.h2>
+                <motion.p
+                    className="text-lg text-center text-gray-800 dark:text-gray-300"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.4 }}>
                     {subscription?.name}
-                </p>
-                <p className="text-lg text-center">
+                </motion.p>
+                <motion.p
+                    className="text-lg text-center"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.5 }}>
                     Status: <span className={subscription?.status === 'active' ? "text-green-500 dark:text-green-400" : subscription?.status === 'expired' ? "text-red-600 dark:text-red-500" : "text-yellow-500 dark:text-yellow-400"}>
                         {subscription?.status}
                     </span>
-                </p>
-                <p className="text-[1em] text-center mb-2 text-gray-700 dark:text-gray-300">
+                </motion.p>
+                <motion.p
+                    className="text-[1em] text-center mb-2 text-gray-700 dark:text-gray-300"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.6 }}>
                     {subscription?.status === 'active' ? `Expire In ${getDaysRemaining(subscription?.renewalDate as Date)} Days` : "Expired"}
-                </p>
-                <p className="text-sm text-center mb-6 text-gray-600 dark:text-gray-400">
+                </motion.p>
+                <motion.p
+                    className="text-sm text-center mb-6 text-gray-600 dark:text-gray-400"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.7 }}
+                >
                     Are you sure you want to delete this subscription?
-                </p>
-                <div className="flex justify-between w-full gap-2">
+                </motion.p>
+                <motion.div
+                    className="flex justify-between w-full gap-2"
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.8 }}
+                >
                     <Button
                         type="button"
                         variant="outline"
                         className="h-10 px-5 text-base cursor-pointer text-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600"
-                        onClick={() => setDelete(false)}>
+                        onClick={() => setDelete(false)}
+                    >
                         Cancel
                     </Button>
                     <Button
                         variant={"destructive"}
                         className="h-10 px-5 text-base cursor-pointer text-white bg-red-600 dark:bg-red-700"
-                        onClick={handleDelete}>
+                        onClick={handleDelete}
+                    >
                         Delete
                     </Button>
-                </div>
-            </div>
-        </div>
+                </motion.div>
+            </motion.div>
+        </motion.div>
     )
 }
 

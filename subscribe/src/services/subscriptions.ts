@@ -1,4 +1,4 @@
-import { CreateSubscriptions, Subscription } from '@/lib/types';
+import { CreateSubscriptions, PaginatedResponse, Subscription } from '@/lib/types';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 const BASE_URL = import.meta.env.VITE_BACKEND_URL;
@@ -17,8 +17,11 @@ export const allSubscriptions = createApi({
         getSubscription: builder.query<Subscription, string | undefined>({
             query: (userId) => `/subscriptions/${userId}`,
         }),
-        getAllSubscriptions: builder.query<Subscription[], string | undefined>({
-            query: (userId) => `/subscriptions/user/${userId}`,
+        // getAllSubscriptions: builder.query<Subscription[], string | undefined>({
+        //     query: (userId) => `/subscriptions/user/${userId}`,
+        // }),
+        getAllSubscriptions: builder.query<PaginatedResponse<Subscription>, { userId: string, page?: number, limit?: number }>({
+            query: ({ userId, page = 1, limit = 10 }) => `/subscriptions/user/${userId}?page=${page}&limit=${limit}`,
         }),
         updateSubscription: builder.mutation<Subscription, CreateSubscriptions>({
             query: (newSubscription) => ({

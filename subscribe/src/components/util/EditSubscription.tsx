@@ -5,6 +5,7 @@ import { z } from "zod";
 import { format, parseISO } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { cn, platforms } from "@/lib/utils";
+import { motion } from "motion/react"; // Ensure you have this import
 
 import {
     Form,
@@ -131,42 +132,55 @@ const EditSubscription = ({ subscription, setEdit, allSubscriptions, setAllSubsc
     }, [platformName]);
 
     return (
-        <div className="p-5 bg-gray-100 dark:bg-gray-800 rounded-2xl">
+        <motion.div initial={{ scale: 0.9, opacity: 0, height: "0" }} animate={{ scale: 1, opacity: 1, height: "fit-content", transition: { duration: .5 } }} exit={{ scale: 0.9, opacity: 0 }}
+            className="p-5 bg-[#f7f7f7] dark:bg-gray-800 rounded-2xl">
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                <motion.form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="space-y-8"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.5 }}
+                >
                     <div className="space-y-6">
                         <FormField
                             control={form.control}
                             name="platformId"
                             render={({ field }) => (
-                                <FormItem className="w-full">
-                                    <FormLabel className="text-base font-medium text-gray-900 dark:text-gray-200">
-                                        Select Platform
-                                    </FormLabel>
-                                    <FormControl className="w-full">
-                                        <Select
-                                            onValueChange={(value) => {
-                                                field.onChange(value);
-                                                setShowCustomInput(value === "Other");
-                                            }}
-                                            value={field.value}>
-                                            <SelectTrigger className="h-12 text-base px-4 w-full bg-white dark:bg-gray-700">
-                                                <SelectValue placeholder="Select a platform" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                {platforms.map((platform) => (
-                                                    <SelectItem
-                                                        key={platform.id}
-                                                        value={platform.name}
-                                                        className="text-base py-3 text-gray-900 dark:text-gray-200">
-                                                        {platform.name}
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
-                                    </FormControl>
-                                    <FormMessage className="text-sm" />
-                                </FormItem>
+                                <motion.div
+                                    initial={{ y: 20, opacity: 0 }}
+                                    animate={{ y: 0, opacity: 1 }}
+                                    transition={{ duration: 0.3 }}
+                                >
+                                    <FormItem className="w-full">
+                                        <FormLabel className="text-base font-medium text-gray-900 dark:text-gray-200">
+                                            Select Platform
+                                        </FormLabel>
+                                        <FormControl className="w-full">
+                                            <Select
+                                                onValueChange={(value) => {
+                                                    field.onChange(value);
+                                                    setShowCustomInput(value === "Other");
+                                                }}
+                                                value={field.value}>
+                                                <SelectTrigger className="h-12 text-base px-4 w-full bg-white dark:bg-gray-700">
+                                                    <SelectValue placeholder="Select a platform" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    {platforms.map((platform) => (
+                                                        <SelectItem
+                                                            key={platform.id}
+                                                            value={platform.name}
+                                                            className="text-base py-3 text-gray-900 dark:text-gray-200">
+                                                            {platform.name}
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                        </FormControl>
+                                        <FormMessage className="text-sm" />
+                                    </FormItem>
+                                </motion.div>
                             )}
                         />
 
@@ -175,17 +189,23 @@ const EditSubscription = ({ subscription, setEdit, allSubscriptions, setAllSubsc
                                 control={form.control}
                                 name="customPlatform"
                                 render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel className="text-base font-medium text-gray-900 dark:text-gray-200">Platform Name</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                placeholder="Enter platform name"
-                                                className="h-12 text-base px-4 bg-white dark:bg-gray-700"
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormMessage className="text-sm" />
-                                    </FormItem>
+                                    <motion.div
+                                        initial={{ y: 20, opacity: 0 }}
+                                        animate={{ y: 0, opacity: 1 }}
+                                        transition={{ duration: 0.3 }}
+                                    >
+                                        <FormItem>
+                                            <FormLabel className="text-base font-medium text-gray-900 dark:text-gray-200">Platform Name</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    placeholder="Enter platform name"
+                                                    className="h-12 text-base px-4 bg-white dark:bg-gray-700"
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                            <FormMessage className="text-sm" />
+                                        </FormItem>
+                                    </motion.div>
                                 )}
                             />
                         )}
@@ -197,23 +217,29 @@ const EditSubscription = ({ subscription, setEdit, allSubscriptions, setAllSubsc
                             control={form.control}
                             name="category"
                             render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel className="text-base font-medium text-gray-900 dark:text-gray-200">Category</FormLabel>
-                                    <Select onValueChange={field.onChange} value={field.value}>
-                                        <FormControl>
-                                            <SelectTrigger className="h-12 text-base px-4 w-full bg-white dark:bg-gray-700">
-                                                <SelectValue placeholder="Select category" />
-                                            </SelectTrigger>
-                                        </FormControl>
-                                        <SelectContent>
-                                            <SelectItem value="entertainment" className="text-base py-3 text-gray-900 dark:text-gray-200">Entertainment</SelectItem>
-                                            <SelectItem value="sports" className="text-base py-3 text-gray-900 dark:text-gray-200">Sports</SelectItem>
-                                            <SelectItem value="lifestyle" className="text-base py-3 text-gray-900 dark:text-gray-200">Lifestyle</SelectItem>
-                                            <SelectItem value="Other" className="text-base py-3 text-gray-900 dark:text-gray-200">Others</SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                    <FormMessage className="text-sm" />
-                                </FormItem>
+                                <motion.div
+                                    initial={{ y: 20, opacity: 0 }}
+                                    animate={{ y: 0, opacity: 1 }}
+                                    transition={{ duration: 0.3 }}
+                                >
+                                    <FormItem>
+                                        <FormLabel className="text-base font-medium text-gray-900 dark:text-gray-200">Category</FormLabel>
+                                        <Select onValueChange={field.onChange} value={field.value}>
+                                            <FormControl>
+                                                <SelectTrigger className="h-12 text-base px-4 w-full bg-white dark:bg-gray-700">
+                                                    <SelectValue placeholder="Select category" />
+                                                </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent>
+                                                <SelectItem value="entertainment" className="text-base py-3 text-gray-900 dark:text-gray-200">Entertainment</SelectItem>
+                                                <SelectItem value="sports" className="text-base py-3 text-gray-900 dark:text-gray-200">Sports</SelectItem>
+                                                <SelectItem value="lifestyle" className="text-base py-3 text-gray-900 dark:text-gray-200">Lifestyle</SelectItem>
+                                                <SelectItem value="Other" className="text-base py-3 text-gray-900 dark:text-gray-200">Others</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                        <FormMessage className="text-sm" />
+                                    </FormItem>
+                                </motion.div>
                             )}
                         />
 
@@ -221,23 +247,29 @@ const EditSubscription = ({ subscription, setEdit, allSubscriptions, setAllSubsc
                             control={form.control}
                             name="frequency"
                             render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel className="text-base font-medium text-gray-900 dark:text-gray-200">Billing Frequency</FormLabel>
-                                    <Select onValueChange={field.onChange} value={field.value}>
-                                        <FormControl>
-                                            <SelectTrigger className="h-12 text-base px-4 w-full bg-white dark:bg-gray-700">
-                                                <SelectValue placeholder="Select frequency" />
-                                            </SelectTrigger>
-                                        </FormControl>
-                                        <SelectContent>
-                                            <SelectItem value="monthly" className="text-base py-3 text-gray-900 dark:text-gray-200">Monthly</SelectItem>
-                                            <SelectItem value="yearly" className="text-base py-3 text-gray-900 dark:text-gray-200">Yearly</SelectItem>
-                                            <SelectItem value="weekly" className="text-base py-3 text-gray-900 dark:text-gray-200">Weekly</SelectItem>
-                                            <SelectItem value="daily" className="text-base py-3 text-gray-900 dark:text-gray-200">Daily</SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                    <FormMessage className="text-sm" />
-                                </FormItem>
+                                <motion.div
+                                    initial={{ y: 20, opacity: 0 }}
+                                    animate={{ y: 0, opacity: 1 }}
+                                    transition={{ duration: 0.3 }}
+                                >
+                                    <FormItem>
+                                        <FormLabel className="text-base font-medium text-gray-900 dark:text-gray-200">Billing Frequency</FormLabel>
+                                        <Select onValueChange={field.onChange} value={field.value}>
+                                            <FormControl>
+                                                <SelectTrigger className="h-12 text-base px-4 w-full bg-white dark:bg-gray-700">
+                                                    <SelectValue placeholder="Select frequency" />
+                                                </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent>
+                                                <SelectItem value="monthly" className="text-base py-3 text-gray-900 dark:text-gray-200">Monthly</SelectItem>
+                                                <SelectItem value="yearly" className="text-base py-3 text-gray-900 dark:text-gray-200">Yearly</SelectItem>
+                                                <SelectItem value="weekly" className="text-base py-3 text-gray-900 dark:text-gray-200">Weekly</SelectItem>
+                                                <SelectItem value="daily" className="text-base py-3 text-gray-900 dark:text-gray-200">Daily</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                        <FormMessage className="text-sm" />
+                                    </FormItem>
+                                </motion.div>
                             )}
                         />
 
@@ -245,19 +277,25 @@ const EditSubscription = ({ subscription, setEdit, allSubscriptions, setAllSubsc
                             control={form.control}
                             name="price"
                             render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel className="text-base font-medium text-gray-900 dark:text-gray-200">Price</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            type="number"
-                                            placeholder="0.00"
-                                            className="h-12 text-base px-4 bg-white dark:bg-gray-700"
-                                            onChange={(e) => field.onChange(Number(e.target.value))}
-                                            value={field.value || ''}
-                                        />
-                                    </FormControl>
-                                    <FormMessage className="text-sm" />
-                                </FormItem>
+                                <motion.div
+                                    initial={{ y: 20, opacity: 0 }}
+                                    animate={{ y: 0, opacity: 1 }}
+                                    transition={{ duration: 0.3 }}
+                                >
+                                    <FormItem>
+                                        <FormLabel className="text-base font-medium text-gray-900 dark:text-gray-200">Price</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                type="number"
+                                                placeholder="0.00"
+                                                className="h-12 text-base px-4 bg-white dark:bg-gray-700"
+                                                onChange={(e) => field.onChange(Number(e.target.value))}
+                                                value={field.value || ''}
+                                            />
+                                        </FormControl>
+                                        <FormMessage className="text-sm" />
+                                    </FormItem>
+                                </motion.div>
                             )}
                         />
 
@@ -265,23 +303,29 @@ const EditSubscription = ({ subscription, setEdit, allSubscriptions, setAllSubsc
                             control={form.control}
                             name="currency"
                             render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel className="text-base font-medium text-gray-900 dark:text-gray-200">Currency</FormLabel>
-                                    <Select onValueChange={field.onChange} value={field.value}>
-                                        <FormControl>
-                                            <SelectTrigger className="h-12 text-base px-4 w-full bg-white dark:bg-gray-700">
-                                                <SelectValue placeholder="Select currency" />
-                                            </SelectTrigger>
-                                        </FormControl>
-                                        <SelectContent>
-                                            <SelectItem value="INR" className="text-base py-3 text-gray-900 dark:text-gray-200">INR</SelectItem>
-                                            <SelectItem value="USD" className="text-base py-3 text-gray-900 dark:text-gray-200">USD</SelectItem>
-                                            <SelectItem value="EUR" className="text-base py-3 text-gray-900 dark:text-gray-200">EUR</SelectItem>
-                                            <SelectItem value="GBP" className="text-base py-3 text-gray-900 dark:text-gray-200">GBP</SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                    <FormMessage className="text-sm" />
-                                </FormItem>
+                                <motion.div
+                                    initial={{ y: 20, opacity: 0 }}
+                                    animate={{ y: 0, opacity: 1 }}
+                                    transition={{ duration: 0.3 }}
+                                >
+                                    <FormItem>
+                                        <FormLabel className="text-base font-medium text-gray-900 dark:text-gray-200">Currency</FormLabel>
+                                        <Select onValueChange={field.onChange} value={field.value}>
+                                            <FormControl>
+                                                <SelectTrigger className="h-12 text-base px-4 w-full bg-white dark:bg-gray-700">
+                                                    <SelectValue placeholder="Select currency" />
+                                                </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent>
+                                                <SelectItem value="INR" className="text-base py-3 text-gray-900 dark:text-gray-200">INR</SelectItem>
+                                                <SelectItem value="USD" className="text-base py-3 text-gray-900 dark:text-gray-200">USD</SelectItem>
+                                                <SelectItem value="EUR" className="text-base py-3 text-gray-900 dark:text-gray-200">EUR</SelectItem>
+                                                <SelectItem value="GBP" className="text-base py-3 text-gray-900 dark:text-gray-200">GBP</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                        <FormMessage className="text-sm" />
+                                    </FormItem>
+                                </motion.div>
                             )}
                         />
 
@@ -289,23 +333,29 @@ const EditSubscription = ({ subscription, setEdit, allSubscriptions, setAllSubsc
                             control={form.control}
                             name="paymentMethod"
                             render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel className="text-base font-medium text-gray-900 dark:text-gray-200">Payment Method</FormLabel>
-                                    <Select onValueChange={field.onChange} value={field.value}>
-                                        <FormControl>
-                                            <SelectTrigger className="h-12 text-base px-4 w-full bg-white dark:bg-gray-700">
-                                                <SelectValue placeholder="Select payment method" />
-                                            </SelectTrigger>
-                                        </FormControl>
-                                        <SelectContent>
-                                            <SelectItem value="Credit Card" className="text-base py-3 text-gray-900 dark:text-gray-200">Credit Card</SelectItem>
-                                            <SelectItem value="Debit Card" className="text-base py-3 text-gray-900 dark:text-gray-200">Debit Card</SelectItem>
-                                            <SelectItem value="UPI" className="text-base py-3 text-gray-900 dark:text-gray-200">UPI</SelectItem>
-                                            <SelectItem value="Net Banking" className="text-base py-3 text-gray-900 dark:text-gray-200">Net Banking</SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                    <FormMessage className="text-sm" />
-                                </FormItem>
+                                <motion.div
+                                    initial={{ y: 20, opacity: 0 }}
+                                    animate={{ y: 0, opacity: 1 }}
+                                    transition={{ duration: 0.3 }}
+                                >
+                                    <FormItem>
+                                        <FormLabel className="text-base font-medium text-gray-900 dark:text-gray-200">Payment Method</FormLabel>
+                                        <Select onValueChange={field.onChange} value={field.value}>
+                                            <FormControl>
+                                                <SelectTrigger className="h-12 text-base px-4 w-full bg-white dark:bg-gray-700">
+                                                    <SelectValue placeholder="Select payment method" />
+                                                </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent>
+                                                <SelectItem value="Credit Card" className="text-base py-3 text-gray-900 dark:text-gray-200">Credit Card</SelectItem>
+                                                <SelectItem value="Debit Card" className="text-base py-3 text-gray-900 dark:text-gray-200">Debit Card</SelectItem>
+                                                <SelectItem value="UPI" className="text-base py-3 text-gray-900 dark:text-gray-200">UPI</SelectItem>
+                                                <SelectItem value="Net Banking" className="text-base py-3 text-gray-900 dark:text-gray-200">Net Banking</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                        <FormMessage className="text-sm" />
+                                    </FormItem>
+                                </motion.div>
                             )}
                         />
 
@@ -313,39 +363,45 @@ const EditSubscription = ({ subscription, setEdit, allSubscriptions, setAllSubsc
                             control={form.control}
                             name="startDate"
                             render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel className="text-base font-medium text-gray-900 dark:text-gray-200">Start Date</FormLabel>
-                                    <Popover>
-                                        <PopoverTrigger asChild>
-                                            <FormControl>
-                                                <Button
-                                                    variant={"outline"}
-                                                    className={cn(
-                                                        "h-12 text-base px-4 w-full pl-3 text-left font-normal dark:bg-gray-700",
-                                                        !field.value && "text-muted-foreground"
-                                                    )}
-                                                >
-                                                    {field.value ? (
-                                                        format(field.value, "PPP")
-                                                    ) : (
-                                                        <span>Pick a date</span>
-                                                    )}
-                                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                                </Button>
-                                            </FormControl>
-                                        </PopoverTrigger>
-                                        <PopoverContent className="w-auto p-0" align="start">
-                                            <Calendar
-                                                mode="single"
-                                                selected={field.value}
-                                                onSelect={field.onChange}
-                                                disabled={(date) => date > new Date()}
-                                                initialFocus
-                                            />
-                                        </PopoverContent>
-                                    </Popover>
-                                    <FormMessage className="text-sm" />
-                                </FormItem>
+                                <motion.div
+                                    initial={{ y: 20, opacity: 0 }}
+                                    animate={{ y: 0, opacity: 1 }}
+                                    transition={{ duration: 0.3 }}
+                                >
+                                    <FormItem>
+                                        <FormLabel className="text-base font-medium text-gray-900 dark:text-gray-200">Start Date</FormLabel>
+                                        <Popover>
+                                            <PopoverTrigger asChild>
+                                                <FormControl>
+                                                    <Button
+                                                        variant={"outline"}
+                                                        className={cn(
+                                                            "h-12 text-base px-4 w-full pl-3 text-left font-normal dark:bg-gray-700",
+                                                            !field.value && "text-muted-foreground"
+                                                        )}
+                                                    >
+                                                        {field.value ? (
+                                                            format(field.value, "PPP")
+                                                        ) : (
+                                                            <span>Pick a date</span>
+                                                        )}
+                                                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                    </Button>
+                                                </FormControl>
+                                            </PopoverTrigger>
+                                            <PopoverContent className="w-auto p-0" align="start">
+                                                <Calendar
+                                                    mode="single"
+                                                    selected={field.value}
+                                                    onSelect={field.onChange}
+                                                    disabled={(date) => date > new Date()}
+                                                    initialFocus
+                                                />
+                                            </PopoverContent>
+                                        </Popover>
+                                        <FormMessage className="text-sm" />
+                                    </FormItem>
+                                </motion.div>
                             )}
                         />
                     </div>
@@ -365,9 +421,10 @@ const EditSubscription = ({ subscription, setEdit, allSubscriptions, setAllSubsc
                             Confirm
                         </Button>
                     </div>
-                </form>
+                </motion.form>
             </Form>
-        </div>
+        </motion.div>
+
     )
 }
 

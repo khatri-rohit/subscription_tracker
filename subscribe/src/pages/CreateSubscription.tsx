@@ -6,6 +6,7 @@ import { CalendarIcon } from "lucide-react"
 import { BeatLoader } from "react-spinners"
 import { useNavigate } from "react-router-dom"
 import { format } from "date-fns"
+import { motion } from 'motion/react'
 
 import { cn, platforms } from "@/lib/utils"
 import { CreateSubscriptions } from "@/lib/types"
@@ -110,15 +111,43 @@ const CreateSubscription = () => {
         }
     }
 
+    // <motion.div
+    //     initial={{ opacity: 0, y: 20 }}
+    //     animate={{ opacity: 1, y: 0 }}
+    //     transition={{ delay: 0.4, duration: 0.5 }}
+    // >
+    //     <motion.div
+    // initial={{ opacity: 0, y: 20 }}
+    // animate={{ opacity: 1, y: 0 }}
+    //     transition={{ duration: 0.5, ease: "easeOut" }}
+    //     className="max-w-3xl mx-auto px-6 py-8 h-screen"
+    // >
+    //         <motion.div
+    //             initial={{ opacity: 0, x: -20 }}
+    //             animate={{ opacity: 1, x: 0 }}
+    //             transition={{ delay: 0.2, duration: 0.5 }}
+    //             className="mb-10"
+    //         >
+
     return (
-        <div className="max-w-3xl mx-auto px-6 py-8 h-screen">
-            <div className="mb-10">
+
+        <motion.div initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0, height: "100vh" }}
+            className="max-w-3xl mx-auto px-6 py-8 h-0">
+            <motion.div initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.1, duration: 0.3 }}
+                className="mb-10">
                 <h1 className="text-4xl font-bold tracking-tight text-gray-900 dark:text-white">Create New Subscription</h1>
                 <p className="text-gray-500 mt-3 text-lg dark:text-gray-400">Add a new subscription to track your expenses</p>
-            </div>
+            </motion.div>
 
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                <motion.form
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4, duration: 0.5 }}
+                    onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                     {/* Platform Selection - Full Width */}
                     <div className="space-y-6">
                         <FormField
@@ -354,9 +383,9 @@ const CreateSubscription = () => {
                             {isLoading ? <BeatLoader size={10} color="#ffffff" /> : 'Create Subscription'}
                         </Button>
                     </div>
-                </form>
+                </motion.form>
             </Form>
-        </div>
+        </motion.div>
     )
 }
 

@@ -1,14 +1,18 @@
+import { motion } from 'motion/react';
 import { GithubIcon, Mail } from 'lucide-react';
-import { useTheme } from '../theme-provider';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
 import { Moon, Sun, MonitorCog } from 'lucide-react';
+
+import { useTheme } from '../theme-provider';
+
 import { Button } from '../ui/button';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
 
 const Footer = () => {
   const { setTheme, theme } = useTheme();
 
   return (
-    <footer className="bg-background text-foreground p-4 border-t border-border">
+    <motion.footer initial={{ opacity: 0, scaleX: 0 }} animate={{ opacity: 1, scaleX: 1, transition: { duration: .5, delay: .8 } }}
+      className="bg-background text-foreground p-4 border-t border-border">
       <div className="container mx-auto flex flex-col items-center justify-between md:flex-row">
         <div className="mb-4 md:mb-0">
           <p className="text-sm text-muted-foreground">
@@ -45,7 +49,7 @@ const Footer = () => {
           </DropdownMenu>
         </div>
       </div>
-    </footer>
+    </motion.footer>
   );
 }
 

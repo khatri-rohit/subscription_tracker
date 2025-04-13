@@ -1,4 +1,8 @@
-import { useAppDispatch } from "@/app/store";
+import { MonitorCog, Moon, Sun } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { motion } from 'motion/react'
+import axios from "axios";
+
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -12,11 +16,10 @@ import {
     DropdownMenuSub,
     DropdownMenuSubTrigger
 } from "@/components/ui/dropdown-menu"
+
 import { useAuth } from "@/context/Auth";
+import { useAppDispatch } from "@/app/store";
 import { isAuthenticated } from "@/features/slice";
-import axios from "axios";
-import { MonitorCog, Moon, Sun } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 import { useTheme } from "./theme-provider";
 
 function ProfileBtn() {
@@ -38,10 +41,12 @@ function ProfileBtn() {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <div className="image z-10">
+                <motion.div className="image z-10 rounded-full"
+                    whileHover={{ y: -2, boxShadow: "3px 3px 1px #212121" }}
+                    whileTap={{ scale: 1.1, transition: { duration: .3 } }}>
                     <img src={img} alt="avatar"
                         className="object-cover w-10 h-10 rounded-full cursor-pointer" />
-                </div>
+                </motion.div>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56 mr-3">
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
@@ -75,7 +80,8 @@ function ProfileBtn() {
                 </DropdownMenuSub>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
-                    <a className="w-full" href="https://github.com/khatri-rohit/subscription_tracker">
+                    <a className="w-full"
+                        href="https://github.com/khatri-rohit/subscription_tracker">
                         GitHub
                     </a>
                 </DropdownMenuItem>

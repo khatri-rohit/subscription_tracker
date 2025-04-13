@@ -1,6 +1,7 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { X, List, Rows4, Search, Sofa, Volleyball, Tv2 } from "lucide-react"
+import { motion } from 'motion/react'
 
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -180,7 +181,8 @@ const Subscriptions = () => {
             setDelete={setDelete} />
         </Model>
       )}
-      <main className="p-10 dark:bg-gray-900 dark:text-white h-screen">
+      <motion.main initial={{ opacity: 0, y: -100 }} animate={{ opacity: 1, y: 0, transition: { duration: .3 } }}
+        className="p-10 dark:bg-gray-900 dark:text-white h-screen">
         <div className="p-2 space-y-5 w-1/2">
           <h3 className="text-3xl">Manage Subscriptions</h3>
           <div className="flex items-center gap-x-2 w-full">
@@ -193,10 +195,11 @@ const Subscriptions = () => {
               {query.length > 0 && (<X className="cursor-pointer mr-1.5 p-0.5" onClick={handleX} />)}
             </form>
 
-            <Button className="bg-[#636AE8] text-[1.1em] text-white px-4 py-2 rounded-lg hover:bg-[#4B51B8] cursor-pointer dark:bg-[#4B51B8] dark:hover:bg-[#636AE8]"
-              onClick={() => navigate('/subscription/create-subs')}>
-              Create Subscription
-            </Button>
+            <motion.button whileTap={{ scale: 1.15, transition: { ease: "easeIn" } }}>
+              <Button className="bg-[#636AE8] text-[1.1em] text-white px-4 py-2 rounded-lg hover:bg-[#4B51B8] cursor-pointer dark:bg-[#4B51B8] dark:hover:bg-[#636AE8]" onClick={() => navigate('/subscription/create-subs')}>
+                Create Subscription
+              </Button>
+            </motion.button>
           </div>
         </div>
 
@@ -248,7 +251,7 @@ const Subscriptions = () => {
             }
           }) : <p className="text-xl my-auto text-center md:col-span-3 lg:col-span-5 xl:col-span-5 dark:text-gray-400">you don't have {length == 0 ? "Any" : status} subscriptions yet</p>}
         </div>
-      </main>
+      </motion.main>
     </>
   )
 }

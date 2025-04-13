@@ -45,7 +45,7 @@ const SettingLayout = () => {
                         </ul>
                     </div>
 
-                    <div className="flex-1 bg-white dark:bg-gray-800 shadow-md dark:border-2 border-white rounded-lg p-8">
+                    <div className="flex-1 bg-white dark:bg-gray-800 shadow-md dark:border-2 border-white rounded-lg p-8 relative">
                         <Outlet />
                     </div>
                 </div>

@@ -27,7 +27,14 @@ const Profile = () => {
     const { user, imageUrl } = useAuth();
 
     const [saveBtn, setSaveBtn] = useState<boolean>(true);
-    const [profileImage, setProfileImage] = useState<string>((user?.profileImage as string) || '/img/blank-avatar.webp');
+    const [profileImage, setProfileImage] = useState<string>(() => {
+        const imgpath = (user?.profileImage as string);
+        if (imgpath.length > 0) {
+            return `${imageUrl}/${imgpath}`
+        } else {
+            return '/img/blank-avatar.webp'
+        }
+    });
 
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [updateUserInfo] = useUpdateUserInfoMutation()
@@ -59,11 +66,12 @@ const Profile = () => {
         }
     };
 
-    const handleSubmit = async (data: z.infer<typeof profileFormSchema>) => {
-        console.log("Profile form submitted with data:", data);
+    const onSubmit = async (data: z.infer<typeof profileFormSchema>) => {
+        // e.preventDefault();
+        // console.log("Profile form submitted with data:", data);
         console.log("Profile image:", profileImage);
 
-        const { firstName, lastName, email } = form.getValues()
+        const { firstName, lastName, email } = data
         try {
             await updateUserInfo({
                 _id: user?._id as string,
@@ -72,13 +80,18 @@ const Profile = () => {
                 email: email as string
             });
 
-            toast.success("User Updated");
-            window.location.reload()
+            toast.success("Profile Information Updated");
         } catch (error) {
             console.log(error);
         }
         setSaveBtn(true);
     };
+
+    // const handleCancel = (e: FormEvent) => {
+    //     e.preventDefault();
+    //     form.reset();
+    //     setSaveBtn(true);
+    // }
 
     const handleProfilePictureClick = () => {
         fileInputRef.current?.click();
@@ -88,20 +101,17 @@ const Profile = () => {
     const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file) {
-            // Create a URL for the selected image
             const imageUrl = URL.createObjectURL(file);
             setProfileImage(imageUrl);
-            console.log(imageUrl);
 
-            await updateUserAvatar({ _id: user?._id, profileImage: file });
-            window.location.reload()
+            await updateUserAvatar({ _id: user?._id as string, profileImage: file });
         }
     };
 
     return (
         <div className="max-w-4xl mx-auto p-8 dark:bg-gray-800 dark:text-white rounded-lg">
             <h1 className="text-3xl font-bold mb-8">
-                Profile Settings
+                Profile Settings <span className='text-sm font-light'>(reload if you can't see desired changes)</span>
             </h1>
 
             <div className="mb-8">
@@ -113,7 +123,7 @@ const Profile = () => {
                         className="w-24 h-24 rounded-full bg-gray-700 cursor-pointer relative overflow-hidden"
                         onClick={handleProfilePictureClick}>
                         <img
-                            src={profileImage.includes("blank-avatar") ? profileImage : `${imageUrl}/${profileImage}`}
+                            src={profileImage.includes("blank-avatar") ? "/img/blank-avatar.webp" : profileImage}
                             width='100'
                             height='100'
                             alt="Profile"
@@ -149,7 +159,8 @@ const Profile = () => {
                     Profile Information
                 </h2>
                 <Form {...form}>
-                    <form className="space-y-4" onChange={handleFormChange} onSubmit={form.handleSubmit(handleSubmit)}>
+                    <form className="space-y-4" onChange={handleFormChange}
+                        onSubmit={form.handleSubmit(onSubmit)}>
                         <FormField
                             control={form.control}
                             name="firstName"
@@ -210,15 +221,6 @@ const Profile = () => {
 
                         <div className="flex justify-end space-x-4 mt-5">
                             <Button
-                                type="button"
-                                className="px-6 py-2 text-gray-900 hover:text-white bg-white rounded-lg hover:bg-gray-600 transition-colors dark:text-gray-300 dark:bg-gray-900 dark:hover:bg-gray-600"
-                                onClick={() => {
-                                    form.reset();
-                                    setSaveBtn(true);
-                                }}>
-                                Cancel
-                            </Button>
-                            <Button
                                 type="submit"
                                 disabled={saveBtn}
                                 className="px-6 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors dark:bg-blue-700 dark:hover:bg-blue-800">
@@ -227,6 +229,12 @@ const Profile = () => {
                         </div>
                     </form>
                 </Form>
+                {/* <Button
+                    type="button"
+                    className="px-6 py-2 text-gray-900 hover:text-white bg-white rounded-lg hover:bg-gray-600 transition-colors dark:text-gray-300 dark:bg-gray-900 dark:hover:bg-gray-600"
+                    onClick={handleCancel}>
+                    Cancel
+                </Button> */}
             </div>
         </div>
     );

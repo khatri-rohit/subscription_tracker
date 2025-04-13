@@ -37,7 +37,7 @@ export const aboutUser = createApi({
                 }
             }
         }),
-        updateUserAvatar: builder.mutation({
+        updateUserAvatar: builder.mutation<{ path: string }, { _id: string, profileImage: File }>({
             query: (data) => {
                 const { _id, profileImage } = data;
 

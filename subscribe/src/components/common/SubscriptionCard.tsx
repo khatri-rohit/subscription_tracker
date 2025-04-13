@@ -1,6 +1,7 @@
 import { formatDate, formatCurrency } from '@/lib/utils';
 import { AlertCircle, Edit2, Trash2, RefreshCw } from 'lucide-react';
 import { Button } from '../ui/button';
+import { motion } from 'motion/react'
 
 interface SubscriptionCardProps {
     subscription: {
@@ -25,7 +26,12 @@ const SubscriptionCard = ({ subscription, onEdit, onCancel, onRenew }: Subscript
     const isCancelled = subscription.status === 'cancelled';
 
     return (
-        <div className="relative group w-72 h-56 bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 hover:shadow-lg transition-all">
+        <motion.div initial={{ opacity: 0, scaleX: 0 }}
+            animate={{ opacity: 1, scaleX: 1, transition: { delay: .5 } }}
+            whileHover={{
+                scale: 1.09, transition: { duration: 0.2 }, boxShadow: "1px 1px 3px #21212134"
+            }}
+            className="relative group w-72 h-56 bg-[#fefefe] dark:bg-gray-800 rounded-xl shadow p-6 hover:shadow-lg transition-all">
             <div className="flex flex-col h-full">
                 {/* Status Badge */}
                 <div className={`absolute top-4 right-4 px-2 py-1 rounded-full text-xs font-medium
@@ -58,11 +64,15 @@ const SubscriptionCard = ({ subscription, onEdit, onCancel, onRenew }: Subscript
                 {/* Hover Actions */}
                 <div className="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
                     <div className="flex gap-2 justify-end">
-                        <Button
-                            className="p-2 rounded-full bg-blue-50 hover:bg-blue-100 text-blue-600 cursor-pointer dark:bg-blue-600 dark:hover:bg-blue-500 dark:text-blue-200"
-                            onClick={() => onEdit(subscription._id)}>
-                            <Edit2 size={16} />
-                        </Button>
+                        {/* <motion.button /> */}
+                        <motion.button className='cursor-pointer px-0.5'
+                            whileTap={{ scale: 0.8 }}>
+                            <Button
+                                className="p-2 rounded-full bg-blue-50 hover:bg-blue-100 text-blue-600 cursor-pointer dark:bg-blue-600 dark:hover:bg-blue-500 dark:text-blue-200"
+                                onClick={() => onEdit(subscription._id)}>
+                                <Edit2 size={16} />
+                            </Button>
+                        </motion.button>
                         {isExpired ? (
                             <Button
                                 className="p-2 rounded-full bg-green-50 hover:bg-green-100 text-green-600 cursor-pointer dark:bg-green-600 dark:hover:bg-green-500 dark:text-green-200"
@@ -70,16 +80,19 @@ const SubscriptionCard = ({ subscription, onEdit, onCancel, onRenew }: Subscript
                                 <RefreshCw size={16} />
                             </Button>
                         ) : (
-                            <Button
-                                className="p-2 rounded-full bg-red-50 hover:bg-red-100 text-red-600 cursor-pointer dark:bg-red-600 dark:hover:bg-red-500 dark:text-red-200"
-                                onClick={() => onCancel(subscription._id)}>
-                                <Trash2 size={16} />
-                            </Button>
+                            <motion.button className='cursor-pointer px-0.5'
+                                whileTap={{ scale: 0.8 }}>
+                                <Button
+                                    className="p-2 rounded-full bg-red-50 hover:bg-red-100 text-red-600 cursor-pointer dark:bg-red-600 dark:hover:bg-red-500 dark:text-red-200"
+                                    onClick={() => onCancel(subscription._id)}>
+                                    <Trash2 size={16} />
+                                </Button>
+                            </motion.button>
                         )}
                     </div>
                 </div>
             </div>
-        </div>
+        </motion.div>
     );
 };
 

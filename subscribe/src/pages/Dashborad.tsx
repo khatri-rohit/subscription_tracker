@@ -2,6 +2,7 @@ import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { List, Music, Search, Sofa, Video, X } from "lucide-react"
 import { FadeLoader } from "react-spinners";
+import { motion } from 'motion/react'
 
 import { Category, Subscription, SubsStatus, Tabs } from "@/lib/types";
 import SubsOverview from "@/components/common/SubsOverview.tsx";
@@ -133,7 +134,8 @@ const Dashborad = () => {
   }, [data])
 
   return (
-    <main className="p-10 dark:bg-gray-900 h-full min-h-screen">
+    <motion.main initial={{ opacity: 0, x: -500 }} animate={{ opacity: 1, x: 0, transition: { duration: .3 } }}
+      className="p-10 dark:bg-gray-900 h-full min-h-screen">
       <div className="p-2 space-y-5 w-fit">
         <h3 className="text-3xl dark:text-white">Subscription Overview</h3>
         {/* Search Overview */}
@@ -243,10 +245,10 @@ const Dashborad = () => {
           }))
         }
         {
-          filterSubscirpion.length === 0 && !isLoading &&(<p className="text-xl my-auto text-center md:col-span-3 lg:col-span-4">You don't have {length == 0 ? "Any" : category} subscriptions</p>)
+          filterSubscirpion.length === 0 && !isLoading && (<p className="text-xl my-auto text-center md:col-span-3 lg:col-span-4">You don't have {length == 0 ? "Any" : category} subscriptions</p>)
         }
       </div>
-    </main>
+    </motion.main>
   )
 }
 

@@ -57,7 +57,7 @@ export const getUserSubscriptions = async (req, res, next) => {
         const limit = parseInt(req.query.limit) || 10;
         const skip = (page - 1) * limit;
 
-        const totalCount = await Subscription.countDocuments();
+        const totalCount = await Subscription.countDocuments({ user: req.params.id });
         const subscription = await Subscription.find({ user: req.params.id })
             .skip(skip)
             .limit(limit)

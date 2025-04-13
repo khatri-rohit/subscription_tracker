@@ -81,14 +81,15 @@ const Subscriptions = () => {
     data,
     refetch,
     isLoading,
-    // isFetching,
     currentData
   } = useGetAllSubscriptionsQuery({
     userId: user?._id || '',
     page: currentPage,
-    limit: itemsPerPage
+    limit: itemsPerPage,
+
   }, {
     skip: !user?._id?.trim(),
+    refetchOnMountOrArgChange: true,
   });
 
   // Pagination handlers
@@ -191,6 +192,7 @@ const Subscriptions = () => {
   }, [user, refetch]);
 
   useEffect(() => {
+    console.log(data);
     setAllSubscriptions((data?.subscriptions as Subscription[]))
     setPaginationData(data?.pagination as Pagination)
     setLength((data?.subscriptions?.length as number));
@@ -216,7 +218,7 @@ const Subscriptions = () => {
         </Model>
       )}
       <motion.main initial={{ opacity: 0, y: -100 }} animate={{ opacity: 1, y: 0, transition: { duration: .3 } }}
-        className="p-10 dark:bg-gray-900 dark:text-white h-screen">
+        className="p-10 dark:bg-gray-900 dark:text-white min-h-screen">
         <div className="p-2 space-y-5 w-1/2">
           <h3 className="text-3xl">Manage Subscriptions</h3>
           <div className="flex items-center gap-x-2 w-full">
@@ -246,9 +248,7 @@ const Subscriptions = () => {
           }
         </div>
 
-        <div className="w-full mx-auto relative">
-
-          {/* <Button
+        {/* <Button
             onClick={handlePrevPage}
             disabled={currentPage <= 1 || isLoading || isFetching}
             className={`absolute top-1/2 transform -translate-y-1/2 ${currentPage <= 1 ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`}
@@ -256,93 +256,78 @@ const Subscriptions = () => {
             <ChevronsLeft />
           </Button> */}
 
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 xl:gap-6 lg:gap-4 md:gap-3 mt-10 mx-10 min-h-[600px]">
-            {isLoading ? (
-              <p className="text-xl my-auto text-center md:col-span-3 lg:col-span-5 xl:col-span-5 dark:text-gray-400">
-                <Circle className="animate-spin" />
-              </p>
-            ) : length > 0 ? allSubscriptions.map((subscription) => {
-              if (status === 'All') {
-                return (<SubscriptionCard
-                  key={subscription._id}
-                  subscription={subscription}
-                  onEdit={(id) => handleEdit(id)}
-                  onCancel={(id) => handleCancel(id)}
-                  onRenew={(id) => handleRenew(id)}
-                />);
-              } else if (subscription.category === status) {
-                return (<SubscriptionCard
-                  key={subscription._id}
-                  subscription={subscription}
-                  onEdit={(id) => handleEdit(id)}
-                  onCancel={(id) => handleCancel(id)}
-                  onRenew={(id) => handleRenew(id)}
-                />);
-              } else if ((status !== 'entertainment' && status !== 'lifestyle' && status !== 'sports') && status === 'Other') {
-                return (<SubscriptionCard
-                  key={subscription._id}
-                  subscription={subscription}
-                  onEdit={(id) => handleEdit(id)}
-                  onCancel={(id) => handleCancel(id)}
-                  onRenew={(id) => handleRenew(id)}
-                />);
-              }
-            }) : <p className="text-xl my-auto text-center md:col-span-3 lg:col-span-5 xl:col-span-5 dark:text-gray-400">you don't have {length == 0 ? "Any" : status} subscriptions yet</p>}
-          </div>
-
-          {/* <Button
+        {/* <Button
             onClick={handleNextPage}
             disabled={!paginationData || currentPage >= paginationData.pages || isLoading || isFetching}
             className={`absolute top-1/2 right-0 transform -translate-y-1/2 ${!paginationData || currentPage >= paginationData.pages ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`}
           >
             <ChevronsRight />
           </Button> */}
+        <div className="w-full mx-auto relative flex flex-col justify-between space-y-1 min-h-[600px]">
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 xl:gap-6 lg:gap-4 md:gap-3 mt-10 mx-10">
+            {isLoading ? (
+              <p className="text-xl my-auto text-center md:col-span-3 lg:col-span-5 xl:col-span-5 dark:text-gray-400">
+                <Circle className="animate-spin" />
+              </p>
+            ) : length > 0 ? allSubscriptions.map((subscription) => (
+              <SubscriptionCard
+                key={subscription._id}
+                subscription={subscription}
+                onEdit={(id) => handleEdit(id)}
+                onCancel={(id) => handleCancel(id)}
+                onRenew={(id) => handleRenew(id)}
+              />
+            )) : (
+              <p className="text-xl my-auto text-center md:col-span-3 lg:col-span-5 xl:col-span-5 dark:text-gray-400">
+                you don't have {length === 0 ? "Any" : status} subscriptions yet
+              </p>
+            )}
+          </div>
 
+          {paginationData && (
+            <div className="flex justify-center items-center gap-4 mt-8">
+              <span className="text-sm dark:text-gray-300">
+                Page {currentPage} of {paginationData.pages}
+              </span>
+              <div className="flex gap-2">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={handlePrevPage}
+                  disabled={currentPage <= 1 || isLoading}
+                  className="dark:border-gray-600 dark:text-gray-300"
+                >
+                  Previous
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={handleNextPage}
+                  disabled={currentPage >= paginationData.pages || isLoading}
+                  className="dark:border-gray-600 dark:text-gray-300"
+                >
+                  Next
+                </Button>
+              </div>
+              <select
+                className="border rounded p-1 text-sm dark:bg-gray-800 dark:border-gray-600 dark:text-gray-300"
+                value={itemsPerPage}
+                onChange={(e) => {
+                  setItemsPerPage(Number(e.target.value));
+                  setCurrentPage(1);
+                }}>
+                <option value="5">5 per page</option>
+                <option value="10">10 per page</option>
+                <option value="20">20 per page</option>
+                <option value="50">50 per page</option>
+              </select>
+              <span className="text-sm dark:text-gray-300">
+                Showing {allSubscriptions.length} of {paginationData.total} items
+              </span>
+            </div>
+          )}
         </div>
 
-        {paginationData && (
-          <div className="flex justify-center items-center gap-4 mt-8">
-            <span className="text-sm dark:text-gray-300">
-              Page {currentPage} of {paginationData.pages}
-            </span>
-            <div className="flex gap-2">
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={handlePrevPage}
-                disabled={currentPage <= 1 || isLoading}
-                className="dark:border-gray-600 dark:text-gray-300"
-              >
-                Previous
-              </Button>
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={handleNextPage}
-                disabled={currentPage >= paginationData.pages || isLoading}
-                className="dark:border-gray-600 dark:text-gray-300"
-              >
-                Next
-              </Button>
-            </div>
-            <select
-              className="border rounded p-1 text-sm dark:bg-gray-800 dark:border-gray-600 dark:text-gray-300"
-              value={itemsPerPage}
-              onChange={(e) => {
-                setItemsPerPage(Number(e.target.value));
-                setCurrentPage(1);
-              }}
-            >
-              <option value="5">5 per page</option>
-              <option value="10">10 per page</option>
-              <option value="20">20 per page</option>
-              <option value="50">50 per page</option>
-            </select>
-            <span className="text-sm dark:text-gray-300">
-              Showing {allSubscriptions.length} of {paginationData.total} items
-            </span>
-          </div>
-        )}
 
       </motion.main>
     </>

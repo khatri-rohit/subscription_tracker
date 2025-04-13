@@ -81,8 +81,7 @@ const Subscriptions = () => {
     data,
     refetch,
     isLoading,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    isFetching,
+    // isFetching,
     currentData
   } = useGetAllSubscriptionsQuery({
     userId: user?._id || '',

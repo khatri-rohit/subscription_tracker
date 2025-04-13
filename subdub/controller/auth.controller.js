@@ -167,7 +167,7 @@ function setAuthCookie(res, token) {
         httpOnly: false,
         secure: true,  // Must be true when sameSite is 'none'
         sameSite: 'none',  // Make sure this is a strict
-        maxAge: 24 * 60 * 60 * 1000 * 2
+        maxAge: 7 * 24 * 60 * 60 * 1000
     });
     // res.cookie('token', encryptToken, {
     //     httpOnly: NODE_ENV === 'production',

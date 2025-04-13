@@ -39,12 +39,6 @@ export const getSubscription = async (req, res, next) => {
         const id = req.params.id;
 
         const subscription = await Subscription.findById(id);
-
-        // return res.status(200).json({
-        // success:true,
-        // data: subscription
-        // })
-
         return res.status(200).json(subscription)
     } catch (error) {
         next(error);
@@ -58,13 +52,29 @@ export const getUserSubscriptions = async (req, res, next) => {
             error.status = 403;
             throw error;
         }
-        const subscription = await Subscription.find({ user: req.params.id });
 
-        // return res.status(200).json({
-        // success:true,
-        // data: subscription
-        // })
-        return res.status(200).json(subscription)
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const skip = (page - 1) * limit;
+
+        const totalCount = await Subscription.countDocuments();
+        const subscription = await Subscription.find({ user: req.params.id })
+            .skip(skip)
+            .limit(limit)
+            .sort({ createdAt: -1 });
+
+        // console.log(subscription);
+
+        return res.status(200).json({
+            success: true,
+            subscriptions: subscription,
+            pagination: {
+                total: totalCount,
+                page,
+                limit,
+                pages: Math.ceil(totalCount / limit)
+            }
+        });
     } catch (error) {
         next(error);
     }

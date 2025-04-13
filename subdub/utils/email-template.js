@@ -41,7 +41,7 @@ export const generateEmailTemplate = ({
                     </tr>
                 </table>
                 
-                <p style="font-size: 16px; margin-bottom: 25px;">If you'd like to make changes or cancel your subscription, please visit your <a href="http://localhost:5173/dashboard/settings" style="color: #4a90e2; text-decoration: none;">account settings</a> before the renewal date.</p>
+                <p style="font-size: 16px; margin-bottom: 25px;">If you'd like to make changes or cancel your subscription, please visit your <a href="https://subtracking.vercel.app/dashboard/settings" style="color: #4a90e2; text-decoration: none;">account settings</a> before the renewal date.</p>
                 
                 <p style="font-size: 16px; margin-top: 30px;">Need help? <a href="${supportLink}" style="color: #4a90e2; text-decoration: none;">Contact our support team</a> anytime.</p>
                 
@@ -110,7 +110,7 @@ export const generateWelcomeEmailTemplate = (name) => `
             <td style="padding: 40px 30px;">                
                 <p style="font-size: 18px; margin-bottom: 25px;">Hello <strong style="color: #4a90e2;">${name}</strong>,</p>
                 
-                <p style="font-size: 16px; margin-bottom: 25px;">Welcome to SubDub! We're thrilled to have you join our community of smart subscription managers. 🌟</p>
+                <p style="font-size: 16px; margin-bottom: 25px;">Welcome to Subscription Tracker! We're thrilled to have you join our community of smart subscription managers. 🌟</p>
                 
                 <!-- Feature Highlights -->
                 <table cellpadding="15" cellspacing="0" border="0" width="100%" style="background-color: #f0f7ff; border-radius: 10px; margin-bottom: 25px;">
@@ -136,14 +136,14 @@ export const generateWelcomeEmailTemplate = (name) => `
                 
                 <!-- Getting Started Button -->
                 <div style="text-align: center; margin: 30px 0;">
-                    <a href="http://localhost:5173/" style="background-color: #4a90e2; color: #ffffff; padding: 12px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; cursor: pointer;">Get Started Now</a>
+                    <a href="https://subtracking.vercel.app/dashboard" style="background-color: #4a90e2; color: #ffffff; padding: 12px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; cursor: pointer;">Get Started Now</a>
                 </div>
                 
-                <p style="font-size: 16px; margin-bottom: 25px;">Need help getting started? Our support team is here for you! <a href="http://localhost:5173/dashboard/settings" style="color: #4a90e2; text-decoration: none;">Reach out anytime</a>.</p>
+                <p style="font-size: 16px; margin-bottom: 25px;">Need help getting started? Our support team is here for you! <a href="https://subtracking.vercel.app/dashboard/settings" style="color: #4a90e2; text-decoration: none;">Reach out anytime</a>.</p>
                 
                 <p style="font-size: 16px; margin-top: 30px;">
                     Welcome to better subscription management!<br>
-                    <strong>The SubDub Team</strong>
+                    <strong>The Subscription Tracker Team</strong>
                 </p>
             </td>
         </tr>
@@ -169,5 +169,5 @@ export const generateWelcomeEmailTemplate = (name) => `
 export const welcomeEmailTemplate = {
     label: "Welcome Email",
     generateSubject: (data) => `🎉 Welcome to SubDub, ${data.name}!`,
-    generateBody: (data) => generateWelcomeEmailTemplate(data.name),
+    generateBody: (data) => generateWelcomeEmailTemplate(data),
 };

@@ -19,7 +19,6 @@ import { useDeleteUserMutation, useUpdatePassowrdMutation } from '@/services/use
 import { useState } from 'react';
 import { status } from '@/lib/types';
 import { Circle } from 'lucide-react';
-import Model from '@/components/util/Model';
 import DeleteAccountConfirmation from '@/components/util/DeleteAccount';
 
 const formSchema = z.object({

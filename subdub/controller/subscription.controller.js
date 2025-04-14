@@ -2,6 +2,7 @@ import dayjs from 'dayjs';
 import { SERVER_URL } from '../config/env.js';
 import { workflowClient } from '../config/upstash.js';
 import Subscription from '../models/subscription.model.js';
+import { newSubscriptionCreated } from '../utils/send-email.js';
 
 export const createSubscription = async (req, res, next) => {
     try {
@@ -22,6 +23,9 @@ export const createSubscription = async (req, res, next) => {
                 },
                 retries: 0,
             });
+            // console.log({ ...req.user._doc, ...subscription._doc }, "\nController");
+            const userAndSubscriotion = { ...req.user._doc, ...subscription._doc }
+            newSubscriptionCreated({ to: req.user.email, subscription: userAndSubscriotion })
         }
 
         console.log("Subscription Created");

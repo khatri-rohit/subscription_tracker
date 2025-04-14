@@ -165,9 +165,103 @@ export const generateWelcomeEmailTemplate = (name) => `
 </div>
 `;
 
+export const generateNewSubscriptionEmailTemplate = ({
+    firstName,
+    name,
+    frequency,
+    price,
+    renewalDate,
+    paymentMethod,
+    // billingCycle,
+    category,
+}) => `
+<div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 0; background-color: #f4f7fa;">
+    <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #ffffff; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+        <!-- Header -->
+        <tr>
+            <td style="background-color: #4a90e2; text-align: center; padding: 30px;">
+                <p style="font-size: 54px; line-height: 54px; font-weight: 800; color: #ffffff; margin: 0;">Subscription Tracker</p>
+                <p style="color: #ffffff; font-size: 24px; margin: 10px 0 0;">New Subscription Added! 🎉</p>
+            </td>
+        </tr>
+        
+        <!-- Main Content -->
+        <tr>
+            <td style="padding: 40px 30px;">                
+                <p style="font-size: 18px; margin-bottom: 25px;">Hello <strong style="color: #4a90e2;">${firstName}</strong>,</p>
+                
+                <p style="font-size: 16px; margin-bottom: 25px;">Your new subscription to <strong style="color: #4a90e2;">${name}</strong> has been successfully added to your account! Here are the details:</p>
+                
+                <!-- Subscription Details -->
+                <table cellpadding="15" cellspacing="0" border="0" width="100%" style="background-color: #f0f7ff; border-radius: 10px; margin-bottom: 25px;">
+                   <tr>
+                        <td style="font-size: 16px; border-bottom: 1px solid #d0e3ff;">
+                            <strong>Plan:</strong> ${frequency}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 16px; border-bottom: 1px solid #d0e3ff;">
+                            <strong>Category:</strong> ${category}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 16px; border-bottom: 1px solid #d0e3ff;">
+                            <strong>Price:</strong> ${price}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 16px; border-bottom: 1px solid #d0e3ff;">
+                            <strong>Next Renewal:</strong> ${renewalDate}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 16px;">
+                            <strong>Payment Method:</strong> ${paymentMethod}
+                        </td>
+                    </tr>
+                </table>
+                
+                <!-- Action Button -->
+                <div style="text-align: center; margin: 30px 0;">
+                    <a href="http:localhost:5173/subscriptions" style="background-color: #4a90e2; color: #ffffff; padding: 12px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; cursor: pointer;">View Subscription Details</a>
+                </div>
+                
+                <p style="font-size: 16px; margin-bottom: 25px;">You'll receive renewal reminders before your next payment date. You can manage your subscription settings anytime through your account dashboard.</p>
+                
+                <p style="font-size: 16px; margin-top: 30px;">
+                    Happy tracking!<br>
+                    <strong>The Subscription Tracker Team</strong>
+                </p>
+            </td>
+        </tr>
+        
+        <!-- Footer -->
+        <tr>
+            <td style="background-color: #f0f7ff; padding: 20px; text-align: center; font-size: 14px;">
+                <p style="margin: 0 0 10px;">
+                    SubDub Inc. | 123 Main St, Anytown, AN 12345
+                </p>
+                <p style="margin: 0;">
+                    <a href="#" style="color: #4a90e2; text-decoration: none; margin: 0 10px;">Privacy Policy</a> | 
+                    <a href="#" style="color: #4a90e2; text-decoration: none; margin: 0 10px;">Terms of Service</a> |
+                    <a href="#" style="color: #4a90e2; text-decoration: none; margin: 0 10px;">Help Center</a>
+                </p>
+            </td>
+        </tr>
+    </table>
+</div>
+`;
+
+
 // Add this to your emailTemplates array
 export const welcomeEmailTemplate = {
     label: "Welcome Email",
     generateSubject: (data) => `🎉 Welcome to SubDub, ${data.name}!`,
     generateBody: (data) => generateWelcomeEmailTemplate(data),
+};
+
+export const newSubscriptionEmailTemplate = {
+    label: "New Subscription Created",
+    generateSubject: (data) => `🆕 New Subscription Added: ${data}`,
+    generateBody: (data) => generateNewSubscriptionEmailTemplate(data),
 };

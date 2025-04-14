@@ -1,6 +1,27 @@
-import { emailTemplates, welcomeEmailTemplate } from './email-template.js'
+import { emailTemplates, newSubscriptionEmailTemplate, welcomeEmailTemplate } from './email-template.js'
 import dayjs from 'dayjs'
 import transporter, { accountEmail } from '../config/nodemailer.js'
+
+export const newSubscriptionCreated = async ({ to, subscription }) => {
+    if (!to) throw new Error('Missing required parameters');
+
+    // console.log("Template\n",subscription);
+    const message = newSubscriptionEmailTemplate.generateBody(subscription)
+    const subject = newSubscriptionEmailTemplate.generateSubject(subscription.name);
+
+    const mailOptions = {
+        from: accountEmail,
+        to: to,
+        subject: subject,
+        html: message
+    }
+
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) return console.log(error, 'Error sending email');
+        console.log('Email sent: ' + info.response);
+    });
+}
+
 
 export const userCreated = async ({ to, user }) => {
     if (!to) throw new Error('Missing required parameters');

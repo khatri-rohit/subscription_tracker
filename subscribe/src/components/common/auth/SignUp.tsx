@@ -71,8 +71,8 @@ const SignUp = () => {
             });
             console.log(response);
             setTimeout(() => setStatus("success"), 500);
-            navigate('/dashboard', { replace: true })
             dispatch(isAuthenticated(true))
+            navigate('/dashboard', { replace: true })
         } catch (error) {
             setStatus("error");
             if (axios.isAxiosError(error)) {

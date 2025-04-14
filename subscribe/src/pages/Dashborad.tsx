@@ -1,14 +1,13 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
-import { List, Music, Search, Sofa, Video, X } from "lucide-react"
-import { FadeLoader } from "react-spinners";
+import { List, Loader, Music, Search, Sofa, Video, X } from "lucide-react"
 import { motion } from 'motion/react'
 
 import { Category, Subscription, SubsStatus, Tabs } from "@/lib/types";
 import SubsOverview from "@/components/common/SubsOverview.tsx";
 import { setSubscription } from '@/features/slice'
 import { useGetAllSubscriptionsQuery } from '@/services/subscriptions'
-import { useAppDispatch } from "@/app/store";
+import { useAppDispatch, useAppSelector } from "@/app/store";
 import { useAuth } from "@/context/Auth.tsx";
 
 import { Input } from "@/components/ui/input"
@@ -124,6 +123,8 @@ const Dashborad = () => {
     setFilterSubscription(data?.subscriptions as Subscription[]);
   }
 
+  const isAuth = useAppSelector((state) => state.rootReducers.isAuth)
+
   useEffect(() => {
     if (data) {
       dispatch(setSubscription(data?.subscriptions))
@@ -131,7 +132,7 @@ const Dashborad = () => {
       setFilterSubscription(data?.subscriptions);
       setLength(data?.subscriptions.length);
     }
-  }, [data])
+  }, [data, isAuth, dispatch])
 
   return (
     <motion.main initial={{ opacity: 0, x: -500 }} animate={{ opacity: 1, x: 0, transition: { duration: .3 } }}
@@ -169,11 +170,7 @@ const Dashborad = () => {
       {/* All Subscriptions */}
       <div className={isError || isLoading ? "h-52 flex items-center justify-center" : "grid grid-cols-2 md:gap-5 gap-2 lg:gap-3 md:grid-cols-3 lg:grid-cols-4 min-h-56"}>
         {isError && <p className="text-2xl text-red-500 my-auto text-center">Something Went Wrong</p>}
-        {!isError && (isLoading ? <FadeLoader
-          color="#141010"
-          height={19}
-          width={6}
-        /> :
+        {!isError && (isLoading ? <Loader size={45} className='animate-spin opacity-75 text-black dark:text-white' /> :
           length > 0 ? (subscriptions?.map((subscription) => {
             if (subscription.status === status) {
               return (<SubsOverview key={subscription._id} name={subscription.name}
@@ -229,11 +226,7 @@ const Dashborad = () => {
       {/* All Subscriptions */}
       <div className={isError || isLoading ? "h-52 flex items-center justify-center" : "grid grid-cols-2 md:gap-5 gap-2 lg:gap-3 md:grid-cols-3 lg:grid-cols-4 min-h-56"}>
         {isError && <p className="text-2xl text-red-500">Something Went Wrong</p>}
-        {!isError && (isLoading ? <FadeLoader
-          color="#141010"
-          height={19}
-          width={6}
-        /> :
+        {!isError && (isLoading ? <Loader size={45} className='animate-spin opacity-75 text-black dark:text-white' /> :
           filterSubscirpion.length > 0 && filterSubscirpion?.map((subscription) => {
             if (subscription.category === category) {
               return <SubsOverview key={subscription._id} name={subscription.name}

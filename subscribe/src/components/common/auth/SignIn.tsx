@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 
-import { EyeIcon, MailIcon, X } from "lucide-react"
+import { Circle, EyeIcon, MailIcon, X } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "@/context/Auth"
 import { useState } from "react"
@@ -64,11 +64,9 @@ const SignIn = () => {
         return
       }
       setStatus("loading");
-      const response = await axios.post(
-        `${apiUrl}/auth/sign-in`,
-        { email, password },
+      const response = await axios.post( `${apiUrl}/auth/sign-in`, { email, password },
         {
-          withCredentials: true, // Enable this
+          withCredentials: true,
           headers: {
             "Content-Type": "application/json",
           }
@@ -147,7 +145,7 @@ const SignIn = () => {
               <Button
                 className="w-full hover:bg-white/80 cursor-pointer bg-white text-black"
                 type="submit" disabled={status === 'loading'}>
-                Submit
+                {status === 'loading' ? <Circle className="animate-spin mx-auto" size={20} /> : "SignIn"}
               </Button>
             </form>
           </Form>

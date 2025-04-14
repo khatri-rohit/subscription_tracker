@@ -16,6 +16,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/context/Auth';
 import { useUpdateUserAvatarMutation, useUpdateUserInfoMutation } from '@/services/users';
+import { status } from '@/lib/types';
 
 const profileFormSchema = z.object({
     firstName: z.string().min(2, "Name must be at least 2 characters long"),
@@ -35,6 +36,8 @@ const Profile = () => {
             return '/img/blank-avatar.webp'
         }
     });
+
+    const [status, setStatus] = useState<status>('success')
 
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [updateUserInfo] = useUpdateUserInfoMutation()
@@ -101,10 +104,18 @@ const Profile = () => {
     const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file) {
-            const imageUrl = URL.createObjectURL(file);
-            setProfileImage(imageUrl);
+            setStatus('loading')
+            try {
+                const imageUrl = URL.createObjectURL(file);
+                await updateUserAvatar({ _id: user?._id as string, profileImage: file });
+                setProfileImage(imageUrl);
+                setStatus('success')
 
-            await updateUserAvatar({ _id: user?._id as string, profileImage: file });
+            } catch (error) {
+                setStatus('error')
+                console.log(error);
+            }
+
         }
     };
 
@@ -144,6 +155,8 @@ const Profile = () => {
                         onChange={handleFileChange}
                     />
                 </div>
+                {status === 'error' &&
+                    (<p className="text-[.7em] text-red-500">Too Large File or Invalid Format</p>)}
                 <div>
                     <Button
                         type="button"

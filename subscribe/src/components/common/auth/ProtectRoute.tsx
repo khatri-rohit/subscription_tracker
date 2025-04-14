@@ -8,14 +8,18 @@ const ProtectRoute = ({ children }: { children: React.ReactNode }) => {
     const isAuth = useAppSelector((state) => state.rootReducers.isAuth);
     const [isLoading, setIsLoading] = useState(true);
     const location = useLocation()
-    const { user } = useAuth()
+    const { user, getLoggedInUser } = useAuth()
+
+    useEffect(() => {
+        getLoggedInUser()
+    }, [])
 
     useEffect(() => {
         // Short delay to allow auth check to complete
         const timer = setTimeout(() => {
             setIsLoading(false);
         }, 500);
-
+        // console.log(user);
         return () => clearTimeout(timer);
     }, [user, isAuth]);
 

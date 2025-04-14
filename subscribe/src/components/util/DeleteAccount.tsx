@@ -3,13 +3,15 @@ import { motion } from 'motion/react'
 
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
+import { Loader } from 'lucide-react';
 
 interface Props {
     onDelete: () => void,
     setShow: Dispatch<SetStateAction<boolean>>
+    load: boolean
 }
 
-const DeleteAccountConfirmation = ({ onDelete, setShow }: Props) => {
+const DeleteAccountConfirmation = ({ onDelete, setShow, load }: Props) => {
     const [inputValue, setInputValue] = useState<string>('');
 
     const handleDelete = () => {
@@ -39,13 +41,14 @@ const DeleteAccountConfirmation = ({ onDelete, setShow }: Props) => {
             <div className="flex justify-between items-center gap-1">
                 <Button
                     onClick={() => setShow(false)}
+                    disabled={load}
                     className="mt-4 flex-[1] bg-white text-gray-900 py-2 rounded-md hover:bg-white/80 transition duration-200 cursor-pointer border hover:shadow-md">
                     Cancel
                 </Button>
                 <Button
                     onClick={handleDelete}
                     className="mt-4 flex-[1] bg-red-600 text-white py-2 rounded-md hover:bg-red-600 transition duration-200 cursor-pointer hover:shadow-md">
-                    Delete My Account
+                    {load ? (<Loader size={45} className='animate-spin opacity-75 text-white' />) : "Delete My Account"}
                 </Button>
             </div>
         </motion.div>

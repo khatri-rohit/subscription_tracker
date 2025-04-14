@@ -17,19 +17,14 @@ import SettingLayout from './components/layout/SettingLayout';
 import Account from './pages/Account';
 import Notifications from './pages/Notifications';
 import Profile from './pages/Profile';
-import { useAuth } from './context/Auth';
 
 function App() {
-
-  const { user } = useAuth();
 
   return (
     <BrowserRouter>
       <Routes>
-        {!user && (<>
-          <Route path='/signup' element={<SignUp />} />
-          <Route path='/signin' element={<SignIn />} />
-        </>)}
+        <Route path='/signup' element={<SignUp />} />
+        <Route path='/signin' element={<SignIn />} />
 
         <Route path='/' element={<Layout />}>
           <Route index element={<Home />} />

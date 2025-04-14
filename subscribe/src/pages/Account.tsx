@@ -21,6 +21,9 @@ import { status } from '@/lib/types';
 import { Circle } from 'lucide-react';
 import DeleteAccountConfirmation from '@/components/util/DeleteAccount';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { isAuthenticated } from '@/features/slice';
+import { useAppDispatch } from '@/app/store';
 
 const formSchema = z.object({
     password: z.string().min(8, "Your New Password is Should Be 8 Character Long").optional(),
@@ -29,11 +32,14 @@ const formSchema = z.object({
 
 const Account = () => {
 
+    const { user,apiUrl } = useAuth();
     const navigate = useNavigate()
-
-    const { user } = useAuth();
+    
+    const dispatch = useAppDispatch()
+    
     const [status, setStatus] = useState<status>("success")
     const [show, setShow] = useState(false);
+    const [load, setLoad] = useState(false);
 
     const [deleteUser] = useDeleteUserMutation();
     const [updatePassowrd] = useUpdatePassowrdMutation()
@@ -80,12 +86,18 @@ const Account = () => {
 
     const handleSubmit = async () => {
         try {
+            axios.defaults.withCredentials = true
+            await axios.post(`${apiUrl}/auth/sign-out`)
             await deleteUser({
                 _id: user?._id
             })
-            navigate("/");
-            localStorage.clear()
-            window.location.reload();
+            dispatch(isAuthenticated(false))
+            setLoad(true);
+            setTimeout(() => {
+                navigate("/");
+                localStorage.clear();
+                window.location.reload();
+            }, 1000)
         } catch (error) {
             console.log(error);
         }
@@ -93,8 +105,8 @@ const Account = () => {
 
     return (
         <>
-            {show && (<div className="h-full bg-white/50 dark:bg-zinc-800/80 absolute w-full">
-                <DeleteAccountConfirmation setShow={setShow} onDelete={handleSubmit} />
+            {show && (<div className="h-full bg-white/50 dark:bg-zinc-700/50 absolute w-full rounded-2xl">
+                <DeleteAccountConfirmation load={load} setShow={setShow} onDelete={handleSubmit} />
             </div>)}
             <div className="max-w-4xl mx-auto rounded-lg p-8 bg-white dark:bg-gray-800">
                 <h1 className="text-3xl font-bold text-gray-800 mb-8 dark:text-gray-200">

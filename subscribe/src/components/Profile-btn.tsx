@@ -36,7 +36,7 @@ function ProfileBtn() {
             axios.defaults.withCredentials = true
             await axios.post(`${apiUrl}/auth/sign-out`)
             dispatch(isAuthenticated(false))
-            setTimeout(() => navigation('/'), 500)
+            setTimeout(() => navigation('/'), 1000)
         } catch (error) {
             const axiosError = error as AxiosError;
             console.log(axiosError.cause);

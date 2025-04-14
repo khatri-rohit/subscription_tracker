@@ -69,14 +69,14 @@ export type Pass = {
 export type SubsStatus = 'All' | 'active' | 'cancelled' | 'expired' 
 
 
-export interface Pagination {
+export type Pagination = {
     total: number;
     page: number;
     limit: number;
     pages: number;
 }
 
-export interface PaginatedResponse<T> {
+export type PaginatedResponse<T> = {
     subscriptions: T[];
     pagination: Pagination;
 }

@@ -1,4 +1,4 @@
-import { NavLink, useNavigate } from "react-router-dom"
+import { NavLink } from "react-router-dom"
 
 import { useAppSelector } from '@/app/store';
 import { Button } from "../ui/button"
@@ -6,7 +6,6 @@ import ProfileBtn from "../Profile-btn";
 
 const Navbar = () => {
 
-    const navigate = useNavigate();
     const { isAuth } = useAppSelector((state) => state.rootReducers);
 
     return (
@@ -43,9 +42,10 @@ const Navbar = () => {
                                 </>) :
                                 (
 
-                                    <Button className="bg-[#636AE8] dark:text-white hover:bg-[#565ba9] transition-all duration-300 cursor-pointer"
-                                        onClick={() => navigate('/signin')}>
-                                        <img src="/img/newsletter.png" /> SignIn
+                                    <Button className="bg-[#636AE8] dark:text-white hover:bg-[#565ba9] transition-all duration-300 cursor-pointer">
+                                        <NavLink to={"/signin"} className="flex items-center justify-center gap-1.5 text-lg font-medium">
+                                            <img src="/img/newsletter.png" /> SignIn
+                                        </NavLink>
                                     </Button>
                                 )
                         }

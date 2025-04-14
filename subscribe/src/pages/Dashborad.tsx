@@ -48,6 +48,7 @@ const Dashborad = () => {
 
   const { user } = useAuth()
   const dispatch = useAppDispatch()
+  // console.log(user);
 
   const [filterSubscirpion, setFilterSubscription] = useState<Subscription[]>([]);
   const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
@@ -186,7 +187,7 @@ const Dashborad = () => {
         {(data?.subscriptions.length === 0 || !data) && !isLoading && <NavLink to={'/subscription/create-subs'}
           className="text-xl my-auto text-center md:col-span-3 lg:col-span-4">
           <Button variant={"secondary"}
-            className="text-xl rounded-lg cursor-pointer p-5">
+            className="text-xl rounded-lg cursor-pointer p-5 dark:bg-white dark:text-gray-900">
             Create Reminder Now
           </Button>
         </NavLink>}

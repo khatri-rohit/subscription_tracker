@@ -20,21 +20,21 @@ const SettingLayout = () => {
                         <ul className="space-y-4">
                             <li>
                                 <NavLink
-                                    className={location.pathname.split('/')[3] === 'profile' ? "flex items-center text-lg text-white bg-green-600 transition-colors py-2 px-4 rounded-md hover:bg-green-50 hover:text-green-600 dark:bg-green-500 dark:hover:bg-green-600" : "flex items-center text-lg text-gray-800 hover:text-green-600 transition-colors py-2 px-4 rounded-md hover:bg-green-50 dark:text-gray-300"}
+                                    className={location.pathname.split('/')[3] === 'profile' ? "flex items-center text-lg text-white bg-green-600 transition-colors py-2 px-4 rounded-md hover:text-green-600 dark:hover:text-green-50 hover:bg-green-50 dark:bg-green-500 dark:hover:bg-green-600" : "flex items-center text-lg text-gray-800 hover:text-green-600 dark:hover:text-green-500 transition-colors py-2 px-4 rounded-md hover:bg-green-50 dark:text-gray-300"}
                                     to="/dashboard/settings/profile">
                                     <span>Profile</span>
                                 </NavLink>
                             </li>
                             <li>
                                 <NavLink
-                                    className={location.pathname.split('/').length === 3 ? "flex items-center text-lg text-white bg-indigo-500 transition-colors py-2 px-4 rounded-md hover:bg-indigo-50 hover:text-indigo-500 dark:bg-indigo-600 dark:hover:bg-indigo-700" : "flex items-center text-lg text-indigo-600 transition-colors py-2 px-4 rounded-md hover:bg-indigo-50 dark:text-indigo-300"}
+                                    className={location.pathname.split('/').length === 3 ? "flex items-center text-lg text-white bg-indigo-500 transition-colors py-2 px-4 rounded-md hover:bg-indigo-50 dark:hover:text-indigo-50 hover:text-indigo-500 dark:bg-indigo-600 dark:hover:bg-indigo-700" : "flex items-center text-lg text-indigo-600 transition-colors py-2 px-4 rounded-md hover:bg-indigo-50 dark:text-indigo-500"}
                                     to="/dashboard/settings">
                                     <span>Account</span>
                                 </NavLink>
                             </li>
                             <li>
                                 <NavLink
-                                    className={location.pathname.split('/')[3] === 'notifications' ? "flex items-center text-lg text-white bg-yellow-600 transition-colors py-2 px-4 rounded-md hover:bg-yellow-50 hover:text-yellow-600 dark:bg-yellow-500 dark:hover:bg-yellow-600" : "flex items-center text-lg text-gray-800 hover:text-yellow-600 transition-colors py-2 px-4 rounded-md hover:bg-yellow-50 dark:text-gray-300"}
+                                    className={location.pathname.split('/')[3] === 'notifications' ? "flex items-center text-lg text-white bg-yellow-600 transition-colors py-2 px-4 rounded-md hover:bg-yellow-50 hover:text-yellow-600 dark:hover:text-yellow-50 dark:bg-yellow-500 dark:hover:bg-yellow-600" : "flex items-center text-lg text-gray-800 hover:text-yellow-600 dark:hover:text-yellow-600 transition-colors py-2 px-4 rounded-md hover:bg-yellow-50 dark:text-gray-300"}
                                     to="/dashboard/settings/notifications">
                                     <span>Notifications</span>
                                 </NavLink>

@@ -1,5 +1,5 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import { X, List, Rows4, Search, Sofa, Volleyball, Tv2, Circle } from "lucide-react"
 import { motion } from 'motion/react'
 
@@ -60,18 +60,12 @@ const Subscriptions = () => {
 
   const navigate = useNavigate();
   const { user } = useAuth()
+  // const location = useLocation()
+  // console.log(user);
 
   const [edit, setEdit] = useState<boolean>(false);
   const [del, setDelete] = useState<boolean>(false);
   const [id, setId] = useState<string | null>(null);
-
-  // const {
-  //   data,
-  //   refetch,
-  //   currentData
-  // } = useGetAllSubscriptionsQuery(user?._id, {
-  //   skip: !user?._id.trim(),
-  // });
 
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [itemsPerPage, setItemsPerPage] = useState<number>(10);
@@ -83,10 +77,9 @@ const Subscriptions = () => {
     isLoading,
     currentData
   } = useGetAllSubscriptionsQuery({
-    userId: user?._id || '',
+    userId: user?._id as string,
     page: currentPage,
     limit: itemsPerPage,
-
   }, {
     skip: !user?._id?.trim(),
     refetchOnMountOrArgChange: true,
@@ -187,7 +180,7 @@ const Subscriptions = () => {
   useEffect(() => {
     if (user?._id) {
       refetch();
-      // console.log("Refetching");
+      console.log("Refetching");
     }
   }, [user, refetch]);
 
@@ -231,7 +224,9 @@ const Subscriptions = () => {
               {query.length > 0 && (<X className="cursor-pointer mr-1.5 p-0.5" onClick={handleX} />)}
             </form>
 
-            <motion.button className="bg-[#636AE8] text-[1.1em] text-white px-4 py-2 rounded-lg hover:bg-[#4B51B8] cursor-pointer dark:bg-[#4B51B8] dark:hover:bg-[#636AE8]" whileTap={{ scale: 1.15, transition: { ease: "easeIn" } }} onClick={() => navigate('/subscription/create-subs')}>
+            <motion.button className="bg-[#636AE8] text-[1.1em] text-white px-4 py-2 rounded-lg hover:bg-[#4B51B8] cursor-pointer dark:bg-[#4B51B8] dark:hover:bg-[#636AE8]"
+              whileTap={{ scale: 1.15, transition: { ease: "easeIn" } }}
+              onClick={() => navigate('/subscription/create-subs')}>
               Create Subscription
             </motion.button>
           </div>
@@ -278,13 +273,13 @@ const Subscriptions = () => {
                 onRenew={(id) => handleRenew(id)}
               />
             )) : (
-              <p className="text-xl my-auto text-center md:col-span-3 lg:col-span-5 xl:col-span-5 dark:text-gray-400">
-                you don't have {length === 0 ? "Any" : status} subscriptions yet
+              <p className="text-2xl min-h-screen w-full flex justify-center items-center md:col-span-3 lg:col-span-5 xl:col-span-5 dark:text-slate-100">
+                you don't have {length === 0 ? "any" : status} subscriptions yet
               </p>
             )}
           </div>
 
-          {paginationData && (
+          {paginationData && length > 0 && (
             <div className="flex justify-center items-center gap-4 mt-8">
               <span className="text-sm dark:text-gray-300">
                 Page {currentPage} of {paginationData.pages}

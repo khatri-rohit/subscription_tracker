@@ -6,8 +6,6 @@ import {
     useContext,
     PropsWithChildren,
     useState,
-    useEffect,
-    // cache
 } from "react";
 
 type User = {
@@ -23,7 +21,8 @@ type User = {
 type AuthContextType = {
     apiUrl: string;
     imageUrl: string;
-    user: User | null
+    user: User | null,
+    getLoggedInUser: () => void
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -37,13 +36,14 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     const dispatch = useAppDispatch();
 
     const getLoggedInUser = async () => {
+        console.log("called");
         try {
             axios.defaults.withCredentials = true;
             const request = await axios.post(`${apiUrl}/users/`);
             console.log(request.data.data);
             dispatch(isAuthenticated(true));
             setUser(request.data.data);
-            console.log("Previous Session");
+            // console.log("Previous Session");
         } catch (error) {
             const axiosError = error as AxiosError;
             console.log(axiosError);
@@ -54,12 +54,9 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         }
     }
 
-    useEffect(() => {
-        getLoggedInUser();
-    }, [])
-
     return (
-        <AuthContext.Provider value={{ apiUrl, user, imageUrl }}>
+        <AuthContext.Provider value={{ apiUrl, user, imageUrl, getLoggedInUser }}>
+        {/* // <AuthContext.Provider value={{ apiUrl, user, imageUrl }}> */}
             {children}
         </AuthContext.Provider>
     )

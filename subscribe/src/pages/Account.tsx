@@ -20,6 +20,7 @@ import { useState } from 'react';
 import { status } from '@/lib/types';
 import { Circle } from 'lucide-react';
 import DeleteAccountConfirmation from '@/components/util/DeleteAccount';
+import { useNavigate } from 'react-router-dom';
 
 const formSchema = z.object({
     password: z.string().min(8, "Your New Password is Should Be 8 Character Long").optional(),
@@ -27,6 +28,8 @@ const formSchema = z.object({
 });
 
 const Account = () => {
+
+    const navigate = useNavigate()
 
     const { user } = useAuth();
     const [status, setStatus] = useState<status>("success")
@@ -80,6 +83,8 @@ const Account = () => {
             await deleteUser({
                 _id: user?._id
             })
+            navigate("/");
+            localStorage.clear()
             window.location.reload();
         } catch (error) {
             console.log(error);
@@ -88,7 +93,7 @@ const Account = () => {
 
     return (
         <>
-            {show && (<div className="h-full bg-white/50 absolute w-full">
+            {show && (<div className="h-full bg-white/50 dark:bg-zinc-800/80 absolute w-full">
                 <DeleteAccountConfirmation setShow={setShow} onDelete={handleSubmit} />
             </div>)}
             <div className="max-w-4xl mx-auto rounded-lg p-8 bg-white dark:bg-gray-800">

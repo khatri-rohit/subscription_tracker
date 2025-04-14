@@ -1,5 +1,5 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from "react"
-import { useLocation, useNavigate } from "react-router-dom"
+import {  useNavigate } from "react-router-dom"
 import { X, List, Rows4, Search, Sofa, Volleyball, Tv2, Circle } from "lucide-react"
 import { motion } from 'motion/react'
 
@@ -60,7 +60,6 @@ const Subscriptions = () => {
 
   const navigate = useNavigate();
   const { user } = useAuth()
-  // const location = useLocation()
   // console.log(user);
 
   const [edit, setEdit] = useState<boolean>(false);

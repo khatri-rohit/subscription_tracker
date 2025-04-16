@@ -11,8 +11,8 @@ const userSchema = new mongoose.Schema({
     lastName: {
         type: String,
         required: [true, 'Last Name is required'], // with error message
-        trim: true, // remove white spaces
-        minLength: 2,
+        // trim: true, // remove white spaces
+        // minLength: 2,
         maxLength: 50,
     },
     email: {

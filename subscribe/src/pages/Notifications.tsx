@@ -1,7 +1,10 @@
+import { FormEvent, useState } from "react";
+import { toast } from "sonner";
+
+import { useUpdateEmailNotificationMutation } from "@/services/users";
+
 import { Button } from "@/components/ui/button"
 import { useAuth } from "@/context/Auth";
-import { useUpdateEmailNotificationMutation } from "@/services/users";
-import { FormEvent, useState } from "react";
 
 const Notifications = () => {
     const { user } = useAuth()
@@ -12,8 +15,10 @@ const Notifications = () => {
     const handleNotification = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const value = emailNotifications === "Enabled";
+        const change = value ? "Enabled" : "Disabled";
         console.log(emailNotifications);
         updateEmailNotification({ _id: user?._id as string, notify: value });
+        toast.success(`Notifications are ${change}`)
     }
 
     return (

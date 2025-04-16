@@ -10,12 +10,15 @@ import {
 import { Input } from "@/components/ui/input"
 
 import { Circle, EyeIcon, MailIcon, X } from "lucide-react"
-import { useNavigate } from "react-router-dom"
+import { NavLink, useNavigate } from "react-router-dom"
 import { useAuth } from "@/context/Auth"
 import { useState } from "react"
 import axios, { AxiosError } from "axios"
 import { useAppDispatch, useAppSelector } from "@/app/store"
 import { isAuthenticated } from "@/features/slice"
+import { CodeResponse, useGoogleLogin } from "@react-oauth/google"
+import { toast } from "sonner"
+import { googleAuth } from "./api"
 
 type FormValues = {
   email: string,
@@ -64,7 +67,7 @@ const SignIn = () => {
         return
       }
       setStatus("loading");
-      const response = await axios.post( `${apiUrl}/auth/sign-in`, { email, password },
+      const response = await axios.post(`${apiUrl}/auth/sign-in`, { email, password },
         {
           withCredentials: true,
           headers: {
@@ -92,6 +95,40 @@ const SignIn = () => {
       }
     }
   }
+
+  const googleLogin = async (auth: CodeResponse) => {
+    try {
+      console.log(auth);
+      if (auth.code) {
+        const response = await googleAuth(auth.code);
+        dispatch(isAuthenticated(true))
+        navigate('/dashboard', { replace: true })
+        toast.success(response?.data.message);
+      } else {
+        throw new Error("Auth code is not Found")
+      }
+    } catch (error) {
+      const axiosError = error as AxiosError;
+      const response = axiosError.response?.data as ErrorResponse;
+      if (response.error.includes("Duplicate")) {
+        toast.error("This Email Already Exist")
+      } else {
+        toast.error("Something happened try again later")
+      }
+      console.log(axiosError);
+    }
+  }
+
+  const handleErrorLogin = (error: Pick<CodeResponse, "error" | "error_description" | "error_uri">) => {
+    console.log(error);
+    toast.error("Google login failed. Please try again.");
+  }
+
+  const handleGoogleAuth = useGoogleLogin({
+    onSuccess: googleLogin,
+    onError: handleErrorLogin,
+    flow: 'auth-code'
+  })
 
   return (
     <div className="h-screen flex justify-center items-center">
@@ -155,19 +192,22 @@ const SignIn = () => {
               Or Continue With
             </p>
             <div className="icons flex items-center justify-center gap-x-7 mt-4">
-              <div className="bg-white px-2 rounded-lg">
+              <Button className="bg-white px-2 rounded-lg" onClick={handleGoogleAuth}>
                 <img src="/img/icons/google-svgrepo-com.svg" alt="google" className="w-10 h-10 cursor-pointer" />
-              </div>
-              <div className="bg-white px-2 rounded-lg">
+              </Button>
+              <Button className="bg-white px-2 rounded-lg">
                 <img src="/img/icons/github-svgrepo-com.svg" alt="github" className="w-10 h-10 cursor-pointer" />
-              </div>
-              <div className="bg-white px-2 rounded-lg">
+              </Button>
+              <Button className="bg-white px-2 rounded-lg">
                 <img src="/img/icons/twitter-svgrepo-com.svg" alt="twitter" className="w-10 h-10 cursor-pointer" />
-              </div>
+              </Button>
             </div>
           </div>
 
-          <p className="text-sm lg:text-[1em] text-center pt-10 pb-5 md:pb-4">Don't have an account? <span className="hover:underline text-gray-50 cursor-pointer" onClick={() => navigate('/signup')}>Signup</span></p>
+          <p className="text-sm lg:text-[1em] text-center pt-10 pb-5 md:pb-4">Don't have an account? <NavLink to={'/signup'} className="hover:underline text-gray-50 cursor-pointer">
+            Signup
+          </NavLink>
+          </p>
 
         </div>
 

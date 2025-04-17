@@ -3,9 +3,8 @@ import { useForm } from "react-hook-form"
 import { useNavigate } from "react-router-dom"
 import { ALargeSmall, EyeIcon, MailIcon, X } from "lucide-react"
 import axios, { AxiosError } from 'axios';
-import { CodeResponse, useGoogleLogin } from '@react-oauth/google'
 import { SyncLoader } from 'react-spinners'
-import { googleAuth } from './api'
+// import { googleAuth } from './api'
 
 import { useAuth } from "@/context/Auth"
 import { useAppDispatch, useAppSelector } from "@/app/store";
@@ -20,7 +19,7 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { toast } from "sonner";
+// import { toast } from "sonner";
 
 type FormValues = {
     firstName: string,
@@ -40,7 +39,7 @@ const SignUp = () => {
 
     const [status, setStatus] = useState<Status>('success');
 
-    const { apiUrl } = useAuth();
+    const { apiUrl, imageUrl, getLoggedInUser } = useAuth();
     const dispatch = useAppDispatch()
     const isAuth = useAppSelector((state) => state.rootReducers.isAuth)
 
@@ -94,39 +93,19 @@ const SignUp = () => {
         }
     }
 
-    const googleLogin = async (auth: CodeResponse) => {
-        try {
-            console.log(auth);
-            if (auth.code) {
-                const response = await googleAuth(auth.code);
-                dispatch(isAuthenticated(true))
-                navigate('/dashboard', { replace: true })
-                toast.success(response?.data.message);
-            } else {
-                throw new Error("Auth code is not Found")
-            }
-        } catch (error) {
-            const axiosError = error as AxiosError;
-            const response = axiosError.response?.data as ErrorResponse;
-            if (response.error.includes("Duplicate")) {
-                toast.error("This Email Already Exist")
-            } else {
-                toast.error("Something happened try again later")
-            }
-            console.log(axiosError);
-        }
+    const handleXLogin = async () => {
+        window.location.href = "http://localhost:5500/auth/twitter";
     }
 
-    const handleErrorLogin = (error: Pick<CodeResponse, "error" | "error_description" | "error_uri">) => {
-        console.log(error);
-        toast.error("Google login failed. Please try again.");
-    }
+    const handleGithubLogin = async () => {
+        console.log("Call Google");
+        window.location.href = "http://localhost:5500/auth/github";
+    };
 
-    const handleGoogleAuth = useGoogleLogin({
-        onSuccess: googleLogin,
-        onError: handleErrorLogin,
-        flow: 'auth-code'
-    })
+    const handleGoogleAuth = async () => {
+        window.location.href = `${imageUrl}/auth/google`;
+        getLoggedInUser()
+    };
 
     return (
         <div className="h-screen flex justify-center items-center">
@@ -286,10 +265,10 @@ const SignUp = () => {
                             <Button onClick={handleGoogleAuth} className="bg-white md:p-2 rounded-lg">
                                 <img src="/img/icons/google-svgrepo-com.svg" alt="google" className="w-10 h-10 p-1 cursor-pointer" />
                             </Button>
-                            <Button className="bg-white md:p-2 rounded-lg">
+                            <Button className="bg-white md:p-2 rounded-lg" onClick={handleGithubLogin}>
                                 <img src="/img/icons/github-svgrepo-com.svg" alt="github" className="w-10 h-10 p-1 cursor-pointer" />
                             </Button>
-                            <Button className="bg-white md:p-2 px-2 py-2 rounded-lg">
+                            <Button className="bg-white md:p-2 px-2 py-2 rounded-lg" onClick={handleXLogin}>
                                 <img src="/img/icons/twitter-svgrepo-com.svg" alt="twitter" className="w-10 h-10 p-1 cursor-pointer" />
                             </Button>
                         </div>

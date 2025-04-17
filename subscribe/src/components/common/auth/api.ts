@@ -1,15 +1,27 @@
-import axios from 'axios'
+import axios from 'axios';
+
+const API_URL = 'http://localhost:5500';
 
 const api = axios.create({
-    baseURL: `${import.meta.env.VITE_IMAGE_URL}/api/v1/auth/`
+    baseURL: API_URL,
+    withCredentials: true
 });
 
-export const googleAuth = async (code: string) => {
+export const checkAuthStatus = async () => {
     try {
-        axios.defaults.withCredentials = true;
-        const result = await api.post(`/google?code=${code}`)
-        return result;
+        const response = await api.get('/auth/user');
+        return response.data;
     } catch (error) {
-        console.log(error);
+        console.error('Error checking auth status:', error);
+        return { success: false };
     }
-}
+};
+
+export const logoutUser = async () => {
+    try {
+        await api.get('/auth/logout');
+        window.location.href = '/';
+    } catch (error) {
+        console.error('Error logging out:', error);
+    }
+};

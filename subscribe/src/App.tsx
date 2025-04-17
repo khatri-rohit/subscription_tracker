@@ -17,32 +17,14 @@ import SettingLayout from './components/layout/SettingLayout';
 import Account from './pages/Account';
 import Notifications from './pages/Notifications';
 import Profile from './pages/Profile';
-import { GoogleOAuthProvider } from '@react-oauth/google';
-import { useAuth } from './context/Auth';
 
 function App() {
-
-  const { clientId } = useAuth()
-
-  const GoogleProviderSignUp = () => {
-    return <GoogleOAuthProvider clientId={clientId}>
-      <SignUp />
-    </GoogleOAuthProvider>
-  }
-
-  const GoogleProviderSignIn = () => {
-    return <GoogleOAuthProvider clientId={clientId}>
-      <SignIn />
-    </GoogleOAuthProvider>
-  }
 
   return (
     <BrowserRouter>
       <Routes>
-        {/* <GoogleOAuthProvider clientId={clientId}> */}
-        <Route path='/signup' element={<GoogleProviderSignUp />} />
-        <Route path='/signin' element={<GoogleProviderSignIn />} />
-        {/* </GoogleOAuthProvider> */}
+        <Route path='/signup' element={<SignUp />} />
+        <Route path='/signin' element={<SignIn />} />
 
         <Route path='/' element={<Layout />}>
           <Route index element={<Home />} />

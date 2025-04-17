@@ -16,9 +16,9 @@ import { useState } from "react"
 import axios, { AxiosError } from "axios"
 import { useAppDispatch, useAppSelector } from "@/app/store"
 import { isAuthenticated } from "@/features/slice"
-import { CodeResponse, useGoogleLogin } from "@react-oauth/google"
-import { toast } from "sonner"
-import { googleAuth } from "./api"
+// import { CodeResponse, useGoogleLogin } from "@react-oauth/google"
+// import { toast } from "sonner"
+// import { googleAuth } from "./api"
 
 type FormValues = {
   email: string,
@@ -96,39 +96,19 @@ const SignIn = () => {
     }
   }
 
-  const googleLogin = async (auth: CodeResponse) => {
-    try {
-      console.log(auth);
-      if (auth.code) {
-        const response = await googleAuth(auth.code);
-        dispatch(isAuthenticated(true))
-        navigate('/dashboard', { replace: true })
-        toast.success(response?.data.message);
-      } else {
-        throw new Error("Auth code is not Found")
-      }
-    } catch (error) {
-      const axiosError = error as AxiosError;
-      const response = axiosError.response?.data as ErrorResponse;
-      if (response.error.includes("Duplicate")) {
-        toast.error("This Email Already Exist")
-      } else {
-        toast.error("Something happened try again later")
-      }
-      console.log(axiosError);
-    }
+  const handleXLogin = async () => {
+    window.location.href = "http://localhost:5500/auth/twitter";
   }
 
-  const handleErrorLogin = (error: Pick<CodeResponse, "error" | "error_description" | "error_uri">) => {
-    console.log(error);
-    toast.error("Google login failed. Please try again.");
-  }
+  const handleGoogleLogin = async () => {
+    console.log("Call Google");
+    window.location.href = "http://localhost:5500/auth/google";
+  };
 
-  const handleGoogleAuth = useGoogleLogin({
-    onSuccess: googleLogin,
-    onError: handleErrorLogin,
-    flow: 'auth-code'
-  })
+  const handleGithubLogin = async () => {
+    console.log("Call Google");
+    window.location.href = "http://localhost:5500/auth/github";
+  };
 
   return (
     <div className="h-screen flex justify-center items-center">
@@ -192,13 +172,13 @@ const SignIn = () => {
               Or Continue With
             </p>
             <div className="icons flex items-center justify-center gap-x-7 mt-4">
-              <Button className="bg-white px-2 rounded-lg" onClick={handleGoogleAuth}>
+              <Button className="bg-white px-2 rounded-lg" onClick={handleGoogleLogin}>
                 <img src="/img/icons/google-svgrepo-com.svg" alt="google" className="w-10 h-10 cursor-pointer" />
               </Button>
-              <Button className="bg-white px-2 rounded-lg">
+              <Button className="bg-white px-2 rounded-lg" onClick={handleGithubLogin}>
                 <img src="/img/icons/github-svgrepo-com.svg" alt="github" className="w-10 h-10 cursor-pointer" />
               </Button>
-              <Button className="bg-white px-2 rounded-lg">
+              <Button className="bg-white px-2 rounded-lg" onClick={handleXLogin}>
                 <img src="/img/icons/twitter-svgrepo-com.svg" alt="twitter" className="w-10 h-10 cursor-pointer" />
               </Button>
             </div>

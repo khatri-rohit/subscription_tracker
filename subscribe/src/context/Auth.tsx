@@ -6,6 +6,7 @@ import {
     useContext,
     PropsWithChildren,
     useState,
+    useEffect,
 } from "react";
 
 type User = {
@@ -55,6 +56,10 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
             console.log("No Session");
         }
     }
+
+    useEffect(() => {
+        getLoggedInUser()
+    }, [])
 
     return (
         <AuthContext.Provider value={{ clientId, apiUrl, user, imageUrl, getLoggedInUser }}>

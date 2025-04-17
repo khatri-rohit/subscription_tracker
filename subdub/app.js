@@ -21,6 +21,7 @@ import configPassport from './config/passport.js';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import googleAuth from './routes/googleAuth.routes.js';
+import githubAuth from './routes/githubAuth.routes.js';
 
 
 const app = express();
@@ -60,8 +61,11 @@ app.use(passport.initialize());
 app.use(passport.session());
 configPassport(passport); // Configure passport AFTER initializing it
 
+// OAuth Routes
 app.use('/auth', googleAuth);
+app.use('/auth', githubAuth);
 
+// API Routes
 app.use('/api/v1/auth', authRoute);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/subscriptions', subcriptionRouter);

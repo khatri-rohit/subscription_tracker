@@ -1,5 +1,8 @@
 import express from 'express';
 import passport from 'passport';
+import { setAuthCookie } from '../utilits/auth-utils.js';
+import jwt from 'jsonwebtoken';
+import { JWT_SECRET, JWT_EXPRIES_IN } from '../config/env.js';
 
 const router = express.Router();
 
@@ -16,7 +19,20 @@ router.get(
     '/google/callback',
     passport.authenticate('google', { failureRedirect: '/' }),
     (req, res) => {
-        // Successful authentication
+        // Get user from passport auth
+        const user = req.user;
+
+        // Generate a JWT token if not already provided in auth info
+        const token = req.authInfo?.token ||
+            jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: JWT_EXPRIES_IN });
+
+        // Set the auth cookie using the same method as regular sign-in
+        setAuthCookie(res, token);
+
+        // Log the successful authentication
+        console.log("Google Auth successful, JWT cookie set");
+
+        // Successful authentication - redirect to frontend
         res.redirect("http://localhost:5173" + '/dashboard');
     }
 );

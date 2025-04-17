@@ -21,4 +21,6 @@ export const {
     EMAIL_PASS,
     GOOGLE_CLIENT_ID,
     GOOGLE_CLIENT_SECRET,
+    GITHUB_CLIENT_SECRET,
+    GITHUB_CLIENT_ID
 } = process.env;

@@ -8,33 +8,46 @@ const publicKey = fs.readFileSync('./private.pem', 'utf8');
 
 const authorize = async (req, res, next) => {
     try {
-        // // For authentication through header
-        // let token;
-        // if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-        //     token = req.headers.authorization.split(' ')[1];
-        // }
-        // console.log({ ...req.cookies });
-        const { token } = req.cookies
+        // First check if user is already authenticated via Passport session
+        if (req.isAuthenticated() && req.user) {
+            // User is authenticated via Passport
+            return next();
+        }
 
-        // eslint-disable-next-line no-undef
-        const decryptedToken = privateDecrypt(publicKey, Buffer.from(token, 'base64')).toString('utf8');
-        // console.log(decryptedToken);
-        // console.log("Auth Middleware");
+        // Otherwise, check for JWT token in cookies
+        const { token } = req.cookies;
 
-        if (!decryptedToken) return res.status(401).json({ message: "Unauthorized" });
+        if (!token) {
+            return res.status(401).json({ message: "Unauthorized - No token provided" });
+        }
 
-        const decoded = jwt.verify(decryptedToken, JWT_SECRET);
+        try {
+            // Decrypt the token
+            const decryptedToken = privateDecrypt(publicKey, Buffer.from(token, 'base64')).toString('utf8');
 
-        const user = await User.findById(decoded.userId).select('-password');
+            // Verify the JWT token
+            const decoded = jwt.verify(decryptedToken, JWT_SECRET);
 
-        if (!user) return res.status(401).json({ message: "Unauthorized" });
+            // Find the user by ID
+            const user = await User.findById(decoded.userId).select('-password');
 
-        req.user = user;
-        next();
+            if (!user) {
+                return res.status(401).json({ message: "Unauthorized - User not found" });
+            }
+
+            // Set user in request
+            req.user = user;
+            next();
+        } catch (tokenError) {
+            return res.status(401).json({
+                message: "Unauthorized - Invalid token",
+                error: tokenError.message
+            });
+        }
     } catch (error) {
-        res.status(401).json({
-            message: "Unauthorized",
-            error: error
+        res.status(500).json({
+            message: "Internal server error during authentication",
+            error: error.message
         });
     }
 };

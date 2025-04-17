@@ -14,11 +14,10 @@ const authorize = async (req, res, next) => {
         //     token = req.headers.authorization.split(' ')[1];
         // }
         // console.log({ ...req.cookies });
-        const { isagiKun } = req.cookies
-        console.log({ ...req.cookies });
+        const { token } = req.cookies
 
         // eslint-disable-next-line no-undef
-        const decryptedToken = privateDecrypt(publicKey, Buffer.from(isagiKun, 'base64')).toString('utf8');
+        const decryptedToken = privateDecrypt(publicKey, Buffer.from(token, 'base64')).toString('utf8');
         // console.log(decryptedToken);
         // console.log("Auth Middleware");
 

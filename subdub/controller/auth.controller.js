@@ -3,15 +3,12 @@ import mongoose from "mongoose"
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import axios from 'axios';
-import { publicEncrypt } from 'crypto'
 import { promises as fs } from 'fs';
 
 import User from '../models/user.model.js';
-import { JWT_EXPRIES_IN, JWT_SECRET, NODE_ENV } from "../config/env.js";
+import { JWT_EXPRIES_IN, JWT_SECRET } from "../config/env.js";
 import { userCreated } from "../utils/send-email.js";
-import { oAuthClient } from "../config/google.js";
-
-// const privateKey = fs.readFileSync('./private.pem', 'utf8');
+import { setAuthCookie } from "../utilits/auth-utils.js";
 
 let privateKey;
 async function loadKeys() {
@@ -24,75 +21,6 @@ async function loadKeys() {
     }
 }
 loadKeys();
-
-export const googleAuth = async (req, res, next) => {
-    const { code } = req.query;
-    // console.log(code);
-
-    console.log(req.cookies);
-    // for (const cookieName in req.cookies) {
-    //     console.log(cookieName);
-    //     // res.clearCookie(cookieName);
-    // }
-
-    const googleRes = await oAuthClient.getToken(code);
-    oAuthClient.setCredentials(googleRes.tokens)
-    // console.log(googleRes);
-
-    const userResult = await axios.get(`https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${googleRes.tokens.access_token}`)
-    // console.log(userResult.data);
-
-    const { email, given_name, family_name, picture } = userResult.data;
-
-    const user = await User.findOne({ email });
-    console.log(user);
-    if (!user) {
-        const session = await mongoose.startSession();
-        session.startTransaction();
-
-        // console.log({
-        //     firstName: given_name,
-        //     lastName: family_name || " ",
-        //     email: email,
-        //     password: "Thrid Party Auth",
-        //     profileImage: picture
-        // });
-
-        const newUsers = await User.create([{
-            firstName: given_name,
-            lastName: family_name || " ",
-            email: email,
-            password: "Thrid Party Auth",
-            profileImage: picture
-        }], { session });
-
-        console.log(newUsers);
-        const token = jwt.sign({ userId: newUsers[0]._id }, JWT_SECRET, { expiresIn: JWT_EXPRIES_IN });
-
-        setAuthCookie(res, token);
-        userCreated({ to: newUsers[0].email, user: newUsers[0].firstName })
-
-        console.log("Account Created");
-
-        await session.commitTransaction();
-        session.endSession();
-
-        return res.status(201).json({
-            success: true,
-            message: 'User created successfully',
-        });
-    } else {
-        const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: JWT_EXPRIES_IN });
-        setAuthCookie(res, token)
-
-        console.log("LogIn");
-        return res.status(201).json({
-            success: true,
-            message: 'SignIn successfully',
-        });
-    }
-
-}
 
 export const signUp = async (req, res, next) => {
     const session = await mongoose.startSession();
@@ -219,7 +147,7 @@ export const signIn = async (req, res, next) => {
 
 export const signOut = async (_, res, next) => {
     try {
-        res.clearCookie('isagiKun', {
+        res.clearCookie('token', {
             httpOnly: false,
             secure: true,
             sameSite: 'none'
@@ -234,36 +162,36 @@ export const signOut = async (_, res, next) => {
     }
 }
 
-function setAuthCookie(res, token) {
-    // eslint-disable-next-line no-undef
-    const encryptToken = publicEncrypt(privateKey, Buffer.from(token)).toString('base64');
+// function setAuthCookie(res, token) {
+//     // eslint-disable-next-line no-undef
+//     const encryptToken = publicEncrypt(privateKey, Buffer.from(token)).toString('base64');
 
-    console.log(NODE_ENV === 'production', " Cookies");
-    console.log(token);
+//     console.log(NODE_ENV === 'production', " Cookies");
+//     console.log(token);
 
-    res.cookie('isagiKun', encryptToken, {
-        httpOnly: NODE_ENV === 'production',
-        secure: NODE_ENV === 'production',  // Must be true when sameSite is 'none'
-        sameSite: 'strict',  // Make sure this is a strict
-        maxAge: 7 * 24 * 60 * 60 * 1000
-    });
-    // res.cookie('token', encryptToken, {
-    //     httpOnly: false,
-    //     secure: false,  // Must be true when sameSite is 'none'
-    //     sameSite: 'strict',  // Make sure this is a strict
-    //     maxAge: 7 * 24 * 60 * 60 * 1000
-    // });
-    // res.cookie('token', encryptToken, {
-    //     httpOnly: NODE_ENV === 'production',
-    //     secure: true,  // Must be true when sameSite is 'none'
-    //     sameSite: 'none',  // Make sure this is a strict
-    //     maxAge: 24 * 60 * 60 * 1000
-    // });
+//     res.cookie('token', encryptToken, {
+//         httpOnly: NODE_ENV === 'production',
+//         secure: NODE_ENV === 'production',  // Must be true when sameSite is 'none'
+//         sameSite: 'strict',  // Make sure this is a strict
+//         maxAge: 7 * 24 * 60 * 60 * 1000
+//     });
+//     // res.cookie('token', encryptToken, {
+//     //     httpOnly: false,
+//     //     secure: false,  // Must be true when sameSite is 'none'
+//     //     sameSite: 'strict',  // Make sure this is a strict
+//     //     maxAge: 7 * 24 * 60 * 60 * 1000
+//     // });
+//     // res.cookie('token', encryptToken, {
+//     //     httpOnly: NODE_ENV === 'production',
+//     //     secure: true,  // Must be true when sameSite is 'none'
+//     //     sameSite: 'none',  // Make sure this is a strict
+//     //     maxAge: 24 * 60 * 60 * 1000
+//     // });
 
-    // res.cookie('token', encryptToken, {
-    //     httpOnly: NODE_ENV === 'production',
-    //     secure: NODE_ENV === 'production',  // Must be true when sameSite is 'none'
-    //     sameSite: NODE_ENV === 'production' ? 'none' : 'strict',  // Make sure this is a strict
-    //     maxAge: 7 * 24 * 60 * 60 * 1000
-    // });
-}
+//     // res.cookie('token', encryptToken, {
+//     //     httpOnly: NODE_ENV === 'production',
+//     //     secure: NODE_ENV === 'production',  // Must be true when sameSite is 'none'
+//     //     sameSite: NODE_ENV === 'production' ? 'none' : 'strict',  // Make sure this is a strict
+//     //     maxAge: 7 * 24 * 60 * 60 * 1000
+//     // });
+// }

@@ -85,5 +85,51 @@ subscriptionSchema.pre('save', function (next) {
     next();
 });
 
+// Pre-update middleware - works for findOneAndUpdate, updateOne, updateMany
+subscriptionSchema.pre(['updateOne', 'updateMany', 'findOneAndUpdate'], async function(next) {
+    try {
+        const update = this.getUpdate();
+        
+        // If frequency is being updated, recalculate renewal date
+        if (update.frequency) {
+            const renewalPeriod = {
+                daily: 1,
+                weekly: 7,
+                monthly: 30,
+                yearly: 365,
+            };
+
+            const doc = await this.model.findOne(this.getQuery());
+            const startDate = doc.startDate;
+            
+            const newRenewalDate = new Date(startDate);
+            newRenewalDate.setDate(newRenewalDate.getDate() + renewalPeriod[update.frequency]);
+            
+            // Add renewalDate to the update object
+            this.setUpdate({
+                ...update,
+                renewalDate: newRenewalDate
+            });
+        }
+
+        // Check if renewal date needs status update
+        if (update.renewalDate && new Date(update.renewalDate) <= new Date()) {
+            this.setUpdate({
+                ...update,
+                status: 'expired'
+            });
+        }
+
+        next();
+    } catch (error) {
+        next(error);
+    }
+});
+
+// Post-update middleware - runs after update is complete
+subscriptionSchema.post(['updateOne', 'updateMany', 'findOneAndUpdate'], function(doc) {
+    console.log('Document updated:', doc);
+});
+
 const Subscription = mongoose.model('Subscription', subscriptionSchema);
 export default Subscription;

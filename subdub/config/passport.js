@@ -26,7 +26,8 @@ export default function configPassport(passport) {
                 callbackURL: '/auth/google/callback',
             },
             async (accessToken, refreshToken, profile, done) => {
-                // console.log(profile);
+                // // console.log(profile);
+                // eslint-disable-next-line no-unused-vars
                 const newUser = {
                     firstName: profile.name.givenName,
                     lastName: profile.name.familyName,
@@ -34,7 +35,7 @@ export default function configPassport(passport) {
                     password: "Thrid Party Auth",
                     profileImage: profile.photos[0].value,
                 };
-                console.log(newUser);
+                // console.log(newUser);
 
                 const session = await mongoose.startSession();
                 session.startTransaction();
@@ -53,7 +54,7 @@ export default function configPassport(passport) {
                             provider: 'google'
                         }], { session });
 
-                        console.log("Account Created");
+                        // console.log("Account Created");
 
                         // Set user to newly created user
                         user = newUsers[0];
@@ -93,7 +94,7 @@ export default function configPassport(passport) {
                 scope: ['user:email'] // Request email access
             },
             async (accessToken, refreshToken, profile, done) => {
-                console.log(profile);
+                // console.log(profile);
 
                 const session = await mongoose.startSession();
                 session.startTransaction();
@@ -109,7 +110,7 @@ export default function configPassport(passport) {
                         profileImage: profile.photos && profile.photos[0] ? profile.photos[0].value : null
                     };
 
-                    console.log("GitHub profile data:", profileData);
+                    // console.log("GitHub profile data:", profileData);
 
                     // Find user by GitHub ID or email
                     let user = null;
@@ -138,7 +139,7 @@ export default function configPassport(passport) {
                             provider: 'github'
                         }], { session });
 
-                        console.log("GitHub Account Created");
+                        // console.log("GitHub Account Created");
 
                         user = newUsers[0];
 
@@ -198,7 +199,7 @@ export default function configPassport(passport) {
     //             includeEmail: true  // Request email if available
     //         },
     //         async (token, tokenSecret, profile, done) => {
-    //             console.log("Twitter profile:", profile);
+    //             // console.log("Twitter profile:", profile);
 
     //             const session = await mongoose.startSession();
     //             session.startTransaction();
@@ -214,7 +215,7 @@ export default function configPassport(passport) {
     //                     profileImage: profile.photos && profile.photos[0] ? profile.photos[0].value : null
     //                 };
 
-    //                 console.log("Twitter profile data:", profileData);
+    //                 // console.log("Twitter profile data:", profileData);
 
     //                 // Find user by Twitter ID or email
     //                 let user = null;
@@ -243,7 +244,7 @@ export default function configPassport(passport) {
     //                         provider: 'twitter'
     //                     }], { session });
 
-    //                     console.log("Twitter Account Created");
+    //                     // console.log("Twitter Account Created");
 
     //                     user = newUsers[0];
 
@@ -295,16 +296,16 @@ export default function configPassport(passport) {
     // );
 
     passport.serializeUser((user, done) => {
-        console.log("serializeUser\n", user);
+        // console.log("serializeUser\n", user);
         done(null, user._id);
     });
 
     passport.deserializeUser(async (id, done) => {
         try {
-            console.log("deserializeUser\n", id);
+            // console.log("deserializeUser\n", id);
             const user = await User.findById(id);
 
-            console.log(user);
+            // console.log(user);
             done(null, user);
         } catch (err) {
             done(err, null);

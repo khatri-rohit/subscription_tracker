@@ -152,6 +152,9 @@ export const signOut = async (_, res, next) => {
             secure: true,
             sameSite: 'none'
         });
+        res.clearCookie('connect.sid', {
+            httpOnly: true,
+        });
         console.log("Cookies Cleared");
         res.status(200).json({
             success: true,

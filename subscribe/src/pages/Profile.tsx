@@ -100,7 +100,6 @@ const Profile = () => {
         fileInputRef.current?.click();
     };
 
-    // Handle file selection
     const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file) {
@@ -109,13 +108,14 @@ const Profile = () => {
                 const imageUrl = URL.createObjectURL(file);
                 await updateUserAvatar({ _id: user?._id as string, profileImage: file });
                 setProfileImage(imageUrl);
-                setStatus('success')
+                setStatus('success');
+                toast.success("Profile Picture Updated 🎊");
 
             } catch (error) {
-                setStatus('error')
                 console.log(error);
+                setStatus('error');
+                toast.error("Something Went Wrong 🎊");
             }
-
         }
     };
 

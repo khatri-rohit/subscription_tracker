@@ -96,9 +96,9 @@ const SignIn = () => {
     }
   }
 
-  const handleXLogin = async () => {
-    window.location.href = "http://localhost:5500/auth/twitter";
-  }
+  // const handleXLogin = async () => {
+  //   window.location.href = "http://localhost:5500/auth/twitter";
+  // }
 
   const handleGoogleLogin = async () => {
     console.log("Call Google");
@@ -133,7 +133,7 @@ const SignIn = () => {
                     <FormLabel className="text-white">
                       Email
                     </FormLabel>
-                    <div className="flex items-center border px-3 rounded-lg">
+                    <div className="flex items-center border px-3 rounded-lg border-white">
                       <MailIcon color="white" />
                       <Input className="border-none shadow-none text-black text-sm md:text-lg placeholder:text-gray-200"
                         placeholder="Email" {...field} />
@@ -150,7 +150,7 @@ const SignIn = () => {
                     <FormLabel className="text-white">
                       Password
                     </FormLabel>
-                    <div className="flex items-center border px-3 rounded-lg">
+                    <div className="flex items-center border px-3 rounded-lg border-white">
                       <EyeIcon color="white" />
                       <Input className="border-none shadow-none text-black text-sm md:text-lg placeholder:text-gray-200"
                         type="password" placeholder="********" {...field} />
@@ -172,15 +172,19 @@ const SignIn = () => {
               Or Continue With
             </p>
             <div className="icons flex items-center justify-center gap-x-7 mt-4">
-              <Button className="bg-white px-2 rounded-lg" onClick={handleGoogleLogin}>
-                <img src="/img/icons/google-svgrepo-com.svg" alt="google" className="w-10 h-10 cursor-pointer" />
+              <Button className="bg-white px-2 rounded-lg flex-1 cursor-pointer"
+                onClick={handleGoogleLogin}>
+                <img src="/img/icons/google-svgrepo-com.svg" alt="google"
+                  className="w-10 h-10 p-1" /> Login with Google
               </Button>
-              <Button className="bg-white px-2 rounded-lg" onClick={handleGithubLogin}>
-                <img src="/img/icons/github-svgrepo-com.svg" alt="github" className="w-10 h-10 cursor-pointer" />
+              <Button className="bg-white px-2 rounded-lg flex-1 cursor-pointer"
+                onClick={handleGithubLogin}>
+                <img src="/img/icons/github-svgrepo-com.svg" alt="github"
+                  className="w-10 h-10 p-1" /> Login with GitHub
               </Button>
-              <Button className="bg-white px-2 rounded-lg" onClick={handleXLogin}>
+              {/* <Button className="bg-white px-2 rounded-lg" onClick={handleXLogin}>
                 <img src="/img/icons/twitter-svgrepo-com.svg" alt="twitter" className="w-10 h-10 cursor-pointer" />
-              </Button>
+              </Button> */}
             </div>
           </div>
 

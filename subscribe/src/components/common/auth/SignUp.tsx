@@ -93,9 +93,9 @@ const SignUp = () => {
         }
     }
 
-    const handleXLogin = async () => {
-        window.location.href = "http://localhost:5500/auth/twitter";
-    }
+    // const handleXLogin = async () => {
+    //     window.location.href = "http://localhost:5500/auth/twitter";
+    // }
 
     const handleGithubLogin = async () => {
         console.log("Call Google");
@@ -262,15 +262,18 @@ const SignUp = () => {
                             Or Continue With
                         </p>
                         <div className="icons flex justify-center items-center gap-x-7 mt-4">
-                            <Button onClick={handleGoogleAuth} className="bg-white md:p-2 rounded-lg">
-                                <img src="/img/icons/google-svgrepo-com.svg" alt="google" className="w-10 h-10 p-1 cursor-pointer" />
+                            <Button className="bg-white px-2 rounded-lg flex-1  cursor-pointer"
+                                onClick={handleGoogleAuth}>
+                                <img src="/img/icons/google-svgrepo-com.svg" alt="google"
+                                    className="w-10 h-10 p-1" /> Login with Google
                             </Button>
-                            <Button className="bg-white md:p-2 rounded-lg" onClick={handleGithubLogin}>
-                                <img src="/img/icons/github-svgrepo-com.svg" alt="github" className="w-10 h-10 p-1 cursor-pointer" />
+                            <Button className="bg-white px-2 rounded-lg flex-1  cursor-pointer" onClick={handleGithubLogin}>
+                                <img src="/img/icons/github-svgrepo-com.svg" alt="github"
+                                    className="w-10 h-10 p-1" /> Login with GitHub
                             </Button>
-                            <Button className="bg-white md:p-2 px-2 py-2 rounded-lg" onClick={handleXLogin}>
+                            {/* <Button className="bg-white md:p-2 px-2 py-2 rounded-lg" onClick={handleXLogin}>
                                 <img src="/img/icons/twitter-svgrepo-com.svg" alt="twitter" className="w-10 h-10 p-1 cursor-pointer" />
-                            </Button>
+                            </Button> */}
                         </div>
                     </div>
                     <p className="text-sm lg:text-[1em] text-center pt-10 pb-5 md:pb-4">Already have an account? <span className="hover:underline text-gray-800 cursor-pointer" onClick={() => navigate('/signin')}>Login</span></p>

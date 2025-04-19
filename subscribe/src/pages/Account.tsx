@@ -33,9 +33,7 @@ const formSchema = z.object({
 const Account = () => {
 
     const { user, apiUrl } = useAuth();
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [enable, setEnable] = useState(user?.password?.includes("Thrid"))
-
+    const enable = user?.password?.includes("Thrid");
     const navigate = useNavigate()
 
     const dispatch = useAppDispatch()

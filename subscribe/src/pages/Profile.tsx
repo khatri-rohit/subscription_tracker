@@ -26,9 +26,7 @@ const profileFormSchema = z.object({
 
 const Profile = () => {
     const { user, imageUrl } = useAuth();
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const [enable, setEnable] = useState(user?.password?.includes("Thrid"))
-    console.log(enable);
+    const enable = user?.password?.includes("Thrid");
 
     const [saveBtn, setSaveBtn] = useState<boolean>(true);
     const [profileImage, setProfileImage] = useState<string>(() => {

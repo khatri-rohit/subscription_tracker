@@ -1,5 +1,5 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from "react"
-import {  useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { X, List, Rows4, Search, Sofa, Volleyball, Tv2, Circle } from "lucide-react"
 import { motion } from 'motion/react'
 
@@ -60,11 +60,12 @@ const Subscriptions = () => {
 
   const navigate = useNavigate();
   const { user } = useAuth()
-  // console.log(user);
 
   const [edit, setEdit] = useState<boolean>(false);
   const [del, setDelete] = useState<boolean>(false);
   const [id, setId] = useState<string | null>(null);
+
+  const [stat, setStat] = useState<'active' | 'expired' | ''>("");
 
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [itemsPerPage, setItemsPerPage] = useState<number>(10);
@@ -84,7 +85,6 @@ const Subscriptions = () => {
     refetchOnMountOrArgChange: true,
   });
 
-  // Pagination handlers
   const handleNextPage = () => {
     if (paginationData && currentPage < paginationData.pages) {
       setCurrentPage(prev => prev + 1);
@@ -121,23 +121,20 @@ const Subscriptions = () => {
     setId(id);
     setEdit(true);
   }
+
   const handleCancel = (id: string) => {
     setId(id);
     setDelete(true);
   }
-  const handleRenew = (id: string) => {
-    console.log(id);
-  }
 
   function onSubmit(e: FormEvent) {
-    e.preventDefault()
+    e.preventDefault();
     if (results.length > 0) {
       setAllSubscriptions(results);
     } else {
       const subs = allSubscriptions.filter((m) => m.name.toLowerCase().includes(query));
-      setAllSubscriptions(subs)
+      setAllSubscriptions(subs);
     }
-    // console.log(results);
   }
 
   const handleChangeTabs = (category: Category) => {
@@ -174,6 +171,16 @@ const Subscriptions = () => {
     } else {
       setSearch(value)
     }
+  }
+
+  const handleChangeStatus = (newStatus: 'active' | 'expired') => {
+    if (newStatus === stat) {
+      setStat('');
+      setAllSubscriptions((currentData?.subscriptions as Subscription[]))
+      return
+    }
+    setAllSubscriptions(currentData?.subscriptions.filter((subscription) => subscription.status === newStatus) as Subscription[]);
+    setStat(newStatus);
   }
 
   useEffect(() => {
@@ -231,32 +238,30 @@ const Subscriptions = () => {
           </div>
         </div>
 
-        <div className="flex items-center justify-start gap-1 p-1 gap-x-14 mt-3">
-          {
-            tabs.map((tab, _) => (
-              <p key={_} className={`${tab.category === status ? tab.active : tab.idle} dark:text-gray-300`}
-                onClick={() => handleChangeTabs(tab.category)}>
-                {tab.icon}{tab.name}
-              </p>
-            ))
-          }
+        <div className="flex items-center justify-between mt-3">
+          <div className="flex items-center justify-start gap-1 gap-x-14 p-1 flex-1">
+            {
+              tabs.map((tab, _) => (
+                <p key={_} className={`${tab.category === status ? tab.active : tab.idle} dark:text-gray-300`}
+                  onClick={() => handleChangeTabs(tab.category)}>
+                  {tab.icon}{tab.name}
+                </p>
+              ))
+            }
+          </div>
+
+          <div className="flex items-center justify-center gap-x-4">
+            <span className={`bg-gray-100 font-light px-2 rounded-md cursor-pointer ${stat === 'active' ? "font-semibold" : "font-light"} dark:bg-green-600 dark:text-white`}
+              onClick={() => handleChangeStatus("active")}>
+              Active
+            </span>
+            <span className={`bg-red-100 text-red-500 px-2 rounded-md cursor-pointer ${stat === 'expired' ? "font-semibold" : "font-light"} dark:bg-red-600 dark:text-white`}
+              onClick={() => handleChangeStatus("expired")}>
+              Expired
+            </span>
+          </div>
         </div>
 
-        {/* <Button
-            onClick={handlePrevPage}
-            disabled={currentPage <= 1 || isLoading || isFetching}
-            className={`absolute top-1/2 transform -translate-y-1/2 ${currentPage <= 1 ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`}
-          >
-            <ChevronsLeft />
-          </Button> */}
-
-        {/* <Button
-            onClick={handleNextPage}
-            disabled={!paginationData || currentPage >= paginationData.pages || isLoading || isFetching}
-            className={`absolute top-1/2 right-0 transform -translate-y-1/2 ${!paginationData || currentPage >= paginationData.pages ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`}
-          >
-            <ChevronsRight />
-          </Button> */}
         <div className="w-full mx-auto relative flex flex-col justify-between space-y-1 min-h-[600px]">
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 xl:gap-6 lg:gap-4 md:gap-3 mt-10 mx-10">
             {isLoading ? (
@@ -269,7 +274,6 @@ const Subscriptions = () => {
                 subscription={subscription}
                 onEdit={(id) => handleEdit(id)}
                 onCancel={(id) => handleCancel(id)}
-                onRenew={(id) => handleRenew(id)}
               />
             )) : (
               <p className="text-2xl min-h-screen w-full flex justify-center items-center md:col-span-3 lg:col-span-5 xl:col-span-5 dark:text-slate-100">

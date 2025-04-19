@@ -16,7 +16,8 @@ type User = {
     email: string
     createdAt: string,
     profileImage: string,
-    notify: boolean
+    notify: boolean;
+    password?: string;
 }
 
 type AuthContextType = {
@@ -63,7 +64,6 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
 
     return (
         <AuthContext.Provider value={{ clientId, apiUrl, user, imageUrl, getLoggedInUser }}>
-            {/* // <AuthContext.Provider value={{ apiUrl, user, imageUrl }}> */}
             {children}
         </AuthContext.Provider>
     )

@@ -1,5 +1,6 @@
 import { BellRing, Calculator, ChartNoAxesColumn, Ticket } from "lucide-react";
 import Feature from "./Feature";
+import { motion } from "framer-motion";
 
 const featureDetails = [
     {
@@ -25,25 +26,50 @@ const featureDetails = [
     },
 ];
 
+const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.2,
+        },
+    },
+};
+
 const Features = () => {
     return (
-        <section className="p-4 py-32 shadow bg-white dark:bg-gray-900 transition-colors duration-500">
-            <h4 className="text-5xl text-center font-[700] pb-24 text-gray-900 dark:text-white">
+        <section className="px-4 py-16 md:py-32 shadow bg-white dark:bg-gray-900 transition-colors duration-500">
+            <motion.h4
+                initial={{ opacity: 0, y: -20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                className="text-3xl md:text-4xl lg:text-5xl text-center font-[700] pb-12 md:pb-24 text-gray-900 dark:text-white"
+            >
                 Features
-            </h4>
-            <div className="md:grid grid-cols-3 gap-24 w-fit m-auto">
-                {
-                    featureDetails.map((feature, index) => (
+            </motion.h4>
+            <motion.div
+                variants={containerVariants}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-100px" }}
+                className="md:grid md:grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12 lg:gap-24 max-w-7xl mx-auto px-4">
+                {featureDetails.map((feature, index) => (
+                    <motion.div
+                        key={index}
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: index * 0.1 }}
+                        className={feature.gridProperty}>
+
                         <Feature
-                            key={index}
                             heading={feature.heading}
                             description={feature.description}
                             icon={feature.icon}
                             gridProperty={feature.gridProperty}
                         />
-                    ))
-                }
-            </div>
+                    </motion.div>
+                ))}
+            </motion.div>
         </section>
     );
 };

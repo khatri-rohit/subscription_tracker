@@ -1,7 +1,8 @@
-import { formatDate, formatCurrency } from '@/lib/utils';
-import { AlertCircle, Edit2, Trash2, RefreshCw } from 'lucide-react';
-import { Button } from '../ui/button';
 import { motion } from 'motion/react'
+import { AlertCircle, Edit2, Trash2 } from 'lucide-react';
+
+import { formatDate, formatCurrency } from '@/lib/utils';
+import RenewalDrop from '../util/RenewalDrop';
 
 interface SubscriptionCardProps {
     subscription: {
@@ -18,10 +19,9 @@ interface SubscriptionCardProps {
     };
     onEdit: (id: string) => void;
     onCancel: (id: string) => void;
-    onRenew: (id: string) => void;
 }
 
-const SubscriptionCard = ({ subscription, onEdit, onCancel, onRenew }: SubscriptionCardProps) => {
+const SubscriptionCard = ({ subscription, onEdit, onCancel }: SubscriptionCardProps) => {
     const isExpired = subscription.status === 'expired';
     const isCancelled = subscription.status === 'cancelled';
 
@@ -68,11 +68,14 @@ const SubscriptionCard = ({ subscription, onEdit, onCancel, onRenew }: Subscript
                             <Edit2 size={16} />
                         </motion.button>
                         {isExpired ? (
-                            <Button
-                                className="p-2 rounded-full bg-green-50 hover:bg-green-100 text-green-600 cursor-pointer dark:bg-green-600 dark:hover:bg-green-500 dark:text-green-200"
-                                onClick={() => onRenew(subscription._id)}>
-                                <RefreshCw size={16} />
-                            </Button>
+                            <>
+                                <RenewalDrop subscription={subscription} />
+                                <motion.button whileTap={{ scale: 0.8 }}
+                                    className="p-2 rounded-full bg-red-50 hover:bg-red-100 text-red-600 cursor-pointer dark:bg-red-600 dark:hover:bg-red-500 dark:text-red-200"
+                                    onClick={() => onCancel(subscription._id)}>
+                                    <Trash2 size={16} />
+                                </motion.button>
+                            </>
                         ) : (
                             <motion.button whileTap={{ scale: 0.8 }}
                                 className="p-2 rounded-full bg-red-50 hover:bg-red-100 text-red-600 cursor-pointer dark:bg-red-600 dark:hover:bg-red-500 dark:text-red-200"

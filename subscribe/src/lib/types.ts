@@ -31,6 +31,7 @@ export type UpdateSubscriptions = {
     category: string;
     startDate: Date;
     paymentMethod: string;
+    status?: 'active' | 'cancelled' | 'expired';
 }
 
 export type status = 'success' | 'loading' | 'error'

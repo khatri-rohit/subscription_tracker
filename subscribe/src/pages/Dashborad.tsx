@@ -48,7 +48,6 @@ const Dashborad = () => {
 
   const { user } = useAuth()
   const dispatch = useAppDispatch()
-  // console.log(user);
 
   const [filterSubscirpion, setFilterSubscription] = useState<Subscription[]>([]);
   const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);

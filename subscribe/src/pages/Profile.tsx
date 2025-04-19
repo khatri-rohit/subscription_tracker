@@ -26,11 +26,16 @@ const profileFormSchema = z.object({
 
 const Profile = () => {
     const { user, imageUrl } = useAuth();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [enable, setEnable] = useState(user?.password?.includes("Thrid"))
+    console.log(enable);
 
     const [saveBtn, setSaveBtn] = useState<boolean>(true);
     const [profileImage, setProfileImage] = useState<string>(() => {
         const imgpath = (user?.profileImage as string);
         if (imgpath.length > 0) {
+            if (user?.profileImage.includes("google"))
+                return imgpath;
             return `${imageUrl}/${imgpath}`
         } else {
             return '/img/blank-avatar.webp'
@@ -224,6 +229,7 @@ const Profile = () => {
                                         <Input
                                             type="email"
                                             {...field}
+                                            disabled={enable}
                                             className="mt-1 block w-full px-4 py-2 border border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                                         />
                                     </FormControl>

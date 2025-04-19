@@ -2,6 +2,10 @@ import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast, } from "sonner"
+import { useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { Circle } from 'lucide-react';
 
 import {
     Form,
@@ -16,12 +20,8 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 
 import { useDeleteUserMutation, useUpdatePassowrdMutation } from '@/services/users';
-import { useState } from 'react';
 import { status } from '@/lib/types';
-import { Circle } from 'lucide-react';
 import DeleteAccountConfirmation from '@/components/util/DeleteAccount';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { isAuthenticated } from '@/features/slice';
 import { useAppDispatch } from '@/app/store';
 
@@ -32,11 +32,14 @@ const formSchema = z.object({
 
 const Account = () => {
 
-    const { user,apiUrl } = useAuth();
+    const { user, apiUrl } = useAuth();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [enable, setEnable] = useState(user?.password?.includes("Thrid"))
+
     const navigate = useNavigate()
-    
+
     const dispatch = useAppDispatch()
-    
+
     const [status, setStatus] = useState<status>("success")
     const [show, setShow] = useState(false);
     const [load, setLoad] = useState(false);
@@ -112,8 +115,10 @@ const Account = () => {
                 <h1 className="text-3xl font-bold text-gray-800 mb-8 dark:text-gray-200">
                     Account Settings
                 </h1>
-                <div className="mb-8">
-                    <h2 className="text-xl font-semibold text-gray-700 mb-4 dark:text-gray-300">Security</h2>
+                {!enable && (<div className="mb-8">
+                    <h2 className="text-xl font-semibold text-gray-700 mb-4 dark:text-gray-300">
+                        Security
+                    </h2>
 
                     <Form {...form}>
                         <form className="space-y-4" onSubmit={form.handleSubmit(confirmSubmit)}>
@@ -131,6 +136,7 @@ const Account = () => {
                                                 type="password"
                                                 placeholder="Current password"
                                                 className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                                disabled={enable}
                                                 {...field}
                                             />
                                         </FormControl>
@@ -152,6 +158,7 @@ const Account = () => {
                                                 type="password"
                                                 placeholder="New password"
                                                 className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                                disabled={enable}
                                                 {...field}
                                             />
                                         </FormControl>
@@ -162,17 +169,18 @@ const Account = () => {
                             <div className="flex justify-end space-x-4">
                                 <Button
                                     className="px-6 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors cursor-pointer dark:bg-gray-600 dark:text-gray-200 dark:hover:bg-gray-500"
-                                    onClick={() => form.reset()}>
+                                    onClick={() => form.reset()}
+                                    disabled={enable}>
                                     Cancel
                                 </Button>
-                                <Button disabled={status === 'loading'}
+                                <Button disabled={enable || status === 'loading'}
                                     className="px-6 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors cursor-pointer">
                                     {status === 'loading' ? <Circle className='animate-spin' size={50} /> : "Save Changes"}
                                 </Button>
                             </div>
                         </form>
                     </Form>
-                </div>
+                </div>)}
 
                 <div className="my-8">
                     <h2 className="text-xl font-semibold text-gray-700 mb-4 dark:text-gray-300">

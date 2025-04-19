@@ -26,7 +26,8 @@ function ProfileBtn() {
     const navigation = useNavigate();
     const { setTheme } = useTheme()
     const { user, imageUrl } = useAuth()
-    const img = user?.profileImage ? (imageUrl + "/" + user?.profileImage) : '/img/blank-avatar.webp';
+    const img = user?.profileImage ? user.profileImage.includes("google") ? user?.profileImage : (imageUrl + "/" + user?.profileImage) : '/img/blank-avatar.webp';
+    console.log(img);
 
     const dispatch = useAppDispatch();
     const { apiUrl } = useAuth()

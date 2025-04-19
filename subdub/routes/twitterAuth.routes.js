@@ -2,23 +2,22 @@ import express from 'express';
 import passport from 'passport';
 import { setAuthCookie } from '../utilits/auth-utils.js';
 import jwt from 'jsonwebtoken';
-import { JWT_SECRET, JWT_EXPRIES_IN, CLIENT_URL } from '../config/env.js';
+import { JWT_SECRET, JWT_EXPRIES_IN } from '../config/env.js';
 
 const router = express.Router();
 
-// GitHub authentication routes
-// @desc    Auth with GitHub
-// @route   GET /auth/github
+// @desc    Auth with Twitter
+// @route   GET /auth/twitter
 router.get(
-    '/github',
-    passport.authenticate('github', { scope: ['user:email'] })
+    '/x',
+    passport.authenticate('twitter')
 );
 
-// @desc    GitHub auth callback
-// @route   GET /auth/github/callback
+// @desc    Twitter auth callback
+// @route   GET /auth/twitter/callback
 router.get(
-    '/github/callback',
-    passport.authenticate('github', { failureRedirect: '/' }),
+    '/twitter/callback',
+    passport.authenticate('twitter', { failureRedirect: '/' }),
     (req, res) => {
         // Get user from passport auth
         const user = req.user;
@@ -31,10 +30,10 @@ router.get(
         setAuthCookie(res, token);
 
         // Log the successful authentication
-        console.log("GitHub Auth successful, JWT cookie set");
+        console.log("Twitter Auth successful, JWT cookie set");
 
         // Successful authentication - redirect to frontend
-        res.redirect(CLIENT_URL + '/dashboard');
+        res.redirect("http://localhost:5173" + '/dashboard');
     }
 );
 

@@ -23,6 +23,7 @@ const authorize = async (req, res, next) => {
 
         try {
             // Decrypt the token
+            // eslint-disable-next-line no-undef
             const decryptedToken = privateDecrypt(publicKey, Buffer.from(token, 'base64')).toString('utf8');
 
             // Verify the JWT token

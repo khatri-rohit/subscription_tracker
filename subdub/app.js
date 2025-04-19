@@ -2,7 +2,7 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 
-import { NODE_ENV, PORT } from './config/env.js';
+import { NODE_ENV, PORT, SESSION_SECRET } from './config/env.js';
 import passport from 'passport';
 
 import userRouter from './routes/user.routes.js';
@@ -13,7 +13,6 @@ import workflowRouter from './routes/workflow.routes.js';
 import connectToDB from './database/mongodb.js';
 
 import errorMiddleware from './middleware/error.middleware.js';
-// eslint-disable-next-line no-unused-vars
 import arcjetMiddleware from './middleware/arcjet.middleware.js';
 import session from 'express-session';
 
@@ -22,15 +21,13 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import googleAuth from './routes/googleAuth.routes.js';
 import githubAuth from './routes/githubAuth.routes.js';
-
+import twitterAuth from './routes/twitterAuth.routes.js';
 
 const app = express();
 
-// Get current file path (ES module equivalent of __dirname)
 const __filename = fileURLToPath(import.meta.url);
 // eslint-disable-next-line no-unused-vars
 const __dirname = dirname(__filename);
-
 
 app.use("/uploads", express.static('uploads'))
 app.use(express.json());
@@ -46,7 +43,7 @@ app.use(cors({
 // Sessions
 app.use(
     session({
-        secret: 'secret',
+        secret: SESSION_SECRET,
         resave: false,
         saveUninitialized: false,
         cookie: {
@@ -64,16 +61,21 @@ configPassport(passport); // Configure passport AFTER initializing it
 // OAuth Routes
 app.use('/auth', googleAuth);
 app.use('/auth', githubAuth);
+app.use('/auth', twitterAuth); // Add Twitter auth routes
 
-// API Routes
 app.use('/api/v1/auth', authRoute);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/subscriptions', subcriptionRouter);
 app.use('/api/v1/workflows', workflowRouter);
+
 app.use(errorMiddleware);
 
 app.get('/', (req, res) => {
-    res.send("Welcome to Subscription Tracker API");
+    res.send(`<div style="background:#213448; height:100vh; margin:-8px; overflow-y:hidden; color:white;"> 
+                <h1 style="text-align:center; font-family:sans-serif; font-size:5rem;">
+                    Subscription Tracker Backend API
+                </h1>
+            </div>`);
 });
 
 app.listen(PORT, async () => {

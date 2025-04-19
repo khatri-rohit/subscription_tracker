@@ -2,7 +2,7 @@ import express from 'express';
 import passport from 'passport';
 import { setAuthCookie } from '../utilits/auth-utils.js';
 import jwt from 'jsonwebtoken';
-import { JWT_SECRET, JWT_EXPRIES_IN } from '../config/env.js';
+import { JWT_SECRET, JWT_EXPRIES_IN, CLIENT_URL } from '../config/env.js';
 
 const router = express.Router();
 
@@ -33,7 +33,7 @@ router.get(
         console.log("Google Auth successful, JWT cookie set");
 
         // Successful authentication - redirect to frontend
-        res.redirect("http://localhost:5173" + '/dashboard');
+        res.redirect(CLIENT_URL + '/dashboard');
     }
 );
 
@@ -64,7 +64,7 @@ router.get('/logout', (req, res, next) => {
             secure: true,
             sameSite: 'none'
         });
-        res.redirect("http://localhost:5173");
+        res.redirect(CLIENT_URL);
     });
 });
 

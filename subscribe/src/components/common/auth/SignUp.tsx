@@ -40,7 +40,7 @@ const SignUp = () => {
 
     const [status, setStatus] = useState<Status>('success');
 
-    const { apiUrl, serverUri, getLoggedInUser } = useAuth();
+    const { apiUrl, serverUri } = useAuth();
     const dispatch = useAppDispatch()
     const isAuth = useAppSelector((state) => state.rootReducers.isAuth)
 

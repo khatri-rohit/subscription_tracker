@@ -139,10 +139,17 @@ export const deleteUser = async (req, res, next) => {
             error.statusCode = 404;
             throw error;
         }
-
+        res.clearCookie('token', {
+            httpOnly: false,
+            secure: true,
+            sameSite: 'none'
+        });
+        res.clearCookie('connect.sid', {
+            httpOnly: true,
+        });
         await User.findByIdAndDelete(req.params.id).select('-password');
         await Subscription.deleteMany({ user: user._id })
-        
+
         res.status(200).json({
             success: true,
             // data: user

@@ -63,7 +63,6 @@ const subscriptionSchema = new mongoose.Schema({
     }
 }, { timestamps: true });
 
-// Auto-Calculate Renewal Date
 subscriptionSchema.pre('save', function (next) {
     if (!this.renewalDate) {
         const renewalPeriod = {
@@ -77,7 +76,6 @@ subscriptionSchema.pre('save', function (next) {
         this.renewalDate.setDate(this.renewalDate.getDate() + renewalPeriod[this.frequency]);
     };
 
-    // Auto-Update the status if renewal date has passed
     if (this.renewalDate <= new Date()) {
         this.status = 'expired';
     }
@@ -85,12 +83,10 @@ subscriptionSchema.pre('save', function (next) {
     next();
 });
 
-// Pre-update middleware - works for findOneAndUpdate, updateOne, updateMany
 subscriptionSchema.pre(['updateOne', 'updateMany', 'findOneAndUpdate'], async function(next) {
     try {
         const update = this.getUpdate();
         
-        // If frequency is being updated, recalculate renewal date
         if (update.frequency) {
             const renewalPeriod = {
                 daily: 1,
@@ -105,14 +101,12 @@ subscriptionSchema.pre(['updateOne', 'updateMany', 'findOneAndUpdate'], async fu
             const newRenewalDate = new Date(startDate);
             newRenewalDate.setDate(newRenewalDate.getDate() + renewalPeriod[update.frequency]);
             
-            // Add renewalDate to the update object
             this.setUpdate({
                 ...update,
                 renewalDate: newRenewalDate
             });
         }
 
-        // Check if renewal date needs status update
         if (update.renewalDate && new Date(update.renewalDate) <= new Date()) {
             this.setUpdate({
                 ...update,

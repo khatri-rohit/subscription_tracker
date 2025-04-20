@@ -110,7 +110,7 @@ export default function configPassport(passport) {
                         profileImage: profile.photos && profile.photos[0] ? profile.photos[0].value : null
                     };
 
-                    // console.log("GitHub profile data:", profileData);
+                    console.log("GitHub profile data:", profile);
 
                     // Find user by GitHub ID or email
                     let user = null;

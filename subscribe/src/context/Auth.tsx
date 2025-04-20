@@ -24,6 +24,7 @@ type AuthContextType = {
     apiUrl: string,
     imageUrl: string,
     clientId: string,
+    serverUri: string,
     user: User | null,
     getLoggedInUser: () => void
 }
@@ -36,6 +37,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     const apiUrl = import.meta.env.VITE_BACKEND_URL;
     const imageUrl = import.meta.env.VITE_IMAGE_URL;
     const clientId = import.meta.env.VITE_GOOGLE_CLIENT;
+    const serverUri = import.meta.env.VITE_SERVER_URI;
 
     const dispatch = useAppDispatch();
 
@@ -63,7 +65,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     }, [])
 
     return (
-        <AuthContext.Provider value={{ clientId, apiUrl, user, imageUrl, getLoggedInUser }}>
+        <AuthContext.Provider value={{ clientId, serverUri, apiUrl, user, imageUrl, getLoggedInUser }}>
             {children}
         </AuthContext.Provider>
     )

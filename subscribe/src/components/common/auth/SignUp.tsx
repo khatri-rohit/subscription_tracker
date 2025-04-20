@@ -39,7 +39,7 @@ const SignUp = () => {
 
     const [status, setStatus] = useState<Status>('success');
 
-    const { apiUrl, imageUrl, getLoggedInUser } = useAuth();
+    const { apiUrl, serverUri, getLoggedInUser } = useAuth();
     const dispatch = useAppDispatch()
     const isAuth = useAppSelector((state) => state.rootReducers.isAuth)
 
@@ -98,12 +98,12 @@ const SignUp = () => {
     // }
 
     const handleGithubLogin = async () => {
-        console.log("Call Google");
-        window.location.href = "http://localhost:5500/auth/github";
+        window.location.href = `${serverUri}/auth/github`;
+        getLoggedInUser()
     };
 
     const handleGoogleAuth = async () => {
-        window.location.href = `${imageUrl}/auth/google`;
+        window.location.href = `${serverUri}/auth/google`;
         getLoggedInUser()
     };
 

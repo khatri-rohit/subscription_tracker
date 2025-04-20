@@ -40,7 +40,7 @@ const SignIn = () => {
   const isAuth = useAppSelector((state) => state.rootReducers.isAuth)
 
   const dispatch = useAppDispatch()
-  const { apiUrl } = useAuth()
+  const { apiUrl, serverUri } = useAuth()
 
   const form = useForm<FormValues>({
     defaultValues: {
@@ -103,13 +103,11 @@ const SignIn = () => {
   // }
 
   const handleGoogleLogin = async () => {
-    console.log("Call Google");
-    window.location.href = "http://localhost:5500/auth/google";
+    window.location.href = `${serverUri}/auth/google`;
   };
 
   const handleGithubLogin = async () => {
-    console.log("Call Google");
-    window.location.href = "http://localhost:5500/auth/github";
+    window.location.href = `${serverUri}/auth/github`;
   };
 
   // Animation variants

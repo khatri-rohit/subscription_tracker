@@ -32,7 +32,7 @@ const Profile = () => {
     const [profileImage, setProfileImage] = useState<string>(() => {
         const imgpath = (user?.profileImage as string);
         if (imgpath.length > 0) {
-            if (user?.profileImage.includes("google"))
+            if (user?.profileImage.includes("google") || user?.profileImage.includes("github"))
                 return imgpath;
             return `${imageUrl}/${imgpath}`
         } else {

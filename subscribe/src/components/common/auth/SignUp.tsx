@@ -99,12 +99,12 @@ const SignUp = () => {
 
     const handleGithubLogin = async () => {
         window.location.href = `${serverUri}/auth/github`;
-        getLoggedInUser()
+        // getLoggedInUser()
     };
 
     const handleGoogleAuth = async () => {
         window.location.href = `${serverUri}/auth/google`;
-        getLoggedInUser()
+        // getLoggedInUser()
     };
 
     const containerVariants = {

@@ -37,7 +37,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     const apiUrl = import.meta.env.VITE_BACKEND_URL;
     const imageUrl = import.meta.env.VITE_IMAGE_URL;
     const clientId = import.meta.env.VITE_GOOGLE_CLIENT;
-    const serverUri = import.meta.env.VITE_SERVER_URI;
+    const serverUri = import.meta.env.VITE_SERVER_URI || 'http://localhost:5500';
 
     const dispatch = useAppDispatch();
 

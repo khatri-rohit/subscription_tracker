@@ -139,28 +139,38 @@ const Subscriptions = () => {
 
   const handleChangeTabs = (category: Category) => {
     setSearch("");
-    setAllSubscriptions((currentData?.subscriptions as Subscription[]))
-    if (length > 0) {
-      if (status === category) {
-        setStatus("All")
-        setLength(1)
-      } else {
-        setStatus(category);
-        if (category !== 'All') {
-          const newSubsLen = allSubscriptions.filter((subscription) => subscription.category === category);
-          if (newSubsLen.length > 0)
-            setLength(newSubsLen.length);
-        } else {
-          setLength(1);
-          setAllSubscriptions((currentData?.subscriptions as Subscription[]))
+    setStat("")
+    if (status === category) {
+      setStatus("All")
+      setAllSubscriptions((data?.subscriptions as Subscription[]))
+      setPaginationData(data?.pagination as Pagination)
+      setLength((data?.subscriptions?.length as number));
+    } else {
+      setStatus(category);
+      if (category !== 'All') {
+        const newSubsLen = data?.subscriptions.filter((subscription) => subscription.category === category);
+        console.log(newSubsLen);
+        setAllSubscriptions(newSubsLen as Subscription[])
+        const pagination: Pagination = {
+          total: newSubsLen?.length as number,
+          page: 1,
+          limit: itemsPerPage,
+          pages: Math.ceil((newSubsLen?.length as number) / itemsPerPage)
         }
+        console.log(pagination);
+        setPaginationData(pagination)
+        // // if (newSubsLen.length > 0)
+        setLength(newSubsLen?.length as number);
+      } else {
+        setLength((data?.subscriptions?.length as number));
+        setAllSubscriptions((data?.subscriptions as Subscription[]))
       }
     }
   }
 
   const handleX = () => {
     setSearch("")
-    setAllSubscriptions((currentData?.subscriptions as Subscription[]))
+    setAllSubscriptions((data?.subscriptions as Subscription[]))
   }
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {

@@ -1,4 +1,10 @@
+import { useState } from "react"
+import { NavLink, useNavigate } from "react-router-dom"
+import axios, { AxiosError } from "axios"
 import { useForm } from "react-hook-form"
+import { Circle, EyeIcon, MailIcon, X } from "lucide-react"
+import { motion } from "motion/react"
+
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -9,11 +15,7 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 
-import { Circle, EyeIcon, MailIcon, X } from "lucide-react"
-import { NavLink, useNavigate } from "react-router-dom"
 import { useAuth } from "@/context/Auth"
-import { useState } from "react"
-import axios, { AxiosError } from "axios"
 import { useAppDispatch, useAppSelector } from "@/app/store"
 import { isAuthenticated } from "@/features/slice"
 // import { CodeResponse, useGoogleLogin } from "@react-oauth/google"
@@ -110,98 +112,197 @@ const SignIn = () => {
     window.location.href = "http://localhost:5500/auth/github";
   };
 
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { duration: 0.5, when: "beforeChildren", staggerChildren: 0.2 }
+    }
+  }
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: { y: 0, opacity: 1, transition: { duration: 0.5 } }
+  }
+
   return (
-    <div className="h-screen flex justify-center items-center">
-      <div className="absolute right-10 top-5 cursor-pointer"
-        onClick={() => navigate('/')}>
+    <motion.div
+      initial="hidden"
+      animate="visible"
+      variants={containerVariants}
+      className="min-h-screen flex justify-center items-center p-4"
+    >
+      <motion.div
+        initial={{ x: 20 }}
+        animate={{ x: 0 }}
+        className="absolute right-4 sm:right-10 top-4 sm:top-5 cursor-pointer"
+        onClick={() => navigate('/')}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+      >
         <X size={25} />
-      </div>
-      <div className="bg-[#636AE8] text-white w-[90%] sm:w-[85%] lg:w-[65%] min-h-[80vh] lg:min-h-[65%] md:grid md:grid-cols-2">
-        <div className="h-full flex flex-col p-10 w-full">
-          <p className="text-3xl text-white font-bold text-center">
+      </motion.div>
+
+      <motion.div
+        variants={itemVariants}
+        className="bg-[#636AE8] text-white w-full max-w-6xl rounded-xl shadow-2xl overflow-hidden md:grid md:grid-cols-2"
+      >
+        <motion.div
+          variants={itemVariants}
+          className="h-full flex flex-col p-6 sm:p-8 lg:p-10 w-full"
+        >
+          <motion.p
+            variants={itemVariants}
+            className="text-2xl sm:text-3xl text-white font-bold text-center mb-8"
+          >
             Login
-          </p>
+          </motion.p>
 
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)}
-              className="space-y-3 md:px-6 px-3 w-full xl:w-[80%] lg:w-[90%] m-auto pt-14 md:pt-0">
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-white">
-                      Email
-                    </FormLabel>
-                    <div className="flex items-center border px-3 rounded-lg border-white">
-                      <MailIcon color="white" />
-                      <Input className="border-none shadow-none text-black text-sm md:text-lg placeholder:text-gray-200"
-                        placeholder="Email" {...field} />
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-white">
-                      Password
-                    </FormLabel>
-                    <div className="flex items-center border px-3 rounded-lg border-white">
-                      <EyeIcon color="white" />
-                      <Input className="border-none shadow-none text-black text-sm md:text-lg placeholder:text-gray-200"
-                        type="password" placeholder="********" {...field} />
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button
-                className="w-full hover:bg-white/80 cursor-pointer bg-white text-black"
-                type="submit" disabled={status === 'loading'}>
-                {status === 'loading' ? <Circle className="animate-spin mx-auto" size={20} /> : "SignIn"}
-              </Button>
-            </form>
+            <motion.form
+              variants={itemVariants}
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="space-y-4 w-full max-w-md mx-auto"
+            >
+              {/* Form fields remain the same but wrapped in motion.div */}
+              <motion.div variants={itemVariants}>
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-white">Email</FormLabel>
+                      <div className="flex items-center border px-3 rounded-lg border-white bg-white/10 backdrop-blur-sm">
+                        <MailIcon color="white" className="w-5 h-5" />
+                        <Input
+                          className="border-none shadow-none text-white text-sm md:text-base placeholder:text-gray-200 bg-transparent"
+                          placeholder="Email"
+                          {...field}
+                        />
+                      </div>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </motion.div>
+
+              <motion.div variants={itemVariants}>
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-white">Password</FormLabel>
+                      <div className="flex items-center border px-3 rounded-lg border-white bg-white/10 backdrop-blur-sm">
+                        <EyeIcon color="white" className="w-5 h-5" />
+                        <Input
+                          className="border-none shadow-none text-white text-sm md:text-base placeholder:text-gray-200 bg-transparent"
+                          type="password"
+                          placeholder="********"
+                          {...field}
+                        />
+                      </div>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </motion.div>
+
+              <motion.div
+                variants={itemVariants}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <Button
+                  className="w-full hover:bg-white/80 cursor-pointer bg-white text-black font-semibold"
+                  type="submit"
+                  disabled={status === 'loading'}
+                >
+                  {status === 'loading' ?
+                    <Circle className="animate-spin mx-auto" size={20} /> :
+                    "Sign In"
+                  }
+                </Button>
+              </motion.div>
+            </motion.form>
           </Form>
 
-          <div className="m-auto md:w-[80%] md:p-0 pt-10">
-            <p className="text-center text-white text-sm relative flex items-center justify-center before:content-[''] before:absolute before:left-0 before:w-[10%] sm:before:w-[15%] md:before:w-[20%] before:h-[1px] before:bg-white/50 after:content-[''] after:absolute after:right-0 after:w-[10%] sm:after:w-[15%] md:after:w-[20%] after:h-[1px] after:bg-white/50">
+          <motion.div
+            variants={itemVariants}
+            className="mt-8 w-full max-w-md mx-auto"
+          >
+            <p className="text-center text-white text-sm relative flex items-center justify-center before:content-[''] before:absolute before:left-0 before:w-[20%] before:h-[1px] before:bg-white/50 after:content-[''] after:absolute after:right-0 after:w-[20%] after:h-[1px] after:bg-white/50">
               Or Continue With
             </p>
-            <div className="icons flex items-center justify-center gap-x-7 mt-4">
-              <Button className="bg-white px-2 rounded-lg flex-1 cursor-pointer"
-                onClick={handleGoogleLogin}>
-                <img src="/img/icons/google-svgrepo-com.svg" alt="google"
-                  className="w-10 h-10 p-1" /> Login with Google
-              </Button>
-              <Button className="bg-white px-2 rounded-lg flex-1 cursor-pointer"
-                onClick={handleGithubLogin}>
-                <img src="/img/icons/github-svgrepo-com.svg" alt="github"
-                  className="w-10 h-10 p-1" /> Login with GitHub
-              </Button>
-              {/* <Button className="bg-white px-2 rounded-lg" onClick={handleXLogin}>
-                <img src="/img/icons/twitter-svgrepo-com.svg" alt="twitter" className="w-10 h-10 cursor-pointer" />
-              </Button> */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-4">
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="w-full sm:w-auto"
+              >
+                <Button
+                  className="w-full bg-white hover:bg-white/90 px-4 py-2 rounded-lg flex items-center justify-center gap-2"
+                  onClick={handleGoogleLogin}
+                >
+                  <img
+                    src="/img/icons/google-svgrepo-com.svg"
+                    alt="google"
+                    className="w-6 h-6"
+                  />
+                  <span className="text-sm text-black">Login with Google</span>
+                </Button>
+              </motion.div>
+
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="w-full sm:w-auto"
+              >
+                <Button
+                  className="w-full bg-white hover:bg-white/90 px-4 py-2 rounded-lg flex items-center justify-center gap-2"
+                  onClick={handleGithubLogin}
+                >
+                  <img
+                    src="/img/icons/github-svgrepo-com.svg"
+                    alt="github"
+                    className="w-6 h-6"
+                  />
+                  <span className="text-sm text-black">Login with GitHub</span>
+                </Button>
+              </motion.div>
             </div>
-          </div>
+          </motion.div>
 
-          <p className="text-sm lg:text-[1em] text-center pt-10 pb-5 md:pb-4">Don't have an account? <NavLink to={'/signup'} className="hover:underline text-gray-50 cursor-pointer">
-            Signup
-          </NavLink>
-          </p>
+          <motion.p
+            variants={itemVariants}
+            className="text-sm text-center mt-8"
+          >
+            Don't have an account?{" "}
+            <NavLink
+              to={'/signup'}
+              className="hover:underline text-gray-50 font-semibold"
+            >
+              Sign up
+            </NavLink>
+          </motion.p>
+        </motion.div>
 
-        </div>
-
-
-        {/* <div className="w-[50%]"> */}
-        <img className="hidden md:block object-cover h-full" src="/img/signup-1.png" alt="girl-illestration" />
-        {/* </div> */}
-
-      </div>
-    </div>
+        <motion.div
+          variants={itemVariants}
+          className="hidden md:block relative h-full"
+        >
+          <motion.img
+            initial={{ scale: 1.1, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            className="object-cover h-full w-full"
+            src="/img/signup-1.png"
+            alt="girl-illustration"
+          />
+        </motion.div>
+      </motion.div>
+    </motion.div>
   )
 }
 

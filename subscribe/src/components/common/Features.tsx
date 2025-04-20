@@ -1,6 +1,6 @@
 import { BellRing, Calculator, ChartNoAxesColumn, Ticket } from "lucide-react";
 import Feature from "./Feature";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 
 const featureDetails = [
     {

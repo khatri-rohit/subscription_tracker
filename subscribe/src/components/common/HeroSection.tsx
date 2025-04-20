@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom"
-import { motion } from "framer-motion"
+import { motion } from "motion/react"
 
 import { Button } from "../ui/button"
 

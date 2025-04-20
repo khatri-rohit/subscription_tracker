@@ -32,7 +32,7 @@ const formSchema = z.object({
 
 const Account = () => {
 
-    const { user, apiUrl } = useAuth();
+    const { user } = useAuth();
     const enable = user?.password?.includes("Thrid");
     const navigate = useNavigate()
 
@@ -88,10 +88,10 @@ const Account = () => {
     const handleSubmit = async () => {
         try {
             axios.defaults.withCredentials = true
-            await axios.post(`${apiUrl}/auth/sign-out`)
             await deleteUser({
                 _id: user?._id
             })
+            // await axios.post(`${apiUrl}/auth/sign-out`)
             dispatch(isAuthenticated(false))
             setLoad(true);
             setTimeout(() => {

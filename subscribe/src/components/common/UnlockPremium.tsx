@@ -1,4 +1,4 @@
-import { motion } from "framer-motion"
+import { motion } from "motion/react"
 import { NavLink } from "react-router-dom"
 
 import { Button } from "../ui/button"
@@ -6,21 +6,20 @@ import { Button } from "../ui/button"
 const UnlockPremium = () => {
     return (
         <div className="py-12 md:py-24 px-4 md:px-0">
-            <motion.div 
+            <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
                 className="w-full md:w-10/12 lg:w-8/12 bg-[#e5e6ff] dark:bg-gray-800 m-auto text-center py-8 md:py-16 px-4 rounded-xl transition-colors duration-500"
             >
-                <motion.h5 
+                <motion.h5
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.3 }}
-                    className="text-xl md:text-2xl text-[#454efc] dark:text-purple-400 font-semibold"
-                >
+                    className="text-xl md:text-2xl text-[#454efc] dark:text-purple-400 font-semibold">
                     Unlock Premium Content
                 </motion.h5>
-                <motion.p 
+                <motion.p
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.5 }}

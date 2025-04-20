@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom"
 import { ALargeSmall, EyeIcon, MailIcon, X } from "lucide-react"
 import axios, { AxiosError } from 'axios';
 import { SyncLoader } from 'react-spinners'
-// import { googleAuth } from './api'
+import { motion } from 'motion/react';
 
 import { useAuth } from "@/context/Auth"
 import { useAppDispatch, useAppSelector } from "@/app/store";
@@ -107,24 +107,70 @@ const SignUp = () => {
         getLoggedInUser()
     };
 
-    return (
-        <div className="h-screen flex justify-center items-center">
-            <div className="absolute right-10 top-5 cursor-pointer"
-                onClick={() => navigate('/')}>
-                <X size={25} />
-            </div >
-            <div className="bg-[#FFCF8D] w-[85%] md:w-[90%] lg:w-[75%] min-h-[80vh] lg:min-h-[65%] md:grid md:grid-cols-2">
-                <img className="hidden md:block object-cover w-full h-full" src="/img/signIn.png" alt="girl-illestration" />
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: {
+                duration: 0.5,
+                when: "beforeChildren",
+                staggerChildren: 0.1
+            }
+        }
+    };
 
-                <div className="h-full flex flex-col justify-between w-[85%] md:w-[90%] lg:w-[75%] m-auto">
-                    <p className="md:text-3xl text-2xl text-center pt-7 text-[#5A3E2B] font-bold">
+    const itemVariants = {
+        hidden: { y: 20, opacity: 0 },
+        visible: { y: 0, opacity: 1, transition: { duration: 0.5 } }
+    };
+
+    return (
+        <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={containerVariants}
+            className="min-h-screen flex justify-center items-center p-4"
+        >
+            <motion.div
+                className="absolute right-4 sm:right-10 top-4 sm:top-5 cursor-pointer"
+                onClick={() => navigate('/')}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+            >
+                <X size={25} />
+            </motion.div>
+
+            <motion.div
+                variants={itemVariants}
+                className="bg-[#FFCF8D] w-[95%] sm:w-[85%] md:w-[90%] lg:w-[75%] min-h-[80vh] lg:min-h-[65%] md:grid md:grid-cols-2 rounded-xl overflow-hidden"
+            >
+                <motion.img
+                    initial={{ scale: 1.1 }}
+                    animate={{ scale: 1 }}
+                    transition={{ duration: 0.5 }}
+                    className="hidden md:block object-cover w-full h-full"
+                    src="/img/signIn.png"
+                    alt="girl-illustration"
+                />
+
+                <motion.div
+                    variants={itemVariants}
+                    className="h-full flex flex-col justify-between w-[90%] sm:w-[85%] md:w-[90%] lg:w-[75%] m-auto py-6 md:py-8"
+                >
+                    <motion.p
+                        variants={itemVariants}
+                        className="md:text-3xl text-2xl text-center text-[#5A3E2B] font-bold"
+                    >
                         Create Account
-                    </p>
+                    </motion.p>
 
                     <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)}
-                            className="space-y-3 m-auto grid grid-cols-1 text-black pt-10 md:p-0">
-                            <div className="names flex space-x-2 w-full col-span-1">
+                        <motion.form
+                            variants={itemVariants}
+                            onSubmit={form.handleSubmit(onSubmit)}
+                            className="space-y-4 grid grid-cols-1 text-black mt-8 md:mt-0"
+                        >
+                            <motion.div variants={itemVariants} className="names flex flex-col sm:flex-row gap-4 sm:space-x-2 w-full col-span-1">
                                 <FormField
                                     control={form.control}
                                     name="firstName"
@@ -161,7 +207,7 @@ const SignUp = () => {
                                         </FormItem>
                                     )}
                                 />
-                            </div>
+                            </motion.div>
 
                             <FormField
                                 control={form.control}
@@ -246,41 +292,59 @@ const SignUp = () => {
                                     </FormItem>
                                 )}
                             />
-                            <Button
-                                className="w-full hover:bg-white/80 cursor-pointer bg-white text-black"
-                                type="submit" disabled={status === 'loading'}>
-                                {status === 'loading' ? <SyncLoader
-                                    color="#31363F"
-                                    size={8}
-                                /> : 'Register'}
-                            </Button>
-                        </form>
+                            <motion.div variants={itemVariants}>
+                                <Button
+                                    className="w-full hover:bg-white/80 cursor-pointer bg-white text-black transition-all duration-300"
+                                    type="submit"
+                                    disabled={status === 'loading'}
+                                >
+                                    {status === 'loading' ? <SyncLoader color="#31363F" size={8} /> : 'Register'}
+                                </Button>
+                            </motion.div>
+                        </motion.form>
                     </Form>
 
-                    <div className="m-auto md:w-[80%] pt-10 md:p-0">
-                        <p className="text-center text-[#3f291a] text-sm relative flex items-center justify-center before:content-[''] before:absolute before:left-0 before:w-[10%] sm:before:w-[15%] md:before:w-[20%] lg:before:w-[25%] before:h-[1px] before:bg-white/80 after:content-[''] after:absolute after:right-0 after:w-[10%] sm:after:w-[15%] md:after:w-[20%] lg:after:w-[25%] after:h-[1px] after:bg-white/80">
+                    <motion.div
+                        variants={itemVariants}
+                        className="m-auto w-full md:w-[90%] mt-8 md:mt-0"
+                    >
+                        <motion.p variants={itemVariants} className="text-center text-[#3f291a] text-sm relative flex items-center justify-center before:content-[''] before:absolute before:left-0 before:w-[10%] sm:before:w-[15%] md:before:w-[20%] lg:before:w-[25%] before:h-[1px] before:bg-white/80 after:content-[''] after:absolute after:right-0 after:w-[10%] sm:after:w-[15%] md:after:w-[20%] lg:after:w-[25%] after:h-[1px] after:bg-white/80">
                             Or Continue With
-                        </p>
-                        <div className="icons flex justify-center items-center gap-x-7 mt-4">
-                            <Button className="bg-white px-2 rounded-lg flex-1  cursor-pointer"
-                                onClick={handleGoogleAuth}>
-                                <img src="/img/icons/google-svgrepo-com.svg" alt="google"
-                                    className="w-10 h-10 p-1" /> Login with Google
-                            </Button>
-                            <Button className="bg-white px-2 rounded-lg flex-1  cursor-pointer" onClick={handleGithubLogin}>
-                                <img src="/img/icons/github-svgrepo-com.svg" alt="github"
-                                    className="w-10 h-10 p-1" /> Login with GitHub
-                            </Button>
-                            {/* <Button className="bg-white md:p-2 px-2 py-2 rounded-lg" onClick={handleXLogin}>
-                                <img src="/img/icons/twitter-svgrepo-com.svg" alt="twitter" className="w-10 h-10 p-1 cursor-pointer" />
-                            </Button> */}
-                        </div>
-                    </div>
-                    <p className="text-sm lg:text-[1em] text-center pt-10 pb-5 md:pb-4">Already have an account? <span className="hover:underline text-gray-800 cursor-pointer" onClick={() => navigate('/signin')}>Login</span></p>
+                        </motion.p>
 
-                </div>
-            </div>
-        </div>
+                        <motion.div variants={itemVariants} className="icons flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-x-7 mt-4">
+                            <Button
+                                className="bg-white px-4 py-2 rounded-lg w-full sm:flex-1 cursor-pointer hover:bg-gray-50 transition-all duration-300"
+                                onClick={handleGoogleAuth}>
+                                <img src="/img/icons/google-svgrepo-com.svg" alt="google" className="w-8 h-8 inline-block mr-2" />
+                                <span className="hidden sm:inline text-black">Login with Google</span>
+                            </Button>
+                            <Button
+                                className="bg-white px-4 py-2 rounded-lg w-full sm:flex-1 cursor-pointer hover:bg-gray-50 transition-all duration-300"
+                                onClick={handleGithubLogin}
+                            >
+                                <img src="/img/icons/github-svgrepo-com.svg" alt="github" className="w-8 h-8 inline-block mr-2" />
+                                <span className="hidden sm:inline text-black">Login with GitHub</span>
+                            </Button>
+                        </motion.div>
+                    </motion.div>
+
+                    <motion.p
+                        variants={itemVariants}
+                        className="text-sm lg:text-base text-center mt-8 md:mt-4"
+                    >
+                        Already have an account? {" "}
+                        <motion.span
+                            className="hover:underline text-gray-800 cursor-pointer"
+                            onClick={() => navigate('/signin')}
+                            whileHover={{ scale: 1.05 }}
+                        >
+                            Login
+                        </motion.span>
+                    </motion.p>
+                </motion.div>
+            </motion.div>
+        </motion.div>
     )
 }
 

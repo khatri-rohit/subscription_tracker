@@ -225,7 +225,7 @@ const CreateSubscription = () => {
                                             <SelectItem value="Entertainment" className="text-base py-3">Entertainment</SelectItem>
                                             <SelectItem value="sports" className="text-base py-3">Sports</SelectItem>
                                             <SelectItem value="Lifestyle" className="text-base py-3">Lifestyle</SelectItem>
-                                            <SelectItem value="Other" className="text-base py-3">Others</SelectItem>
+                                            <SelectItem value="other" className="text-base py-3">Others</SelectItem>
                                         </SelectContent>
                                     </Select>
                                     <FormMessage className="text-sm" />

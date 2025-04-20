@@ -21,7 +21,7 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import googleAuth from './routes/googleAuth.routes.js';
 import githubAuth from './routes/githubAuth.routes.js';
-import twitterAuth from './routes/twitterAuth.routes.js';
+// import twitterAuth from './routes/twitterAuth.routes.js';
 
 const app = express();
 
@@ -33,7 +33,7 @@ app.use("/uploads", express.static('uploads'))
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(arcjetMiddleware);
+// app.use(arcjetMiddleware);
 
 app.use(cors({
     origin: ['https://subtracking.vercel.app', 'http://localhost:5173'],
@@ -61,7 +61,7 @@ configPassport(passport); // Configure passport AFTER initializing it
 // OAuth Routes
 app.use('/auth', googleAuth);
 app.use('/auth', githubAuth);
-app.use('/auth', twitterAuth); // Add Twitter auth routes
+// app.use('/auth', twitterAuth); // Add Twitter auth routes
 
 app.use('/api/v1/auth', authRoute);
 app.use('/api/v1/users', userRouter);

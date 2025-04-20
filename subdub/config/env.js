@@ -26,5 +26,6 @@ export const {
     X_CLIENT_ID,
     X_CLIENT_SECRET,
     SESSION_SECRET,
-    CLIENT_URL
+    CLIENT_URL,
+    SERVER_URI
 } = process.env;

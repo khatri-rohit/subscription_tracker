@@ -123,18 +123,21 @@ const Profile = () => {
     };
 
     return (
-        <div className="max-w-4xl mx-auto p-8 dark:bg-gray-800 dark:text-white rounded-lg">
-            <h1 className="text-3xl font-bold mb-8">
-                Profile Settings <span className='text-sm font-light'>(reload if you can't see desired changes)</span>
+        <div className="w-full max-w-4xl mx-auto p-4 sm:p-6 lg:p-8 dark:bg-gray-800 dark:text-white rounded-lg">
+            <h1 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8">
+                Profile Settings
+                <span className='block sm:inline text-sm font-light mt-1 sm:mt-0 sm:ml-2'>
+                    (reload if you can't see desired changes)
+                </span>
             </h1>
 
-            <div className="mb-8">
-                <h2 className="text-xl font-semibold mb-4">
+            <div className="mb-6 sm:mb-8">
+                <h2 className="text-lg sm:text-xl font-semibold mb-4">
                     Profile Picture
                 </h2>
-                <div className="flex items-center space-x-4">
+                <div className="flex flex-col sm:flex-row items-center gap-4">
                     <div
-                        className="w-24 h-24 rounded-full bg-gray-700 cursor-pointer relative overflow-hidden"
+                        className="w-32 h-32 sm:w-24 sm:h-24 rounded-full bg-gray-700 cursor-pointer relative overflow-hidden"
                         onClick={handleProfilePictureClick}>
                         <img
                             src={profileImage.includes("blank-avatar") ? "/img/blank-avatar.webp" : profileImage}
@@ -144,7 +147,7 @@ const Profile = () => {
                             className="w-full h-full rounded-full object-cover"
                         />
                         <div className="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center opacity-0 hover:opacity-40 transition-opacity">
-                            <span className="text-white text-xs font-medium">
+                            <span className="text-white text-sm sm:text-xs font-medium">
                                 Change
                             </span>
                         </div>
@@ -157,63 +160,68 @@ const Profile = () => {
                         className="hidden"
                         onChange={handleFileChange}
                     />
-                </div>
-                {status === 'error' &&
-                    (<p className="text-[.7em] text-red-500">Too Large File or Invalid Format</p>)}
-                <div>
-                    <Button
-                        type="button"
-                        className="px-6 mt-5 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
-                        onClick={handleProfilePictureClick}>
-                        Change Picture
-                    </Button>
+                    <div className="w-full sm:w-auto">
+                        <Button
+                            type="button"
+                            className="w-full sm:w-auto px-6 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
+                            onClick={handleProfilePictureClick}>
+                            Change Picture
+                        </Button>
+                        {status === 'error' && (
+                            <p className="text-[.7em] text-red-500 mt-2 text-center sm:text-left">
+                                Too Large File or Invalid Format
+                            </p>
+                        )}
+                    </div>
                 </div>
             </div>
 
-            <div className="mb-8">
-                <h2 className="text-xl font-semibold mb-4">
+            <div className="mb-6 sm:mb-8">
+                <h2 className="text-lg sm:text-xl font-semibold mb-4">
                     Profile Information
                 </h2>
                 <Form {...form}>
                     <form className="space-y-4" onChange={handleFormChange}
                         onSubmit={form.handleSubmit(onSubmit)}>
-                        <FormField
-                            control={form.control}
-                            name="firstName"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel className="block text-sm font-medium dark:text-gray-300">
-                                        First Name
-                                    </FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            {...field}
-                                            className="mt-1 block w-full px-4 py-2 border border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                        />
-                                    </FormControl>
-                                    <FormMessage className="text-sm" />
-                                </FormItem>
-                            )}
-                        />
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <FormField
+                                control={form.control}
+                                name="firstName"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel className="block text-sm font-medium dark:text-gray-300">
+                                            First Name
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                {...field}
+                                                className="mt-1 block w-full px-3 sm:px-4 py-2 border border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            />
+                                        </FormControl>
+                                        <FormMessage className="text-xs sm:text-sm" />
+                                    </FormItem>
+                                )}
+                            />
 
-                        <FormField
-                            control={form.control}
-                            name="lastName"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel className="block text-sm font-medium dark:text-gray-300">
-                                        Last Name
-                                    </FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            {...field}
-                                            className="mt-1 block w-full px-4 py-2 border border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                        />
-                                    </FormControl>
-                                    <FormMessage className="text-sm" />
-                                </FormItem>
-                            )}
-                        />
+                            <FormField
+                                control={form.control}
+                                name="lastName"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel className="block text-sm font-medium dark:text-gray-300">
+                                            Last Name
+                                        </FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                {...field}
+                                                className="mt-1 block w-full px-3 sm:px-4 py-2 border border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            />
+                                        </FormControl>
+                                        <FormMessage className="text-xs sm:text-sm" />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
 
                         <FormField
                             control={form.control}
@@ -228,30 +236,24 @@ const Profile = () => {
                                             type="email"
                                             {...field}
                                             disabled={enable}
-                                            className="mt-1 block w-full px-4 py-2 border border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            className="mt-1 block w-full px-3 sm:px-4 py-2 border border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                                         />
                                     </FormControl>
-                                    <FormMessage className="text-sm" />
+                                    <FormMessage className="text-xs sm:text-sm" />
                                 </FormItem>
                             )}
                         />
 
-                        <div className="flex justify-end space-x-4 mt-5">
+                        <div className="flex justify-end mt-6">
                             <Button
                                 type="submit"
                                 disabled={saveBtn}
-                                className="px-6 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors dark:bg-blue-700 dark:hover:bg-blue-800">
+                                className="w-full sm:w-auto px-6 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors dark:bg-blue-700 dark:hover:bg-blue-800">
                                 Save Changes
                             </Button>
                         </div>
                     </form>
                 </Form>
-                {/* <Button
-                    type="button"
-                    className="px-6 py-2 text-gray-900 hover:text-white bg-white rounded-lg hover:bg-gray-600 transition-colors dark:text-gray-300 dark:bg-gray-900 dark:hover:bg-gray-600"
-                    onClick={handleCancel}>
-                    Cancel
-                </Button> */}
             </div>
         </div>
     );

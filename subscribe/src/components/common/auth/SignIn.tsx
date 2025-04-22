@@ -104,7 +104,6 @@ const SignIn = () => {
 
   const handleGoogleLogin = async () => {
     window.location.href = `${serverUri}/auth/google`;
-
   };
 
   const handleGithubLogin = async () => {

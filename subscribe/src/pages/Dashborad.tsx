@@ -200,7 +200,7 @@ const Dashborad = () => {
           : "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-5 min-h-[30vh]"}`}>
         {isError && (<p className="text-2xl text-red-500 my-auto text-center">Something Went Wrong </p>)}
         {!isError && (isLoading ? <Loader size={45} className='animate-spin opacity-75 text-black dark:text-white' /> :
-          length > 0 ? (subscriptions?.map((subscription) => {
+          length > 0 && (subscriptions?.map((subscription) => {
             if (subscription.status === status) {
               return (<SubsOverview key={subscription._id} name={subscription.name}
                 renewalDate={subscription.renewalDate as Date} status={subscription.status} />)
@@ -208,9 +208,7 @@ const Dashborad = () => {
               return <SubsOverview key={subscription._id} name={subscription.name}
                 renewalDate={subscription.renewalDate as Date} status={subscription.status} />
             }
-          })) : <p className="text-xl flex items-center justify-center text-center md:col-span-3 lg:col-span-4 min-h-[30vh]">
-            You don't have {length == 0 ? "Any" : status} subscriptions
-          </p>)
+          })))
         }
         {(data?.subscriptions.length === 0 || !data) && !isLoading && (!isError) && <NavLink to={'/subscription/create-subs'}
           className="text-xl my-auto text-center md:col-span-3 lg:col-span-4">

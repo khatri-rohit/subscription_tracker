@@ -3,7 +3,6 @@ import { toast } from "sonner";
 import { motion } from "motion/react";
 
 import { useUpdateEmailNotificationMutation } from "@/services/users";
-import { Button } from "@/components/ui/button"
 import { useAuth } from "@/context/Auth";
 
 const Notifications = () => {
@@ -83,14 +82,14 @@ const Notifications = () => {
                         className="flex justify-end space-x-4 mt-5"
                         variants={itemVariants}
                     >
-                        <Button
+                        <motion.button
                             className="w-full sm:w-auto px-4 sm:px-6 py-2 text-white bg-blue-600 rounded-lg 
                                      hover:bg-blue-700 transition-colors"
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
                         >
                             Save Changes
-                        </Button>
+                        </motion.button>
                     </motion.div>
                 </form>
             </motion.div>

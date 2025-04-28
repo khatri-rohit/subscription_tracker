@@ -2,7 +2,7 @@
 
 ## Live Site
 
-[Subscription Tracker](https://substracking.vercel.app/)
+[Subscription Tracker](https://subtracking.vercel.app)
 
 ## Overview
 

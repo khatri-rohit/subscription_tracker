@@ -40,7 +40,7 @@ function ProfileBtn() {
             setTimeout(() => navigation('/'), 1000)
         } catch (error) {
             const axiosError = error as AxiosError;
-            // console.log(axiosError.cause);
+            console.log(axiosError.cause);
         }
     }
 

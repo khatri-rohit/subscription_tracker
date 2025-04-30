@@ -19,8 +19,7 @@ const DeleteSubscription = ({ setDelete, subscription, allSubscriptions, setAllS
     const [deleteSubscription] = useDeleteSubscriptionMutation()
 
     const handleDelete = async () => {
-        const result = await deleteSubscription({ _id: subscription?._id as string })
-        // console.log(result.data);
+        await deleteSubscription({ _id: subscription?._id as string })
         setDelete(false);
         const subscriptions = allSubscriptions.filter((subs) => subs._id !== subscription?._id);
         setAllSubscriptions(subscriptions);

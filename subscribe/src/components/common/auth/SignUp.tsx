@@ -64,14 +64,14 @@ const SignUp = () => {
         try {
             const { email, firstName, lastName, password } = data;
             setStatus("loading");
-            const response = await axios.post(`${apiUrl}/auth/sign-up`,
+             await axios.post(`${apiUrl}/auth/sign-up`,
                 { email, firstName, lastName, password }, {
                 withCredentials: true,
                 headers: {
                     "Content-Type": "application/json",
                 }
             });
-            // // console.log(response);
+            // console.log(response);
             setTimeout(() => setStatus("success"), 500);
             dispatch(isAuthenticated(true))
             navigate('/dashboard', { replace: true })

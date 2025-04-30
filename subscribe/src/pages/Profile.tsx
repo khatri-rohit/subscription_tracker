@@ -75,7 +75,7 @@ const Profile = () => {
     const onSubmit = async (data: z.infer<typeof profileFormSchema>) => {
         // e.preventDefault();
         // console.log("Profile form submitted with data:", data);
-        console.log("Profile image:", profileImage);
+        // console.log("Profile image:", profileImage);
 
         const { firstName, lastName, email } = data
         try {

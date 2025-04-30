@@ -96,7 +96,7 @@ const EditSubscription = ({ subscription, setEdit, allSubscriptions, setAllSubsc
     });
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
-        // console.log("Form values:", values);
+        // // console.log("Form values:", values);
         // Implement your submission logic here
         const { platformId, price, currency, category, frequency, paymentMethod, startDate, customPlatform } = values;
         const name: string = platformId === 'Other' ? (customPlatform as string) : platformId;
@@ -113,7 +113,7 @@ const EditSubscription = ({ subscription, setEdit, allSubscriptions, setAllSubsc
         await updateSubscription(newSubscription)
 
         const updatedSubscription = { ...subscription, ...newSubscription };
-        console.log(updatedSubscription);
+        // console.log(updatedSubscription);
         const subscriptions = allSubscriptions.filter((subs) => subs._id !== subscription?._id);
         subscriptions.push(updatedSubscription)
         setAllSubscriptions(subscriptions);

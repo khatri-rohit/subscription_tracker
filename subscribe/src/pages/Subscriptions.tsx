@@ -89,7 +89,7 @@ const Subscriptions = () => {
     if (paginationData && currentPage < paginationData.pages) {
       setCurrentPage(prev => prev + 1);
     }
-    console.log("Next page");
+    // console.log("Next page");
   }
 
   const handlePrevPage = () => {
@@ -149,7 +149,7 @@ const Subscriptions = () => {
       setStatus(category);
       if (category !== 'All') {
         const newSubsLen = data?.subscriptions.filter((subscription) => subscription.category === category);
-        console.log(newSubsLen);
+        // // // // console.log(newSubsLen);
         setAllSubscriptions(newSubsLen as Subscription[])
         const pagination: Pagination = {
           total: newSubsLen?.length as number,
@@ -157,7 +157,7 @@ const Subscriptions = () => {
           limit: itemsPerPage,
           pages: Math.ceil((newSubsLen?.length as number) / itemsPerPage)
         }
-        console.log(pagination);
+        // // console.log(pagination);
         setPaginationData(pagination)
         // // if (newSubsLen.length > 0)
         setLength(newSubsLen?.length as number);
@@ -196,12 +196,12 @@ const Subscriptions = () => {
   useEffect(() => {
     if (user?._id) {
       refetch();
-      console.log("Refetching");
+      // console.log("Refetching");
     }
   }, [user, refetch]);
 
   useEffect(() => {
-    console.log(data);
+    // console.log(data);
     setAllSubscriptions((data?.subscriptions as Subscription[]))
     setPaginationData(data?.pagination as Pagination)
     setLength((data?.subscriptions?.length as number));

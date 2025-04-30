@@ -71,7 +71,7 @@ const SignUp = () => {
                     "Content-Type": "application/json",
                 }
             });
-            console.log(response);
+            // // console.log(response);
             setTimeout(() => setStatus("success"), 500);
             dispatch(isAuthenticated(true))
             navigate('/dashboard', { replace: true })
@@ -80,8 +80,8 @@ const SignUp = () => {
             if (axios.isAxiosError(error)) {
                 const axiosError = error as AxiosError;
                 const response = axiosError.response?.data as ErrorResponse;
-                console.log(axiosError.response);
-                console.log(response.error);
+                // console.log(axiosError.response);
+                // console.log(response.error);
                 if (axiosError.response?.status === 401) {
                     form.setError('email', { message: response.error });
                 } else if (axiosError.response?.status === 400) {

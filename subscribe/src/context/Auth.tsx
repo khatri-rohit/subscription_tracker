@@ -42,11 +42,11 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     const dispatch = useAppDispatch();
 
     const getLoggedInUser = async () => {
-        console.log("called");
+        // console.log("called");
         try {
             axios.defaults.withCredentials = true;
             const request = await axios.post(`${apiUrl}/users/`);
-            console.log(request.data.data);
+            // console.log(request.data.data);
             dispatch(isAuthenticated(true));
             setUser(request.data.data);
             // console.log("Previous Session");
@@ -56,7 +56,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
 
             setUser(null);
             dispatch(isAuthenticated(false));
-            console.log("No Session");
+            // console.log("No Session");
         }
     }
 

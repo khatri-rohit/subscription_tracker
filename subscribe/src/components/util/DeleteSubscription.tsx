@@ -20,7 +20,7 @@ const DeleteSubscription = ({ setDelete, subscription, allSubscriptions, setAllS
 
     const handleDelete = async () => {
         const result = await deleteSubscription({ _id: subscription?._id as string })
-        console.log(result.data);
+        // console.log(result.data);
         setDelete(false);
         const subscriptions = allSubscriptions.filter((subs) => subs._id !== subscription?._id);
         setAllSubscriptions(subscriptions);

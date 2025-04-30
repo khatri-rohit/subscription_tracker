@@ -116,7 +116,7 @@ export function getAllKeys(item: any, prefix = "") {
     for (const key in item) { // Use "in" to iterate object properties. Can be replaced by Object.keys(item) for own properties
         const value = item[key as keyof Subscription]; // corrected type access
         const fieldPath = prefix ? `${prefix}.${key}` : key;
-        console.log(value);
+        // console.log(value);
 
         if (Array.isArray(value)) {
             fields.push(...value.flatMap((arrayItem, index) => getAllKeys(arrayItem, `${fieldPath}[${index}]`)));

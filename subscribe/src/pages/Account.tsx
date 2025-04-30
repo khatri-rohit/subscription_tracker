@@ -81,7 +81,7 @@ const Account = () => {
         } catch (error) {
             setStatus("error")
             toast.error("Check Your Password");
-            console.log("Error In Passowrd");
+            // console.log("Error In Passowrd");
             console.log(error);
         }
     }

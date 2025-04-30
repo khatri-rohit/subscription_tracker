@@ -37,7 +37,7 @@ const SettingLayout = () => {
         }
     }
 
-    console.log(location.pathname.split('/'));
+    // console.log(location.pathname.split('/'));
 
     return (
         <motion.div

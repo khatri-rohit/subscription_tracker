@@ -27,7 +27,7 @@ function ProfileBtn() {
     const { setTheme } = useTheme()
     const { user, imageUrl } = useAuth()
     const img = user?.profileImage ? (user.profileImage.includes("google") || user?.profileImage.includes("github")) ? user?.profileImage : (imageUrl + "/" + user?.profileImage) : '/img/blank-avatar.webp';
-    console.log(img);
+    // console.log(img);
 
     const dispatch = useAppDispatch();
     const { apiUrl } = useAuth()
@@ -40,7 +40,7 @@ function ProfileBtn() {
             setTimeout(() => navigation('/'), 1000)
         } catch (error) {
             const axiosError = error as AxiosError;
-            console.log(axiosError.cause);
+            // console.log(axiosError.cause);
         }
     }
 

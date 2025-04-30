@@ -78,7 +78,7 @@ const CreateSubscription = () => {
         if (selectedPlatform !== "other") {
             form.setValue("customPlatform", "");
         }
-        console.log(selectedPlatform);
+        // console.log(selectedPlatform);
     }, [selectedPlatform, form]);
 
 

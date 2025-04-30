@@ -44,7 +44,7 @@ export const aboutUser = createApi({
                 // Create FormData object
                 const formData = new FormData();
                 formData.append("profileImage", profileImage);
-                console.log(formData);
+                // console.log(formData);
                 return {
                     url: `/users/img/${_id}`,
                     method: 'PUT',

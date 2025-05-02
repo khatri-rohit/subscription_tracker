@@ -113,7 +113,7 @@ const SettingLayout = () => {
                                         <NavLink
                                             onClick={() => setIsNavOpen(false)} // Close menu on mobile after clicking
                                             className={(location.pathname.split('/')[3] === item.path || location.pathname.split('/').length === 2) ?
-                                                `flex items-center text-base sm:text-lg text-white bg-${item.color}-600 transition-all py-2 px-4 rounded-md hover:bg-${item.color}-700 dark:bg-${item.color}-500 dark:hover:bg-${item.color}-600` :
+                                                `flex items-center text-base sm:text-lg text-black bg-${item.color}-600 transition-all py-2 px-4 rounded-md hover:bg-${item.color}-700 dark:bg-${item.color}-500 dark:hover:bg-${item.color}-600` :
                                                 `flex items-center text-base sm:text-lg text-gray-800 hover:text-${item.color}-600 dark:hover:text-${item.color}-500 transition-all py-2 px-4 rounded-md hover:bg-${item.color}-50 dark:text-gray-300`
                                             }
                                             to={`/dashboard/settings${item.path ? '/' + item.path : ''}`}
